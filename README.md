@@ -38,5 +38,9 @@ psql -c "CREATE EXTENSION postgis; CREATE EXTENSION postgis_topology;" lapsocart
 cd pathToProjectRoot
 git clone https://github.com/vargax/lapsoCarte.git
 cd lapsoCarte
+# npm modules
 npm install geotabuladb express socket.io babel
+# Babel browser script
+cd public/js/lib
+ln -s ../../../node_modules/babel/node_modules/babel-core/browser.js babel.js
 ```
