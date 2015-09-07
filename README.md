@@ -39,8 +39,9 @@ cd pathToProjectRoot
 git clone https://github.com/vargax/lapsoCarte.git
 cd lapsoCarte
 # npm modules
-npm install geotabuladb express socket.io babel
+npm install geotabuladb express socket.io babel es6-module-loader
 # Babel browser script
 cd public/js/lib
 ln -s ../../../node_modules/babel/node_modules/babel-core/browser.js babel.js
+ln -s ../../../node_modules/es6-module-loader/dist/es6-module-loader-dev.j* .
 ```
