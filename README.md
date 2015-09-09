@@ -39,9 +39,22 @@ cd pathToProjectRoot
 git clone https://github.com/vargax/lapsoCarte.git
 cd lapsoCarte
 # npm modules
-npm install geotabuladb express socket.io babel es6-module-loader
-# Babel browser script
-cd public/js/lib
-ln -s ../../../node_modules/babel/node_modules/babel-core/browser.js babel.js
-ln -s ../../../node_modules/es6-module-loader/dist/es6-module-loader-dev.j* .
+npm install
+# Modules symbolic link (solves Browserify module not found error)
+cd node_modules
+ln -s ../client/modules .
+```
+# App Execution
+## Sample data database load
+```
+cd drivers
+chmod +x shp+csv.sh
+./shp+csv.sh
+```
+## Project build and execution
+```
+# Compile client-side libraries
+npm run build
+# Server run
+nodejs bootstrap.js
 ```
