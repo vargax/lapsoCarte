@@ -1,13 +1,14 @@
 // ------------------------------------------------------
 // Constants and Variables
 // ------------------------------------------------------
-import * as glbs from './public/js/globals.js';     // Client-Server shared constants
+import * as glbs from './client/modules/globals.js';     // Client-Server shared constants
+import * as geo from 'geotabuladb';
+
 var clients = {};                                   // Dictionary to storage client's sessions
 
 // ------------------------------------------------------
 // Database
 // ------------------------------------------------------
-var geo = require('geotabuladb');		// Database operation
 geo.setCredentials({
     type: 'postgis',
     host: 'localhost',
@@ -23,9 +24,9 @@ var express = require('express');
 var app = express();                                // App
 var server = require('http').createServer(app);     // Web server
 
-app.use(express.static(__dirname + '/public'));     // Static folder
+app.use(express.static(__dirname + '/client/public'));     // Static folder
 app.get('/', function(req, res){
-    res.sendFile(__dirname + '/index.html'); 		// Web server root file
+    res.sendFile(__dirname + '/client/index.html'); 		// Web server root file
 });
 
 server.listen(8080, function(){ 					// Setting ip the server port...
@@ -51,7 +52,7 @@ io.on('connection', function(socket){
 
     // App specific methods:
     socket.on(glbs.GET_MAP, function(msg){
-        console.log(':: This is a '+glbs.GET_MAP+' request...');
+        console.log(':: Receiving a ' + glbs.GET_MAP + ' request...');
         getMap(socket.id,msg);
     });
 });
@@ -70,6 +71,7 @@ function getMap(socketId, msg) {
     };
 
     geo.geoQuery(parameters,function(json) {
+        console.log(':: Sending a ' + glbs.DRAW_MAP + ' request...');
         clients[socketId].emit(glbs.DRAW_MAP, json); // Sending to the client the new event...
     });
 }

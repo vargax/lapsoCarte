@@ -1,0 +1,27 @@
+{
+  "name": "LapsoCarte",
+  "version": "0.0.1",
+  "description": "LapsoCarte is a web-based visual tool to interact with time-space referenced data.",
+  "author": "Camilo Vargas <vargax@gmail.com>",
+  "license": "GPL-2.0",
+  "repository": "https://github.com/vargax/lapsoCarte",
+  "main": "index.js",
+  "scripts": {
+    "build": "browserify client/lapsoCarte.js -t babelify -o ./client/public/lapsoCarte.ES5.js",
+    "start": "nodejs bootstrap.js"
+  },
+  "devDependencies": {
+    "babel": "^5.8.23",
+    "babelify": "^6.3.0",
+    "browserify": "^11.0.1"
+  },
+  "dependencies": {
+    "babel-core": "^5.8.23",
+    "express": "^4.13.3",
+    "geotabuladb": "^0.0.7",
+    "leaflet": "^0.7.5",
+    "leaflet-providers": "^1.1.2",
+    "socket.io": "^1.3.6",
+    "socket.io-client": "^1.3.6"
+  }
+}

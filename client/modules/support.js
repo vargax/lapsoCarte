@@ -1,6 +1,3 @@
-/**
- * Created by cvargasc on 4/09/15.
- */
 var css = {};
 
 for (var i = 0; i < document.styleSheets.length; ++i) {
@@ -8,7 +5,7 @@ for (var i = 0; i < document.styleSheets.length; ++i) {
     for (var j = 0; j < sheet.cssRules.length; ++j) {
         var rule = sheet.cssRules[j];
 
-        var cssText = rule.cssText.slice(rule.cssText.indexOf('{')+1);
+        var cssText = rule.cssText.slice(rule.cssText.indexOf('{') + 1);
         var attrs = cssText.split(';');
 
         var ruleSet = {};
@@ -16,8 +13,7 @@ for (var i = 0; i < document.styleSheets.length; ++i) {
             var keyValue = attrs[k].split(':');
             if (keyValue.length == 2) {
                 var key = keyValue[0].trim();
-                var value = keyValue[1].trim();
-                ruleSet[key] = value;
+                ruleSet[key] = keyValue[1].trim();
             }
         }
 
@@ -27,3 +23,9 @@ for (var i = 0; i < document.styleSheets.length; ++i) {
         }
     }
 }
+
+console.log(css);
+
+module.exports = {
+    css: css
+};
