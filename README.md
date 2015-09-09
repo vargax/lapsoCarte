@@ -1,3 +1,5 @@
+# LapsoCarte
+
 LapsoCarte is a web-based visual tool to interact with time-space referenced data. It is based on:
 
 - *PostGIS* as a database engine.
@@ -5,13 +7,13 @@ LapsoCarte is a web-based visual tool to interact with time-space referenced dat
 
 LapsoCarte also uses:
 
-- *GeoTabulaDB* between iojs and PostGIS.
+- *GeoTabulaDB* between NodeJS and PostGIS.
 - *LeafletJS* in the client-side to manage map interaction.
 
 LapsoCarte is written in *ECMAScript 6* in boot client and server side. LapsoCarte uses Babel for backward compatibility.
 
-# Workspace Setup (Ubuntu 14.04)
-## Packages Installation
+## Workspace Setup (Ubuntu 14.04)
+### Packages Installation
 ```
 # Postgres
 sudo apt-get install postgresql postgresql-contrib postgresql-client pgadmin3
@@ -23,7 +25,7 @@ sudo service postgresql restart
 ```
 For details on how to install NodeJS 0.12 please refer to [NODESOURCE](https://nodesource.com/blog/nodejs-v012-iojs-and-the-nodesource-linux-repositories)
 
-## PostGIS setup
+### PostGIS setup
 ```
 # Create geotabula user
 sudo -i -u postgres
@@ -33,7 +35,7 @@ psql -h localhost -U lapsocarte lapsocarte
 createdb -O lapsocarte lapsocarte
 psql -c "CREATE EXTENSION postgis; CREATE EXTENSION postgis_topology;" lapsocarte
 ```
-## Project setup and NPM dependencies
+### Project setup and NPM dependencies
 ```
 cd pathToProjectRoot
 git clone https://github.com/vargax/lapsoCarte.git
@@ -44,14 +46,14 @@ npm install
 cd node_modules
 ln -s ../client/modules .
 ```
-# App Execution
-## Sample data database load
+## App Execution
+### Sample data database load
 ```
 cd drivers
 chmod +x shp+csv.sh
 ./shp+csv.sh
 ```
-## Project build and execution
+### Project build and execution
 ```
 # Compile client-side libraries
 npm run build
