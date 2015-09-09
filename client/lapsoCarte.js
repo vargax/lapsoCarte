@@ -7,7 +7,7 @@ const ZOOM = 11;
 const ZOOM_RANGE = [10, 16];
 
 function init() {
-    map.createMap(CENTER, ZOOM, ZOOM_RANGE);
+    map.init(CENTER, ZOOM, ZOOM_RANGE);
 }
 
 window.onload = init;
