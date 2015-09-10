@@ -1,6 +1,6 @@
-import * as glbs from 'modules/globals.js';
-import * as map from 'modules/map.js';
-import * as actions from 'modules/actions.js';
+import * as glbs from 'lapsocarte/client/globals.js';
+import * as map from 'lapsocarte/client/map.js';
+import * as actions from 'lapsocarte/client/actions.js';
 
 const CENTER = [4.66198, -74.09866];
 const ZOOM = 11;

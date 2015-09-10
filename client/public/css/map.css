@@ -2,7 +2,7 @@
 /* Do NOT use UPPERCASE for id/class definition... it wont work with the support.js method! (objects properties names are lowercase)*/
 .layer {
     color: #00cbff;
-    weight: 0.5;
+    weight: 5;
 }
 
 .focusedobject {

@@ -44,7 +44,9 @@ cd lapsoCarte
 npm install
 # Modules symbolic link (solves Browserify module not found error)
 cd node_modules
-ln -s ../client/modules .
+mkdir lapsocarte
+cd lapsocarte
+ln -s ../../client/modules .
 ```
 ## App Execution
 ### Sample data database load

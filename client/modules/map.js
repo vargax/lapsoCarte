@@ -1,4 +1,5 @@
-import support from 'modules/support.js';
+import support from 'lapsocarte/client/support.js';
+import geostats from 'geostats/lib/geostats.js';
 import L from'leaflet';
 require('leaflet-providers');
 
@@ -35,7 +36,7 @@ function addLayer(geoJsonLayer) {
     //console.dir(geoJsonLayer);
 
     var layer = L.geoJson(geoJsonLayer, {
-        style: support.css['.layer'],
+        style: choroplethStyle,
         onEachFeature: featureInteraction
     }).addTo(map);
 
@@ -47,7 +48,7 @@ function addLayer(geoJsonLayer) {
         }
 
         function featureDeselect() {
-            layer.setStyle(support.css['.layer']);
+            layer.setStyle(choroplethStyle(feature));
             info.update();
         }
 
@@ -55,6 +56,25 @@ function addLayer(geoJsonLayer) {
             mouseover: featureSelect,
             mouseout: featureDeselect
         });
+    }
+
+    function choroplethStyle(feature) {
+
+        function choroplethColor(d) {
+            return d > 8000 ? '#800026' :
+                d > 7000 ? '#BD0026' :
+                    d > 6000 ? '#E31A1C' :
+                        d > 5000 ? '#FC4E2A' :
+                            d > 4000 ? '#FD8D3C' :
+                                d > 3000 ? '#FEB24C' :
+                                    d > 2000 ? '#FED976' :
+                                        '#FFEDA0';
+        }
+
+        return {
+            color: choroplethColor(feature.properties.population),
+            weight: 1.2
+        }
     }
 
     //layer.bringToBack();
