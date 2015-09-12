@@ -62,16 +62,22 @@ io.on('connection', function(socket){
 // ------------------------------------------------------
 function getMap(socketId, msg) {
 
-    var parameters = {
-        tableName : 'population',	// The name of the table we are going to query
-        geometry : 'geom', 			// The name of the column who has the geometry
-        dateColumn : 't',           // The name of the column who has the time
-        dateRange : '1 AND 1',      // The time range
-        properties : 'all'			// Additional columns we want to recover --> For specific columns you have to pass columns' names as an Array
-    };
+    for (let i = 1; i <= 10; i++) {
 
-    geo.geoQuery(parameters,function(json) {
-        console.log(':: Sending a ' + glbs.DRAW_MAP + ' request...');
-        clients[socketId].emit(glbs.DRAW_MAP, json); // Sending to the client the new event...
-    });
+        let parameters = {
+            tableName: 'population',	// The name of the table we are going to query
+            geometry: 'geom', 			// The name of the column who has the geometry
+            dateColumn: 't',           // The name of the column who has the time
+            dateRange: i + ' AND ' + i,    // The time range
+            properties: 'all'			// Additional columns we want to recover --> For specific columns you have to pass columns' names as an Array
+        };
+
+        geo.geoQuery(parameters, callBack);
+    }
+
+    function callBack(range, json) {
+        range = range.split(' ')[0];
+        console.log(':: Sending a ' + glbs.ADD_LAYER + ' request for t =' + range);
+        clients[socketId].emit(glbs.ADD_LAYER, [range, json]); // Sending to the client the new event...
+    }
 }

@@ -1,10 +1,16 @@
 import support from 'lapsocarte/client/support.js';
+import widgets from 'lapsocarte/client/widgets.js';
 import geostats from 'geostats/lib/geostats.js';
+
 import L from'leaflet';
 require('leaflet-providers');
 
 var map;
-var info;
+var infoWidget;
+var timeWidget;
+
+var timeLayers;
+var currentLayer;
 
 function init(center, zoom, zoomRange) {
     map = L.map('map').setView(center, zoom);
@@ -12,44 +18,38 @@ function init(center, zoom, zoomRange) {
     map._layersMinZoom = zoomRange[0];
     map._layersMaxZoom = zoomRange[1];
 
-    (L.control.scale({imperial: false})).addTo(map);
+    map.addControl(L.control.scale({position: 'topleft', imperial: false}));
 
-    info = new L.control();
-    info.onAdd = function (map) {
-        this._div = L.DomUtil.create('div', 'info');
-        this.update();
-        return this._div;
-    };
-    info.update = function (sptlObjAttr) {
-        // ToDo :: Put this HTML outside the JS code... (something like the support.js crack for the css')
-        let html = '<h4> Data </h4>';
-        for (let item in sptlObjAttr) {
-            html += '<b>' + item + '</b> ' + sptlObjAttr[item] + '</b> <br />';
-        }
-        this._div.innerHTML = html;
-    };
-    info.addTo(map);
+    infoWidget = widgets.getInfoWidget();
+    map.addControl(infoWidget);
+
+    timeWidget = widgets.getTimeWidget();
+    map.addControl(timeWidget);
+
+    timeLayers = {};
 }
 
-function addLayer(geoJsonLayer) {
-    console.log(':+ Adding a new layer to the map: ');
+function addTimeLayer(t, geoJsonLayer) {
     //console.dir(geoJsonLayer);
 
-    var layer = L.geoJson(geoJsonLayer, {
+    let layer = L.geoJson(geoJsonLayer, {
         style: choroplethStyle,
         onEachFeature: featureInteraction
-    }).addTo(map);
+    });
+
+    timeLayers[t] = layer;
+    console.log(':+ Adding a new layer for t = ' + t);
 
     function featureInteraction(feature, layer) {
 
         function featureSelect() {
             layer.setStyle(support.css['.focusedobject']);
-            info.update(feature.properties);
+            infoWidget.update(feature.properties);
         }
 
         function featureDeselect() {
             layer.setStyle(choroplethStyle(feature));
-            info.update();
+            infoWidget.update();
         }
 
         layer.on({
@@ -76,11 +76,18 @@ function addLayer(geoJsonLayer) {
             weight: 1.2
         }
     }
+}
 
-    //layer.bringToBack();
+function setTimeLayer(t) {
+    if (currentLayer != undefined) {
+        map.removeLayer(currentLayer);
+    }
+    currentLayer = timeLayers[t];
+    map.addLayer(currentLayer);
 }
 
 module.exports = {
     init: init,
-    addLayer: addLayer
+    addTimeLayer: addTimeLayer,
+    setTimeLayer: setTimeLayer
 };

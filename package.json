@@ -17,6 +17,7 @@
   },
   "dependencies": {
     "babel-core": "^5.8.23",
+    "c3": "^0.4.10",
     "express": "^4.13.3",
     "geostats": "^1.1.0",
     "geotabuladb": "^0.0.7",

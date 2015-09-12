@@ -4,9 +4,9 @@ import io from 'socket.io-client';
 
 var socket = io();
 
-socket.on(glbs.DRAW_MAP, function (msg) {
-    console.log(':: Receiving a ' + glbs.DRAW_MAP + ' request ' + msg);
-    map.addLayer(msg);
+socket.on(glbs.ADD_LAYER, function (msg) {
+    console.log(':: Receiving a ' + glbs.ADD_LAYER + ' request for t =' + msg[0]);
+    map.addTimeLayer(msg[0], msg[1]);
 });
 
 function init() {
