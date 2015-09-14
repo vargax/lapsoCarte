@@ -1,7 +1,6 @@
 import L from'leaflet';
 
 var info;
-var time;
 
 function getInfoWidget() {
     info = new L.control();
@@ -23,20 +22,6 @@ function getInfoWidget() {
     return info;
 }
 
-function getTimeWidget() {
-    time = new L.control();
-    time.setPosition('bottomleft');
-
-    time.onAdd = function (map) {
-        let container = L.DomUtil.create('div', 'time');
-        container.innerHTML = '<div id="chart"></div>';
-        return container;
-    };
-
-    return time;
-}
-
 module.exports = {
-    getInfoWidget: getInfoWidget,
-    getTimeWidget: getTimeWidget
+    getInfoWidget: getInfoWidget
 };

@@ -18,13 +18,10 @@ function init(center, zoom, zoomRange) {
     map._layersMinZoom = zoomRange[0];
     map._layersMaxZoom = zoomRange[1];
 
-    map.addControl(L.control.scale({position: 'topleft', imperial: false}));
+    map.addControl(L.control.scale({imperial: false}));
 
     infoWidget = widgets.getInfoWidget();
     map.addControl(infoWidget);
-
-    timeWidget = widgets.getTimeWidget();
-    map.addControl(timeWidget);
 
     timeLayers = {};
 }
