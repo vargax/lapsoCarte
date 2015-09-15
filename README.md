@@ -1,16 +1,21 @@
 # LapsoCarte
 
-LapsoCarte is a web-based visual tool to interact with time-space referenced data. It is based on:
+LapsoCarte is a web-based visual tool to interact with time-space referenced data.
 
+The backend is based on:
 - *PostGIS* as a database engine.
 - *NodeJS 0.12* as a server-side platform.
-
-LapsoCarte also uses:
-
 - *GeoTabulaDB* between NodeJS and PostGIS.
-- *LeafletJS* in the client-side to manage map interaction.
 
-LapsoCarte is written in *ECMAScript 6* in boot client and server side. LapsoCarte uses Babel for backward compatibility.
+The frontend is a fork of [BootLeaf](https://github.com/bmcbride/bootleaf) and requires:
+- *jQuery*
+- *Bootstrap*
+- *LeafletJS*
+- Typeahead
+- Handlebars
+- ListJS
+
+Most of LapsoCarte code is written in *ECMAScript 6*. LapsoCarte uses *Babel* for backward compatibility.
 
 ## Workspace Setup (Ubuntu 14.04)
 ### Packages Installation
@@ -40,13 +45,16 @@ psql -c "CREATE EXTENSION postgis; CREATE EXTENSION postgis_topology;" lapsocart
 cd pathToProjectRoot
 git clone https://github.com/vargax/lapsoCarte.git
 cd lapsoCarte
-# npm modules
+
+# Install npm modules
+npm install -g napa babel browserify
 npm install
-# Modules symbolic link (solves Browserify module not found error)
+
+# Publish node_modules folder
+cd app/public/
+mkdir node_modules
 cd node_modules
-mkdir lapsocarte
-cd lapsocarte
-ln -s ../../client/modules .
+ln -s ../../../node_modules/font-awesome .
 ```
 ## App Execution
 ### Sample data database load

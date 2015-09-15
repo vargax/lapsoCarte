@@ -1,6 +1,6 @@
-import support from 'lapsocarte/client/support.js';
-import widgets from 'lapsocarte/client/widgets.js';
-import geostats from 'geostats/lib/geostats.js';
+import support from './support';
+import widgets from './widgets.js';
+//import geostats from 'geostats/lib/geostats.js';
 
 import L from'leaflet';
 require('leaflet-providers');

@@ -1,7 +1,7 @@
 // ------------------------------------------------------
 // Constants and Variables
 // ------------------------------------------------------
-import * as glbs from 'lapsocarte/client/globals.js';     // Client-Server shared constants
+import * as glbs from './app/modules/globals.js';     // Client-Server shared constants
 import * as geo from 'geotabuladb';
 
 var clients = {};                                   // Dictionary to storage client's sessions
@@ -24,9 +24,9 @@ var express = require('express');
 var app = express();                                // App
 var server = require('http').createServer(app);     // Web server
 
-app.use(express.static(__dirname + '/client/public'));     // Static folder
+app.use(express.static(__dirname + '/app/public'));     // Static folder
 app.get('/', function(req, res){
-    res.sendFile(__dirname + '/client/index.html'); 		// Web server root file
+    res.sendFile(__dirname + '/app/index.html'); 		// Web server root file
 });
 
 server.listen(8080, function(){ 					// Setting ip the server port...
