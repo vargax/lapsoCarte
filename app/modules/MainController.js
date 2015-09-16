@@ -7,6 +7,7 @@ I am the main controller of the application. I mediate the communication between
 // ------------------------------------------------------------------------
 import LeafletController from './LeafletController.js';
 import BootleafController from './BootleafController.js';
+import SocketioController from './SocketioController.js';
 
 // ------------------------------------------------------------------------
 // CONSTANTS
@@ -18,11 +19,11 @@ const lc_MAP_ZOOM_RANGE = [10, 16];
 // ------------------------------------------------------------------------
 // VARIABLES
 // ------------------------------------------------------------------------
-let mainController = null; // --> Singleton Pattern...
 let leafletController;
 let bootleafController;
+let socketioController;
 
-
+let mainController = null; // --> Singleton Pattern...
 export default class MainController {
     constructor() {
         if (!mainController) {
@@ -36,9 +37,17 @@ export default class MainController {
 
         bootleafController = new BootleafController();
         bootleafController.initGUI();
+
+        socketioController = new SocketioController();
+        socketioController.initCOMM();
     }
 
     // ++++++++++++++  CONTROLLER-SPECIFIC FUNCTIONS ++++++++++++++++++++++++//
+    // SocketioController (sioc) -----------------------------------------------
+    sioc_addTimeLayer(time, geoJSON) {
+        leafletController.addTimeLayer(time, geoJSON);
+        leafletController.setTimeLayer(time);
+    }
 
     // LeafletController (llc) ------------------------------------------------
     llc_getInitialMapParameters() {
