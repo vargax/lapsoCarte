@@ -1,5 +1,5 @@
 import * as glbs from './globals.js';
-import * as map from './map.js';
+import * as map from './leaflet_controller.js';
 import io from 'socket.io-client';
 
 var socket = io();
@@ -11,7 +11,7 @@ socket.on(glbs.ADD_LAYER, function (msg) {
 
 function init() {
     console.log(':: Sending a ' + glbs.GET_MAP + ' request...');
-    //socket.emit(glbs.GET_MAP, '');
+    socket.emit(glbs.GET_MAP, '');
 }
 
 module.exports = {

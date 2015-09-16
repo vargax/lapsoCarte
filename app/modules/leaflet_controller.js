@@ -1,5 +1,5 @@
-import support from './support';
 import widgets from './widgets.js';
+import support from './support.js';
 //import geostats from 'geostats/lib/geostats.js';
 
 import L from'leaflet';
@@ -7,23 +7,29 @@ require('leaflet-providers');
 
 var map;
 var infoWidget;
-var timeWidget;
 
-var timeLayers;
+var layers;
 var currentLayer;
 
-function init(center, zoom, zoomRange) {
-    map = L.map('map').setView(center, zoom);
+function init() {
+    let mapInitParameters = mainController.llc_getInitialMapParameters();
+    let center = mapInitParameters[0];
+    let zoom = mapInitParameters[1];
+    let zoomRange =   mapInitParameters[2];
+
+    map = L.map('map',{zoomControl: false}).setView(center, zoom);
     map.addLayer(new L.tileLayer.provider('Esri.WorldGrayCanvas'));
     map._layersMinZoom = zoomRange[0];
     map._layersMaxZoom = zoomRange[1];
 
     map.addControl(L.control.scale({imperial: false}));
+    map.addControl(L.control.zoom({position: 'bottomright'}));
+    map.addControl(widgets.getLocateWidget());
 
     infoWidget = widgets.getInfoWidget();
     map.addControl(infoWidget);
 
-    timeLayers = {};
+    layers = {};
 }
 
 function addTimeLayer(t, geoJsonLayer) {
@@ -34,8 +40,9 @@ function addTimeLayer(t, geoJsonLayer) {
         onEachFeature: featureInteraction
     });
 
-    timeLayers[t] = layer;
+    layers[t] = layer;
     console.log(':+ Adding a new layer for t = ' + t);
+    setTimeLayer(t);
 
     function featureInteraction(feature, layer) {
 
@@ -79,12 +86,21 @@ function setTimeLayer(t) {
     if (currentLayer != undefined) {
         map.removeLayer(currentLayer);
     }
-    currentLayer = timeLayers[t];
+    currentLayer = layers[t];
     map.addLayer(currentLayer);
+}
+
+function getMap() {
+    return map;
+}
+function getLayers() {
+    return layers;
 }
 
 module.exports = {
     init: init,
     addTimeLayer: addTimeLayer,
-    setTimeLayer: setTimeLayer
+    setTimeLayer: setTimeLayer,
+    getMap: getMap,
+    getLayers: getLayers
 };

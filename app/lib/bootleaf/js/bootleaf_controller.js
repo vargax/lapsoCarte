@@ -4,71 +4,79 @@ require('bootstrap');
 var Typeahead = require('typeahead');
 require('handlebars');
 require('list.js');
-var L = require('leaflet');
-require('./leaflet.groupedlayercontrol');
+//var L = require('leaflet');
+//require('./leaflet.groupedlayercontrol');
 
-var map, featureList, boroughSearch = [], theaterSearch = [], museumSearch = [];
+var map, layers;
+var featureList, boroughSearch = [], theaterSearch = [], museumSearch = [];
 
-$(window).resize(function() {
-  sizeLayerControl();
-});
+function init(map, layers) {
+  this.map = map;
+  this.layers = layers;
 
-$(document).on("click", ".feature-row", function(e) {
-  $(document).off("mouseout", ".feature-row", clearHighlight);
-  sidebarClick(parseInt($(this).attr("id"), 10));
-});
+  $(window).resize(function() {
+    sizeLayerControl();
+  });
 
-$(document).on("mouseover", ".feature-row", function(e) {
-  highlight.clearLayers().addLayer(L.circleMarker([$(this).attr("lat"), $(this).attr("lng")], highlightStyle));
-});
+  $(document).on("click", ".feature-row", function(e) {
+    $(document).off("mouseout", ".feature-row", clearHighlight);
+    sidebarClick(parseInt($(this).attr("id"), 10));
+  });
 
-$(document).on("mouseout", ".feature-row", clearHighlight);
+  $(document).on("mouseover", ".feature-row", function(e) {
+    highlight.clearLayers().addLayer(L.circleMarker([$(this).attr("lat"), $(this).attr("lng")], highlightStyle));
+  });
 
-$("#about-btn").click(function() {
-  $("#aboutModal").modal("show");
-  $(".navbar-collapse.in").collapse("hide");
-  return false;
-});
+  $(document).on("mouseout", ".feature-row", clearHighlight);
 
-$("#full-extent-btn").click(function() {
-  map.fitBounds(boroughs.getBounds());
-  $(".navbar-collapse.in").collapse("hide");
-  return false;
-});
+  $("#about-btn").click(function() {
+    $("#aboutModal").modal("show");
+    $(".navbar-collapse.in").collapse("hide");
+    return false;
+  });
 
-$("#legend-btn").click(function() {
-  $("#legendModal").modal("show");
-  $(".navbar-collapse.in").collapse("hide");
-  return false;
-});
+  $("#full-extent-btn").click(function() {
+    map.fitBounds(boroughs.getBounds());
+    $(".navbar-collapse.in").collapse("hide");
+    return false;
+  });
 
-$("#login-btn").click(function() {
-  $("#loginModal").modal("show");
-  $(".navbar-collapse.in").collapse("hide");
-  return false;
-});
+  $("#legend-btn").click(function() {
+    $("#legendModal").modal("show");
+    $(".navbar-collapse.in").collapse("hide");
+    return false;
+  });
 
-$("#list-btn").click(function() {
-  $('#sidebar').toggle();
-  map.invalidateSize();
-  return false;
-});
+  $("#login-btn").click(function() {
+    $("#loginModal").modal("show");
+    $(".navbar-collapse.in").collapse("hide");
+    return false;
+  });
 
-$("#nav-btn").click(function() {
-  $(".navbar-collapse").collapse("toggle");
-  return false;
-});
+  $("#list-btn").click(function() {
+    $('#sidebar').toggle();
+    map.invalidateSize();
+    return false;
+  });
 
-$("#sidebar-toggle-btn").click(function() {
-  $("#sidebar").toggle();
-  map.invalidateSize();
-  return false;
-});
+  $("#nav-btn").click(function() {
+    $(".navbar-collapse").collapse("toggle");
+    return false;
+  });
 
-$("#sidebar-hide-btn").click(function() {
-  $('#sidebar').hide();
-  map.invalidateSize();
-});
+  $("#sidebar-toggle-btn").click(function() {
+    $("#sidebar").toggle();
+    map.invalidateSize();
+    return false;
+  });
+
+  $("#sidebar-hide-btn").click(function() {
+    $('#sidebar').hide();
+    map.invalidateSize();
+  });
+
+  $("#loading").hide();
+}
 
 function sizeLayerControl() {
   $(".leaflet-control-layers").css("max-height", $("#map").height() - 50);
@@ -115,6 +123,10 @@ function syncSidebar() {
   featureList.sort("feature-name", {
     order: "asc"
   });
+}
+
+module.exports = {
+  init: init
 }
 
 ///* Basemap Layers */
@@ -416,62 +428,8 @@ function syncSidebar() {
 //  highlight.clearLayers();
 //});
 //
-///* Attribution control */
-//function updateAttribution(e) {
-//  $.each(map._layers, function(index, layer) {
-//    if (layer.getAttribution) {
-//      $("#attribution").html((layer.getAttribution()));
-//    }
-//  });
-//}
-//map.on("layeradd", updateAttribution);
-//map.on("layerremove", updateAttribution);
 //
-//var attributionControl = L.control({
-//  position: "bottomright"
-//});
-//attributionControl.onAdd = function (map) {
-//  var div = L.DomUtil.create("div", "leaflet-control-attribution");
-//  div.innerHTML = "<span class='hidden-xs'>Developed by <a href='http://bryanmcbride.com'>bryanmcbride.com</a> | </span><a href='#' onclick='$(\"#attributionModal\").modal(\"show\"); return false;'>Attribution</a>";
-//  return div;
-//};
-//map.addControl(attributionControl);
-//
-//var zoomControl = L.control.zoom({
-//  position: "bottomright"
-//}).addTo(map);
-//
-///* GPS enabled geolocation control set to follow the user's location */
-//var locateControl = L.control.locate({
-//  position: "bottomright",
-//  drawCircle: true,
-//  follow: true,
-//  setView: true,
-//  keepCurrentZoomLevel: true,
-//  markerStyle: {
-//    weight: 1,
-//    opacity: 0.8,
-//    fillOpacity: 0.8
-//  },
-//  circleStyle: {
-//    weight: 1,
-//    clickable: false
-//  },
-//  icon: "fa fa-location-arrow",
-//  metric: false,
-//  strings: {
-//    title: "My location",
-//    popup: "You are within {distance} {unit} from this point",
-//    outsideMapBoundsMsg: "You seem located outside the boundaries of the map"
-//  },
-//  locateOptions: {
-//    maxZoom: 18,
-//    watch: true,
-//    enableHighAccuracy: true,
-//    maximumAge: 10000,
-//    timeout: 10000
-//  }
-//}).addTo(map);
+
 //
 ///* Larger screens get expanded layer control and visible sidebar */
 //if (document.body.clientWidth <= 767) {
