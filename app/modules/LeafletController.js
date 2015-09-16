@@ -8,7 +8,7 @@ let mainController;
 
 let _map;
 let _layers;
-let _currentLayer;
+let _currentTimeLayer;
 
 let infoWidget;
 
@@ -18,22 +18,22 @@ export default class LeafletController {
         this._initMap();
 
         _layers = {};
-        _currentLayer = null;
+        _currentTimeLayer = null;
     }
 
     addTimeLayer(time, geoJSON) {
-        let timeLayer = TimeLayer(time,geoJSON);
+        let timeLayer = new TimeLayer(time,geoJSON);
         _layers[time] = timeLayer;
     }
 
     setTimeLayer(time) {
         try {
-            _map.removeLayer(_currentLayer); // --> EAFP Pattern
+            _map.removeLayer(_currentTimeLayer.getLayer()); // --> EAFP Pattern
         } catch (e) {
             console.log('+! This was the first layer');
         }
-        _currentLayer = _layers[time];
-        map.addLayer(_currentLayer);
+        _currentTimeLayer = _layers[time];
+        _map.addLayer(_currentTimeLayer.getLayer());
     }
 
     getMap() {
@@ -64,10 +64,14 @@ export default class LeafletController {
 class TimeLayer {
     constructor(time, geoJSON) {
         this.time = time;
-        this.layer = L.geoJson(geoJsonLayer, {
-            style: choroplethStyle,
-            onEachFeature: featureInteraction
+        this.layer = L.geoJson(geoJSON, {
+            style: this.choroplethStyle,
+            onEachFeature: this.featureInteraction
         });
+    }
+
+    getLayer() {
+        return this.layer;
     }
 
     featureInteraction(feature, layer) {
