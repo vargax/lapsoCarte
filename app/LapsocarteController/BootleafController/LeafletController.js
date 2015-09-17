@@ -1,5 +1,5 @@
 import MainController from './BootleafController.js';
-import * as lcs from './LeafletControllerSupport.js';
+import * as support from './Support.js';
 
 import L from'leaflet';
 require('leaflet-providers');
@@ -9,6 +9,7 @@ let mainController;
 let _map;
 let _layers;
 let _currentTimeLayer;
+let _currentHighlightedFeature;
 
 let infoWidget;
 
@@ -17,14 +18,36 @@ export default class LeafletController {
         mainController = new MainController();
         this._initMap();
 
-        _layers = {};
+        _layers = new Map();
+        _currentHighlightedFeature = null;
         _currentTimeLayer = null;
     }
 
     // Methods exposed to my MainController (mc) ---------------------------------
+    mc_highlightFeatures(featureId) {
+        try {
+            _currentHighlightedFeature.setStyle(support.LayerStyle.choroplethStyle(_currentHighlightedFeature));
+        } catch (e) {
+            console.log('Not highlighted feature yet...')
+        }
+        _currentHighlightedFeature = _currentTimeLayer.getFeatures().get(featureId);
+        _currentHighlightedFeature.setStyle(support.LayerStyle.getFocusedLayerStyle());
+
+        //for (let [key,feature] of _currentHighlightedFeatures) {
+        //    feature.setStyle(support.LayerStyle.choroplethStyle(feature));
+        //    _currentHighlightedFeatures.delete(key);
+        //}
+        //
+        //for (let featureId in featuresIds) {
+        //    let feature = _currentTimeLayer.getFeatures().get(featureId);
+        //    feature.setStyle(support.LayerStyle.getFocusedLayerStyle());
+        //    _currentHighlightedFeatures.set(featureId,feature);
+        //}
+    }
+
     mc_addTimeLayer(time, geoJSON) {
         let timeLayer = new TimeLayer(time,geoJSON);
-        _layers[time] = timeLayer;
+        _layers.set(time, timeLayer);
     }
 
     mc_setTimeLayer(time) {
@@ -33,7 +56,7 @@ export default class LeafletController {
         } catch (e) {
             console.log('+! This was the first layer');
         }
-        _currentTimeLayer = _layers[time];
+        _currentTimeLayer = _layers.get(time);
         _map.addLayer(_currentTimeLayer.getLayer());
     }
 
@@ -41,7 +64,7 @@ export default class LeafletController {
         return _map;
     }
 
-    mc_getCurrentlayer() {
+    mc_getCurrentLayer() {
         return _currentTimeLayer;
     }
 
@@ -60,42 +83,54 @@ export default class LeafletController {
         _map.addControl(L.control.scale({imperial: false}));
         _map.addControl(L.control.zoom({position: 'bottomright'}));
 
-        _map.addControl(lcs.Widgets.getLocateWidget());
+        _map.addControl(support.Widgets.getLocateWidget());
 
-        infoWidget = lcs.Widgets.getInfoWidget();
+        infoWidget = support.Widgets.getInfoWidget();
         _map.addControl(infoWidget);
     }
 }
 
+var features = new Map();
 class TimeLayer {
     constructor(time, geoJSON) {
         this.time = time;
         this.layer = L.geoJson(geoJSON, {
-            style: lcs.LayerStyle.choroplethStyle,
-            onEachFeature: this.featureInteraction
+            //style: support.LayerStyle.choroplethStyle,
+            onEachFeature: this.featureSetup
         });
+        this._saveFeatures();
     }
 
     getLayer() {
         return this.layer;
     }
 
-    featureInteraction(feature, layer) {
+    getFeatures() {
+        return this.features;
+    }
+
+    featureSetup(feature, layer) {
 
         function featureSelect() {
-            layer.setStyle(lcs.LayerStyle.getFocusedLayerStyle());
+            layer.setStyle(support.LayerStyle.getFocusedLayerStyle());
             infoWidget.update(feature.properties);
         }
 
         function featureDeselect() {
-            layer.setStyle(lcs.LayerStyle.choroplethStyle(feature));
+            layer.setStyle(support.LayerStyle.choroplethStyle(layer));
             infoWidget.update();
         }
 
+        features.set(layer._leaflet_id, layer);
+        layer.setStyle(support.LayerStyle.choroplethStyle(layer));
         layer.on({
             mouseover: featureSelect,
             mouseout: featureDeselect
         });
     }
-}
 
+    _saveFeatures() {
+        this.features = features;
+        features = new Map();  // Cleaning global container to be ready for the next TimeLayer...
+    }
+}

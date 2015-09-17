@@ -1,4 +1,6 @@
 import MainController from './BootleafController.js';
+import * as support from './Support.js';
+
 import L from'leaflet';
 import $ from 'jquery';
 
@@ -9,26 +11,43 @@ export default class SidebarController {
     constructor() {
         mainController = new MainController();
         map = mainController.sbc_getMap();
-        map.on('moveend', this.mc_syncSidebar);
+        this._init();
     }
 
     // Methods exposed to my MainController (mc) ------------------------------
     mc_syncSidebar() {
-        console.log('CALLING!');
         /* Empty sidebar features */
-        $("#feature-list tbody").empty();
+        let featureList = $("#feature-list tbody");
+        featureList.empty();
 
-        let layers = mainController.sbc_getLayers();
-        for (let layer in layers) {
-            if (map.hasLayer(layer) && map.getBounds().contains(layer.getLatLng())) {
-                $("#feature-list tbody").append('<tr class="feature-row" id="' + L.stamp(layer) + '" lat="' + layer.getLatLng().lat + '" lng="' + layer.getLatLng().lng + '"><td style="vertical-align: middle;"><img width="16" height="18" src="assets/img/theater.png"></td><td class="feature-name">' + layer.feature.properties.NAME + '</td><td style="vertical-align: middle;"><i class="fa fa-chevron-right pull-right"></i></td></tr>');
+        let features = mainController.sbc_getFeatures();
+        for (let [id,feature] of features) {
+            if (map.getBounds().contains(feature.getBounds())) {
+                featureList.append(support.HTMLHelper.genSidebarEntry(id,feature));
             }
         }
     }
 
     // Private methods --------------------------------------------------------
+    _init() {
+        map.on('moveend', this.mc_syncSidebar);
+
+        //$(document).on("click", ".feature-row", function(e) {
+        //    $(document).off("mouseout", ".feature-row", clearHighlight);
+        //    sidebarClick(parseInt($(this).attr("id"), 10));
+        //});
+
+        $(document).on("mouseover", ".feature-row", function(e) {
+            console.log('Highligh '+$(this).attr("id"));
+            mainController.sc_featureOver(Number.parseInt($(this).attr("id")));
+            //highlight.clearLayers().addLayer(L.circleMarker([$(this).attr("lat"), $(this).attr("lng")], highlightStyle));
+        });
+
+        //$(document).on("mouseout", ".feature-row", clearHighlight);
+    }
+
     _sidebarClick(id) {
-        var layer = markerClusters.getLayer(id);
+        var layer = markerClusters.getFeatures(id);
         map.setView([layer.getLatLng().lat, layer.getLatLng().lng], 17);
         layer.fire("click");
         /* Hide sidebar and go to the map on small screens */

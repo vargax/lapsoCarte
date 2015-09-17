@@ -3,11 +3,12 @@ import L from'leaflet';
 export class LayerStyle {
     static getFocusedLayerStyle() {
         return {
-            color: '#FFFF00'
+            color: '#0000FF'
         }
     }
 
     static choroplethStyle(feature) {
+        // ToDo implement dynamic chroplethColor function...
         function choroplethColor(d) {
             return d > 8000 ? '#800026' :
                 d > 7000 ? '#BD0026' :
@@ -20,9 +21,22 @@ export class LayerStyle {
         }
 
         return {
-            color: choroplethColor(feature.properties.population),
+            // ToDo change hard-coded feature property 'population'... Should be dynamic...
+            color: choroplethColor(feature.feature.properties['population']),
             weight: 1.2
         }
+    }
+}
+
+export class HTMLHelper {
+    static genSidebarEntry(featureId, feature) {
+        let center = feature.getBounds().getCenter();
+        // ToDo hard-coded feature property name!!... Should be dynamic...
+        let html = '<tr class="feature-row" id="'+featureId + '" lat="' + center.lat + '" lng="' + center.lng + '">'
+            + '<td style="vertical-align: middle;"><img width="16" height="18" src="assets/img/theater.png"></td>'
+            + '<td class="feature-name">' + feature.feature.properties['nomb_barr'] + '</td>'
+            + '<td style="vertical-align: middle;"><i class="fa fa-chevron-right pull-right"></i></td></tr>';
+        return html;
     }
 }
 
@@ -37,7 +51,7 @@ export class Widgets {
             return this._div;
         };
         info.update = function (sptlObjAttr) {
-            // ToDo :: Put this HTML into another place...
+            // ToDo :: Put this HTML in another place...
             let html = '<h4> Data </h4>';
             for (let item in sptlObjAttr) {
                 html += '<b>' + item + '</b> ' + sptlObjAttr[item] + '</b> <br />';

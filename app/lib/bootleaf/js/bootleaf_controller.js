@@ -19,7 +19,7 @@ function clearHighlight() {
 }
 
 function sidebarClick(id) {
-  var layer = markerClusters.getLayer(id);
+  var layer = markerClusters.getFeatures(id);
   map.setView([layer.getLatLng().lat, layer.getLatLng().lng], 17);
   layer.fire("click");
   /* Hide sidebar and go to the map on small screens */
