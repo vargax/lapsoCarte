@@ -1,4 +1,4 @@
-import MainController from './MainController.js'
+import MainController from './LapsocarteController.js'
 import * as glbs from './globals.js';
 
 import io from 'socket.io-client';
@@ -13,7 +13,8 @@ export default class SocketioController {
         this._inMsgs();
     }
 
-    initCOMM() {
+    // Methods exposed to my MainController (mc) ---------------------------------
+    mc_initCOMM() {
         console.log(':: Sending a ' + glbs.GET_MAP + ' request...');
         this._socket.emit(glbs.GET_MAP, '');
     }

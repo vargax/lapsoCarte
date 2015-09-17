@@ -1,4 +1,5 @@
-import MainController from './MainController.js'
+import MainController from './../LapsocarteController.js';
+import LeafletController from './LeafletController.js';
 
 import $ from 'jquery';
 import Typeahead from 'typeahead';
@@ -8,18 +9,35 @@ require('bootstrap');
 require('handlebars');
 require('list.js');
 
+// ------------------------------------------------------------------------
+// CONSTANTS
+// ------------------------------------------------------------------------
+const lc_MAP_CENTER = [4.66198, -74.09866];
+const lc_MAP_ZOOM = 11;
+const lc_MAP_ZOOM_RANGE = [10, 16];
+
+// ------------------------------------------------------------------------
+// VARIABLES
+// ------------------------------------------------------------------------
 let mainController;
+let leafletController;
 let map;
 
-var featureList, boroughSearch = [], theaterSearch = [], museumSearch = [];
-
+let bootleafController = null; // --> Singleton Pattern...
 export default class BootleafController {
     constructor() {
-        mainController = new MainController();
-        map = mainController.blc_getMap();
+        if (!bootleafController) {
+            bootleafController = this;
+
+            mainController = new MainController();
+            leafletController = new LeafletController();
+            map = leafletController.mc_getMap();
+        }
+        return bootleafController;
     }
 
-    initGUI() {
+    // Methods exposed to my MainController (mc) ---------------------------------
+    mc_initGUI() {
         $(window).resize(function() {
             sizeLayerControl();
         });
@@ -84,6 +102,15 @@ export default class BootleafController {
         $("#loading").hide();
     }
 
+    mc_addTimeLayer(time, geoJSON) {
+        leafletController.mc_addTimeLayer(time, geoJSON);
+        leafletController.mc_setTimeLayer(time);
+    }
+
+    // LeafletController (llc) ------------------------------------------------
+    static llc_getInitialMapParameters() {
+        return [lc_MAP_CENTER, lc_MAP_ZOOM, lc_MAP_ZOOM_RANGE];
+    }
 }
 
 function sizeLayerControl() {

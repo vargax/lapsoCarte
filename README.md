@@ -19,7 +19,7 @@ Most of LapsoCarte code is written in **ECMAScript 6** and uses **Babel** for ba
 
 ## Code Patterns
 - [EAFP](https://docs.python.org/2/glossary.html#term-eafp): Easier to ask for forgiveness than permission.
-- [Mediator Pattern](http://addyosmani.com/largescalejavascript/): The mediator is MainController.js
+- [Mediator Pattern](http://addyosmani.com/largescalejavascript/): The mediator is LapsocarteController.js
 
 ## Workspace Setup (Ubuntu 14.04)
 ### Packages Installation

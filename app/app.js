@@ -1,4 +1,4 @@
-import MainController from './modules/MainController.js';
+import MainController from './LapsocarteController/LapsocarteController.js';
 var css = require('./app.css');
 
 var mainController = new MainController();

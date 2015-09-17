@@ -1,4 +1,4 @@
-import MainController from './MainController.js'
+import MainController from './BootleafController.js'
 import * as lcs from './LeafletControllerSupport.js';
 
 import L from'leaflet';
@@ -21,12 +21,13 @@ export default class LeafletController {
         _currentTimeLayer = null;
     }
 
-    addTimeLayer(time, geoJSON) {
+    // Methods exposed to my MainController (mc) ---------------------------------
+    mc_addTimeLayer(time, geoJSON) {
         let timeLayer = new TimeLayer(time,geoJSON);
         _layers[time] = timeLayer;
     }
 
-    setTimeLayer(time) {
+    mc_setTimeLayer(time) {
         try {
             _map.removeLayer(_currentTimeLayer.getLayer()); // --> EAFP Pattern
         } catch (e) {
@@ -36,12 +37,12 @@ export default class LeafletController {
         _map.addLayer(_currentTimeLayer.getLayer());
     }
 
-    getMap() {
+    mc_getMap() {
         return _map;
     }
 
     _initMap() {
-        let mapInitParameters = mainController.llc_getInitialMapParameters();
+        let mapInitParameters = MainController.llc_getInitialMapParameters();
         let center = mapInitParameters[0];
         let zoom = mapInitParameters[1];
         let zoomRange =   mapInitParameters[2];
