@@ -1,7 +1,7 @@
 // ------------------------------------------------------
 // Constants and Variables
 // ------------------------------------------------------
-import * as glbs from 'app/LapsocarteController/globals.js';     // Client-Server shared constants
+import * as glbs from './app/LapsocarteController/globals.js';     // Client-Server shared constants
 import * as geo from 'geotabuladb';
 
 var clients = {};                                   // Dictionary to storage client's sessions

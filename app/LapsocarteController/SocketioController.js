@@ -19,6 +19,7 @@ export default class SocketioController {
         this._socket.emit(glbs.GET_MAP, '');
     }
 
+    // Private methods -----------------------------------------------------------
     _inMsgs () {
         this._socket.on(glbs.ADD_LAYER, function (msg) {
             console.log(':: Receiving a ' + glbs.ADD_LAYER + ' request for t =' + msg[0]);

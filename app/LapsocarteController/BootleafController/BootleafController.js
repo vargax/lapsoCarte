@@ -1,5 +1,6 @@
 import MainController from './../LapsocarteController.js';
 import LeafletController from './LeafletController.js';
+import SidebarController from './SidebarController.js';
 
 import $ from 'jquery';
 import Typeahead from 'typeahead';
@@ -21,6 +22,7 @@ const lc_MAP_ZOOM_RANGE = [10, 16];
 // ------------------------------------------------------------------------
 let mainController;
 let leafletController;
+let sidebarController;
 let map;
 
 let bootleafController = null; // --> Singleton Pattern...
@@ -31,12 +33,14 @@ export default class BootleafController {
 
             mainController = new MainController();
             leafletController = new LeafletController();
+            sidebarController = new SidebarController();
+
             map = leafletController.mc_getMap();
         }
         return bootleafController;
     }
 
-    // Methods exposed to my MainController (mc) ---------------------------------
+    // Methods exposed to my MainController (mc) ------------------------------
     mc_initGUI() {
         $(window).resize(function() {
             sizeLayerControl();
@@ -111,25 +115,18 @@ export default class BootleafController {
     static llc_getInitialMapParameters() {
         return [lc_MAP_CENTER, lc_MAP_ZOOM, lc_MAP_ZOOM_RANGE];
     }
-}
 
-function sizeLayerControl() {
-    $(".leaflet-control-layers").css("max-height", $("#map").height() - 50);
+    // SidebarController (sbc) ------------------------------------------------
+    sbc_getMap() {
+        return leafletController.mc_getMap();
+    }
+    sbc_getLayers() {
+        return [leafletController.mc_getCurrentLayer().getLayer()];
+    }
 }
 
 function clearHighlight() {
     highlight.clearLayers();
-}
-
-function sidebarClick(id) {
-    var layer = markerClusters.getLayer(id);
-    map.setView([layer.getLatLng().lat, layer.getLatLng().lng], 17);
-    layer.fire("click");
-    /* Hide sidebar and go to the map on small screens */
-    if (document.body.clientWidth <= 767) {
-        $("#sidebar").hide();
-        map.invalidateSize();
-    }
 }
 
 function syncSidebar() {

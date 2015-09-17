@@ -1,4 +1,4 @@
-import MainController from './BootleafController.js'
+import MainController from './BootleafController.js';
 import * as lcs from './LeafletControllerSupport.js';
 
 import L from'leaflet';
@@ -41,6 +41,11 @@ export default class LeafletController {
         return _map;
     }
 
+    mc_getCurrentlayer() {
+        return _currentTimeLayer;
+    }
+
+    // Private methods -----------------------------------------------------------
     _initMap() {
         let mapInitParameters = MainController.llc_getInitialMapParameters();
         let center = mapInitParameters[0];
