@@ -5,19 +5,6 @@
 @import url("./lib/bootleaf/css/leaflet.groupedlayercontrol.css");
 @import url("./lib/bootleaf/css/app.css");
 
-/* ONLY map / leaflet related objects styles --> to be available through CSS imported object from support.js */
-/* Do NOT use UPPERCASE for id/class definition... it wont work with the support.js method! (objects properties names are lowercase)*/
-
-.layer {
-    color: #00cbff;
-    weight: 5;
-}
-
-.focusedobject {
-    color: #FFFF00;
-}
-
-/* No map / leaflet related objects styles */
 .info {
     padding: 6px 8px;
     font: 14px/16px Arial, Helvetica, sans-serif;

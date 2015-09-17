@@ -32,7 +32,7 @@ sudo apt-get install postgis postgresql-9.3-postgis-scripts
 sudo sed -i 's&local   all             all                                     peer&local   all             all                                     md5&g' /etc/postgresql/9.3/main/pg_hba.conf
 sudo service postgresql restart
 ```
-For details on how to install NodeJS 0.12 please refer to [NODESOURCE](https://nodesource.com/blog/nodejs-v012-iojs-and-the-nodesource-linux-repositories)
+For details on how to install NodeJS 0.12 please refer to [NODESOURCE](https://nodesource.com/blog/nodejs-v012-iojs-and-the-nodesource-linux-repositories).
 
 ### PostGIS setup
 ```bash

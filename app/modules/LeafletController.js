@@ -1,5 +1,5 @@
 import MainController from './MainController.js'
-import widgets from './widgets.js';
+import * as lcs from './LeafletControllerSupport.js';
 
 import L from'leaflet';
 require('leaflet-providers');
@@ -54,9 +54,9 @@ export default class LeafletController {
         _map.addControl(L.control.scale({imperial: false}));
         _map.addControl(L.control.zoom({position: 'bottomright'}));
 
-        _map.addControl(widgets.getLocateWidget());
+        _map.addControl(lcs.Widgets.getLocateWidget());
 
-        infoWidget = widgets.getInfoWidget();
+        infoWidget = lcs.Widgets.getInfoWidget();
         _map.addControl(infoWidget);
     }
 }
@@ -65,7 +65,7 @@ class TimeLayer {
     constructor(time, geoJSON) {
         this.time = time;
         this.layer = L.geoJson(geoJSON, {
-            style: this.choroplethStyle,
+            style: lcs.LayerStyle.choroplethStyle,
             onEachFeature: this.featureInteraction
         });
     }
@@ -77,12 +77,12 @@ class TimeLayer {
     featureInteraction(feature, layer) {
 
         function featureSelect() {
-            layer.setStyle(support.css['.focusedobject']);
+            layer.setStyle(lcs.LayerStyle.getFocusedLayerStyle());
             infoWidget.update(feature.properties);
         }
 
         function featureDeselect() {
-            layer.setStyle(choroplethStyle(feature));
+            layer.setStyle(lcs.LayerStyle.choroplethStyle(feature));
             infoWidget.update();
         }
 
@@ -91,23 +91,5 @@ class TimeLayer {
             mouseout: featureDeselect
         });
     }
-
-    choroplethStyle(feature) {
-
-        function choroplethColor(d) {
-            return d > 8000 ? '#800026' :
-                d > 7000 ? '#BD0026' :
-                    d > 6000 ? '#E31A1C' :
-                        d > 5000 ? '#FC4E2A' :
-                            d > 4000 ? '#FD8D3C' :
-                                d > 3000 ? '#FEB24C' :
-                                    d > 2000 ? '#FED976' :
-                                        '#FFEDA0';
-        }
-
-        return {
-            color: choroplethColor(feature.properties.population),
-            weight: 1.2
-        }
-    }
 }
+

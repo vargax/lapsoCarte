@@ -62,7 +62,7 @@ io.on('connection', function(socket){
 // ------------------------------------------------------
 function getMap(socketId, msg) {
 
-    for (let i = 1; i <= 10; i++) {
+    for (let i = 1; i <= 1; i++) {
 
         let parameters = {
             tableName: 'population',	// The name of the table we are going to query
