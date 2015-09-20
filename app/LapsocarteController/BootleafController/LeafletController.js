@@ -9,7 +9,7 @@ let mainController;
 let _map;
 let _layers;
 let _currentTimeLayer;
-let _currentHighlightedFeature;
+let _currentHighlightedFeatures;
 
 let infoWidget;
 
@@ -19,19 +19,19 @@ export default class LeafletController {
         this._initMap();
 
         _layers = new Map();
-        _currentHighlightedFeature = null;
+        _currentHighlightedFeatures = new Map();
         _currentTimeLayer = null;
     }
 
     // Methods exposed to my MainController (mc) ---------------------------------
-    mc_highlightFeatures(featureId) {
-        try {
-            _currentHighlightedFeature.setStyle(support.LayerStyle.choroplethStyle(_currentHighlightedFeature));
-        } catch (e) {
-            console.log('Not highlighted feature yet...')
-        }
-        _currentHighlightedFeature = _currentTimeLayer.getFeatures().get(featureId);
-        _currentHighlightedFeature.setStyle(support.LayerStyle.getFocusedLayerStyle());
+    mc_resetFeature(featureId) {
+        let feature = _currentTimeLayer.getFeatures().get(featureId);
+    }
+
+    mc_highlightFeature(featureId) {
+        let feature = _currentTimeLayer.getFeatures().get(featureId);
+        feature.setStyle(support.LayerStyle.getFocusedLayerStyle());
+        _currentHighlightedFeatures.set(featureId,feature);
 
         //for (let [key,feature] of _currentHighlightedFeatures) {
         //    feature.setStyle(support.LayerStyle.choroplethStyle(feature));

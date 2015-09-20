@@ -102,7 +102,7 @@ export default class BootleafController {
 
     // Methods exposed to all my subcontrollers (sc) --------------------------
     sc_featureOver(featureId) {
-        leafletController.mc_highlightFeatures(featureId);
+        leafletController.mc_highlightFeature(featureId);
     }
 
 
