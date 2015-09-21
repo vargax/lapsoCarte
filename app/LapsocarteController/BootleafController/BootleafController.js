@@ -95,16 +95,18 @@ export default class BootleafController {
         $("#loading").hide();
     }
 
-    mc_addTimeLayer(time, geoJSON) {
-        leafletController.mc_addTimeLayer(time, geoJSON);
-        leafletController.mc_setTimeLayer(time);
+    mc_addTimeGroupLayer(time, geoJSON) {
+        leafletController.mc_addTimeGroupLayer(time, geoJSON);
+        leafletController.mc_setTimeGroupLayer(time);
     }
 
     // Methods exposed to all my subcontrollers (sc) --------------------------
     sc_featureOver(featureId) {
-        leafletController.mc_highlightFeature(featureId);
+        leafletController.mc_highlightLayer(featureId);
     }
-
+    sc_featureOut(featureId) {
+        leafletController.mc_resetLayer(featureId);
+    }
 
     // LeafletController (llc) ------------------------------------------------
     static llc_getInitialMapParameters() {
@@ -116,10 +118,6 @@ export default class BootleafController {
         return leafletController.mc_getMap();
     }
     sbc_getFeatures() {
-        return leafletController.mc_getCurrentLayer().getFeatures();
+        return leafletController.mc_getCurrentLayer().getLayers();
     }
-}
-
-function clearHighlight() {
-    highlight.clearLayers();
 }

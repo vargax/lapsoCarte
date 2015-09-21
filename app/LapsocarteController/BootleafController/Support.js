@@ -19,7 +19,6 @@ export class LayerStyle {
                                     d > 2000 ? '#FED976' :
                                         '#FFEDA0';
         }
-
         return {
             // ToDo change hard-coded feature property 'population'... Should be dynamic...
             color: choroplethColor(feature.feature.properties['population']),
@@ -50,11 +49,14 @@ export class Widgets {
             this.update();
             return this._div;
         };
-        info.update = function (sptlObjAttr) {
-            // ToDo :: Put this HTML in another place...
+        info.update = function (feature) {
             let html = '<h4> Data </h4>';
-            for (let item in sptlObjAttr) {
-                html += '<b>' + item + '</b> ' + sptlObjAttr[item] + '</b> <br />';
+            if (feature !== undefined) {
+                // ToDo :: Put this HTML in another place...
+                let sptlObjAttr = feature.feature.properties;
+                for (let item in sptlObjAttr) {
+                    html += '<b>' + item + '</b> ' + sptlObjAttr[item] + '</b> <br />';
+                }
             }
             this._div.innerHTML = html;
         };

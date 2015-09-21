@@ -8,56 +8,61 @@ let mainController;
 
 let _map;
 let _layers;
-let _currentTimeLayer;
-let _currentHighlightedFeatures;
+let _currentTimeGroupLayer;
+let _currentHighlightedLayers;
 
 let infoWidget;
 
+let leafletController = null; // --> Singleton Pattern, so groupTimeLayer instances could access the controller...
 export default class LeafletController {
     constructor() {
-        mainController = new MainController();
-        this._initMap();
+        if (!leafletController) {
+            leafletController = this;
+            mainController = new MainController();
+            this._initMap();
 
-        _layers = new Map();
-        _currentHighlightedFeatures = new Map();
-        _currentTimeLayer = null;
+            _layers = new Map();
+            _currentHighlightedLayers = new Map();
+            _currentTimeGroupLayer = null;
+        }
+        return leafletController;
     }
 
     // Methods exposed to my MainController (mc) ---------------------------------
-    mc_resetFeature(featureId) {
-        let feature = _currentTimeLayer.getFeatures().get(featureId);
+    mc_resetLayer(layerId) {
+        if (layerId !== undefined) {
+            let layer = _currentHighlightedLayers.get(layerId);
+            _currentHighlightedLayers.delete(layerId);
+            layer.setStyle(support.LayerStyle.choroplethStyle(layer));
+        } else {
+            for (let layer of _currentHighlightedLayers.values()) {
+                layer.setStyle(support.LayerStyle.choroplethStyle(layer));
+            }
+            _currentHighlightedLayers.clear();
+        }
+        infoWidget.update();
     }
 
-    mc_highlightFeature(featureId) {
-        let feature = _currentTimeLayer.getFeatures().get(featureId);
-        feature.setStyle(support.LayerStyle.getFocusedLayerStyle());
-        _currentHighlightedFeatures.set(featureId,feature);
-
-        //for (let [key,feature] of _currentHighlightedFeatures) {
-        //    feature.setStyle(support.LayerStyle.choroplethStyle(feature));
-        //    _currentHighlightedFeatures.delete(key);
-        //}
-        //
-        //for (let featureId in featuresIds) {
-        //    let feature = _currentTimeLayer.getFeatures().get(featureId);
-        //    feature.setStyle(support.LayerStyle.getFocusedLayerStyle());
-        //    _currentHighlightedFeatures.set(featureId,feature);
-        //}
+    mc_highlightLayer(layerId) {
+        let layer = _currentTimeGroupLayer.getLayers().get(layerId);
+        layer.setStyle(support.LayerStyle.getFocusedLayerStyle());
+        infoWidget.update(layer);
+        _currentHighlightedLayers.set(layerId,layer);
     }
 
-    mc_addTimeLayer(time, geoJSON) {
-        let timeLayer = new TimeLayer(time,geoJSON);
+    mc_addTimeGroupLayer(time, geoJSON) {
+        let timeLayer = new GroupTimeLayer(time,geoJSON);
         _layers.set(time, timeLayer);
     }
 
-    mc_setTimeLayer(time) {
+    mc_setTimeGroupLayer(time) {
         try {
-            _map.removeLayer(_currentTimeLayer.getLayer()); // --> EAFP Pattern
+            _map.removeLayer(_currentTimeGroupLayer.getGroupLayer()); // --> EAFP Pattern
         } catch (e) {
             console.log('+! This was the first layer');
         }
-        _currentTimeLayer = _layers.get(time);
-        _map.addLayer(_currentTimeLayer.getLayer());
+        _currentTimeGroupLayer = _layers.get(time);
+        _map.addLayer(_currentTimeGroupLayer.getGroupLayer());
     }
 
     mc_getMap() {
@@ -65,7 +70,7 @@ export default class LeafletController {
     }
 
     mc_getCurrentLayer() {
-        return _currentTimeLayer;
+        return _currentTimeGroupLayer;
     }
 
     // Private methods -----------------------------------------------------------
@@ -90,38 +95,44 @@ export default class LeafletController {
     }
 }
 
-var features = new Map();
-class TimeLayer {
+var layers = new Map();
+class GroupTimeLayer {
     constructor(time, geoJSON) {
         this.time = time;
-        this.layer = L.geoJson(geoJSON, {
+        this.groupLayer = L.geoJson(geoJSON, {
             //style: support.LayerStyle.choroplethStyle,
             onEachFeature: this.featureSetup
         });
         this._saveFeatures();
     }
 
-    getLayer() {
-        return this.layer;
+    getGroupLayer() {
+        return this.groupLayer;
     }
 
-    getFeatures() {
-        return this.features;
+    getLayers() {
+        return this.layers;
     }
 
     featureSetup(feature, layer) {
 
         function featureSelect() {
-            layer.setStyle(support.LayerStyle.getFocusedLayerStyle());
-            infoWidget.update(feature.properties);
+            this._lfController.mc_highlightLayer(this._lfId);
+            //layer.setStyle(support.LayerStyle.getFocusedLayerStyle());
+            //infoWidget.update(feature.properties);
         }
 
         function featureDeselect() {
-            layer.setStyle(support.LayerStyle.choroplethStyle(layer));
-            infoWidget.update();
+            this._lfController.mc_resetLayer(this._lfId);
+            //layer.setStyle(support.LayerStyle.choroplethStyle(layer));
+            //infoWidget.update();
         }
 
-        features.set(layer._leaflet_id, layer);
+        layer._lfController = new LeafletController();
+        layer._lfId = String(layer._leaflet_id);
+
+        layers.set(String(layer._lfId), layer);
+
         layer.setStyle(support.LayerStyle.choroplethStyle(layer));
         layer.on({
             mouseover: featureSelect,
@@ -130,7 +141,7 @@ class TimeLayer {
     }
 
     _saveFeatures() {
-        this.features = features;
-        features = new Map();  // Cleaning global container to be ready for the next TimeLayer...
+        this.layers = layers;
+        layers = new Map();  // Cleaning global container to be ready for the next GroupTimeLayer...
     }
 }

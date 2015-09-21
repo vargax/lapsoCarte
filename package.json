@@ -16,6 +16,7 @@
     "bootstrap": "^3.3.5",
     "browserify": "^11.0.1",
     "browserify-css": "^0.7.1",
+    "c3": "^0.4.10",
     "font-awesome": "^4.4.0",
     "handlebars": "^4.0.2",
     "jquery": "^2.1.4",

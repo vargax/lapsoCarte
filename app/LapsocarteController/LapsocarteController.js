@@ -34,7 +34,7 @@ export default class LapsocarteController {
     // ++++++++++++++  CONTROLLER-SPECIFIC FUNCTIONS ++++++++++++++++++++++++//
     // SocketioController (sioc) -----------------------------------------------
     sioc_addTimeLayer(time, geoJSON) {
-        bootleafController.mc_addTimeLayer(time, geoJSON);
+        bootleafController.mc_addTimeGroupLayer(time, geoJSON);
     }
 
     // BootleafController (blc) -----------------------------------------------

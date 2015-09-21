@@ -16,7 +16,7 @@ export default class SidebarController {
 
     // Methods exposed to my MainController (mc) ------------------------------
     mc_syncSidebar() {
-        /* Empty sidebar features */
+        /* Empty sidebar layers */
         let featureList = $("#feature-list tbody");
         featureList.empty();
 
@@ -38,16 +38,17 @@ export default class SidebarController {
         //});
 
         $(document).on("mouseover", ".feature-row", function(e) {
-            console.log('Highligh '+$(this).attr("id"));
-            mainController.sc_featureOver(Number.parseInt($(this).attr("id")));
+            mainController.sc_featureOver($(this).attr("id"));
             //highlight.clearLayers().addLayer(L.circleMarker([$(this).attr("lat"), $(this).attr("lng")], highlightStyle));
         });
 
-        //$(document).on("mouseout", ".feature-row", clearHighlight);
+        $(document).on("mouseout", ".feature-row", function(e) {
+            mainController.sc_featureOut($(this).attr("id"));
+        });
     }
 
     _sidebarClick(id) {
-        var layer = markerClusters.getFeatures(id);
+        var layer = markerClusters.getLayers(id);
         map.setView([layer.getLatLng().lat, layer.getLatLng().lng], 17);
         layer.fire("click");
         /* Hide sidebar and go to the map on small screens */
