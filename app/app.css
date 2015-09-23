@@ -1,6 +1,7 @@
 @import url("../node_modules/leaflet/dist/leaflet.css");
 @import url("../node_modules/bootstrap/dist/css/bootstrap.css");
 @import url("../node_modules/font-awesome/css/font-awesome.css");
+@import url("../node_modules/jquery-ui/themes/base/minified/jquery-ui.min.css");
 
 /*@import url("./lib/bootleaf/css/leaflet.groupedlayercontrol.css");*/
 /*@import url("../node_modules/c3/c3.css");*/

@@ -39,7 +39,6 @@ export default class SidebarController {
 
         $(document).on("mouseover", ".feature-row", function(e) {
             mainController.sc_featureOver($(this).attr("id"));
-            //highlight.clearLayers().addLayer(L.circleMarker([$(this).attr("lat"), $(this).attr("lng")], highlightStyle));
         });
 
         $(document).on("mouseout", ".feature-row", function(e) {

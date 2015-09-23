@@ -1,14 +1,14 @@
 // ------------------------------------------------------
 // Constants and Variables
 // ------------------------------------------------------
-import * as glbs from './app/LapsocarteController/globals.js';     // Client-Server shared constants
-import * as geo from 'geotabuladb';
+import * as glbs from 'Globals.js';     // Client-Server shared constants
 
-var clients = {};                                   // Dictionary to storage client's sessions
+var clients = {};                       // Dictionary to storage client's sessions
 
 // ------------------------------------------------------
 // Database
 // ------------------------------------------------------
+var geo = new GeotabulaDB();
 geo.setCredentials({
     type: 'postgis',
     host: 'localhost',
@@ -67,8 +67,7 @@ function getMap(socketId, msg) {
         let parameters = {
             tableName: 'population',	// The name of the table we are going to query
             geometry: 'geom', 			// The name of the column who has the geometry
-            dateColumn: 't',           // The name of the column who has the time
-            dateRange: i + ' AND ' + i,    // The time range
+            where: 't = '+ i,           // The name of the column who has the time
             properties: 'all'			// Additional columns we want to recover --> For specific columns you have to pass columns' names as an Array
         };
 

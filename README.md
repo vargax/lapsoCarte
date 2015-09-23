@@ -19,7 +19,7 @@ Most of LapsoCarte code is written in **ECMAScript 6** and uses **Babel** for ba
 
 ## Code Patterns
 - [EAFP](https://docs.python.org/2/glossary.html#term-eafp): Easier to ask for forgiveness than permission.
-- [Mediator Pattern](http://addyosmani.com/largescalejavascript/): The main mediator is LapsocarteController.js. Each submodule has its own mediator, who manages all interaction between all its decedent modules and its own main module. Each mediator **must initialized all his decedent modules and save a reference to them**, otherwise the submodule will be destroyed along with its state. The submodules initialization is done in the mediator constructor.
+- [Mediator Pattern](http://addyosmani.com/largescalejavascript/): The main mediator is LapsocarteAppController.js. Each submodule has its own mediator, who manages all interaction between all its decedent modules and its own main module. Each mediator **must initialized all his decedent modules and save a reference to them**, otherwise the submodule will be destroyed along with its state. The submodules initialization is done in the mediator constructor.
 
 ## Workspace Setup (Ubuntu 14.04)
 ### Packages Installation

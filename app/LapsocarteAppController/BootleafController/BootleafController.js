@@ -1,4 +1,4 @@
-import MainController from './../LapsocarteController.js';
+import MainController from './../LapsocarteAppController.js';
 import LeafletController from './LeafletController.js';
 import SidebarController from './SidebarController.js';
 
@@ -42,10 +42,6 @@ export default class BootleafController {
 
     // Methods exposed to my MainController (mc) ------------------------------
     mc_initGUI() {
-        $(window).resize(function() {
-            sizeLayerControl();
-        });
-
         $("#about-btn").click(function() {
             $("#aboutModal").modal("show");
             $(".navbar-collapse.in").collapse("hide");

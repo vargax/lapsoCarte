@@ -85,7 +85,7 @@ export default class LeafletController {
         _map._layersMinZoom = zoomRange[0];
         _map._layersMaxZoom = zoomRange[1];
 
-        _map.addControl(L.control.scale({imperial: false}));
+        _map.addControl(L.control.scale({imperial: false, position: 'topleft'}));
         _map.addControl(L.control.zoom({position: 'bottomright'}));
 
         _map.addControl(support.Widgets.getLocateWidget());
@@ -95,7 +95,7 @@ export default class LeafletController {
     }
 }
 
-var layers = new Map();
+let layers = new Map();
 class GroupTimeLayer {
     constructor(time, geoJSON) {
         this.time = time;
@@ -118,14 +118,10 @@ class GroupTimeLayer {
 
         function featureSelect() {
             this._lfController.mc_highlightLayer(this._lfId);
-            //layer.setStyle(support.LayerStyle.getFocusedLayerStyle());
-            //infoWidget.update(feature.properties);
         }
 
         function featureDeselect() {
             this._lfController.mc_resetLayer(this._lfId);
-            //layer.setStyle(support.LayerStyle.choroplethStyle(layer));
-            //infoWidget.update();
         }
 
         layer._lfController = new LeafletController();

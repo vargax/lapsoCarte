@@ -1,4 +1,6 @@
 import L from'leaflet';
+import $ from 'jquery';
+require('jquery-ui');
 
 export class LayerStyle {
     static getFocusedLayerStyle() {
@@ -40,6 +42,19 @@ export class HTMLHelper {
 }
 
 export class Widgets {
+    static getTimesliderWidget() {
+        let time = new L.control();
+        time.setPosition('bottomleft');
+
+        time.onAdd = function(map) {
+            let sliderContainer = L.DomUtil.create('div', 'slider');
+            let html = '<div id="leaflet-slider" style="width:200px">' +
+                '<div class="ui-slider-handle"></div>' +
+                '<div id="slider-timestamp" style="width:200px; margin-top:13px; background-color:#FFFFFF; text-align:center; border-radius:5px;">' +
+                '</div></div>'
+        }
+    }
+
     static getInfoWidget() {
         let info = new L.control();
         info.setPosition('topright');
