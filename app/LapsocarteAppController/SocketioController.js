@@ -21,7 +21,7 @@ export default class SocketioController {
 
     // Private methods -----------------------------------------------------------
     _inMsgs () {
-        this._socket.on(glbs.ADD_LAYER, function (msg) {
+        _socket.on(glbs.ADD_LAYER, function (msg) {
             console.log(':: Receiving a ' + glbs.ADD_LAYER + ' request for t =' + msg[0]);
             _mainController.sioc_addTimeLayer(msg[0],msg[1]);
         });
