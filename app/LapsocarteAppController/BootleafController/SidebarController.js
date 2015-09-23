@@ -4,13 +4,13 @@ import * as support from './Support.js';
 import L from'leaflet';
 import $ from 'jquery';
 
-let mainController;
-let map;
+let _mainController;
+let _map;
 
 export default class SidebarController {
     constructor() {
-        mainController = new MainController();
-        map = mainController.sbc_getMap();
+        _mainController = new MainController();
+        _map = _mainController.sbc_getMap();
         this._init();
     }
 
@@ -20,9 +20,9 @@ export default class SidebarController {
         let featureList = $("#feature-list tbody");
         featureList.empty();
 
-        let features = mainController.sbc_getFeatures();
+        let features = _mainController.sbc_getFeatures();
         for (let [id,feature] of features) {
-            if (map.getBounds().contains(feature.getBounds())) {
+            if (_map.getBounds().contains(feature.getBounds())) {
                 featureList.append(support.HTMLHelper.genSidebarEntry(id,feature));
             }
         }
@@ -30,7 +30,7 @@ export default class SidebarController {
 
     // Private methods --------------------------------------------------------
     _init() {
-        map.on('moveend', this.mc_syncSidebar);
+        _map.on('moveend', this.mc_syncSidebar);
 
         //$(document).on("click", ".feature-row", function(e) {
         //    $(document).off("mouseout", ".feature-row", clearHighlight);
@@ -38,22 +38,22 @@ export default class SidebarController {
         //});
 
         $(document).on("mouseover", ".feature-row", function(e) {
-            mainController.sc_featureOver($(this).attr("id"));
+            _mainController.sc_featureOver($(this).attr("id"));
         });
 
         $(document).on("mouseout", ".feature-row", function(e) {
-            mainController.sc_featureOut($(this).attr("id"));
+            _mainController.sc_featureOut($(this).attr("id"));
         });
     }
 
     _sidebarClick(id) {
         var layer = markerClusters.getLayers(id);
-        map.setView([layer.getLatLng().lat, layer.getLatLng().lng], 17);
+        _map.setView([layer.getLatLng().lat, layer.getLatLng().lng], 17);
         layer.fire("click");
         /* Hide sidebar and go to the map on small screens */
         if (document.body.clientWidth <= 767) {
             $("#sidebar").hide();
-            map.invalidateSize();
+            _map.invalidateSize();
         }
     }
 }

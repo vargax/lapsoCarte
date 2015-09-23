@@ -1,10 +1,10 @@
 import MainController from './LapsocarteAppController.js'
 
-let mainController;
+let _mainController;
 
 export default class DataController {
     constructor() {
-        mainController = new MainController();
+        _mainController = new MainController();
     }
 
     // Methods exposed to my MainController (mc) ---------------------------------

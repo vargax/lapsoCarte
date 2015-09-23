@@ -1,4 +1,4 @@
-import MainController from './LapsocarteServerController/LapsocarteServerController.js'
+import LapsocarteServerController from './LapsocarteServerController/LapsocarteServerController.js'
 
-var mainController = new MainController();
-mainController.init();
+var lapsocarteServerController = new LapsocarteServerController();
+lapsocarteServerController.init();

@@ -20,10 +20,10 @@ const lc_MAP_ZOOM_RANGE = [10, 16];
 // ------------------------------------------------------------------------
 // VARIABLES
 // ------------------------------------------------------------------------
-let mainController;
-let leafletController;
-let sidebarController;
-let map;
+let _mainController;
+let _leafletController;
+let _sidebarController;
+let _map;
 
 let bootleafController = null; // --> Singleton Pattern...
 export default class BootleafController {
@@ -31,11 +31,11 @@ export default class BootleafController {
         if (!bootleafController) {
             bootleafController = this;
 
-            mainController = new MainController();
-            leafletController = new LeafletController();
-            sidebarController = new SidebarController();
+            _mainController = new MainController();
+            _leafletController = new LeafletController();
+            _sidebarController = new SidebarController();
 
-            map = leafletController.mc_getMap();
+            _map = _leafletController.mc_getMap();
         }
         return bootleafController;
     }
@@ -49,7 +49,7 @@ export default class BootleafController {
         });
 
         $("#full-extent-btn").click(function() {
-            map.fitBounds(boroughs.getBounds());
+            _map.fitBounds(boroughs.getBounds());
             $(".navbar-collapse.in").collapse("hide");
             return false;
         });
@@ -68,7 +68,7 @@ export default class BootleafController {
 
         $("#list-btn").click(function() {
             $('#sidebar').toggle();
-            map.invalidateSize();
+            _map.invalidateSize();
             return false;
         });
 
@@ -79,29 +79,29 @@ export default class BootleafController {
 
         $("#sidebar-toggle-btn").click(function() {
             $("#sidebar").toggle();
-            map.invalidateSize();
+            _map.invalidateSize();
             return false;
         });
 
         $("#sidebar-hide-btn").click(function() {
             $('#sidebar').hide();
-            map.invalidateSize();
+            _map.invalidateSize();
         });
 
         $("#loading").hide();
     }
 
     mc_addTimeGroupLayer(time, geoJSON) {
-        leafletController.mc_addTimeGroupLayer(time, geoJSON);
-        leafletController.mc_setTimeGroupLayer(time);
+        _leafletController.mc_addTimeGroupLayer(time, geoJSON);
+        _leafletController.mc_setTimeGroupLayer(time);
     }
 
     // Methods exposed to all my subcontrollers (sc) --------------------------
     sc_featureOver(featureId) {
-        leafletController.mc_highlightLayer(featureId);
+        _leafletController.mc_highlightLayer(featureId);
     }
     sc_featureOut(featureId) {
-        leafletController.mc_resetLayer(featureId);
+        _leafletController.mc_resetLayer(featureId);
     }
 
     // LeafletController (llc) ------------------------------------------------
@@ -111,9 +111,9 @@ export default class BootleafController {
 
     // SidebarController (sbc) ------------------------------------------------
     sbc_getMap() {
-        return leafletController.mc_getMap();
+        return _leafletController.mc_getMap();
     }
     sbc_getFeatures() {
-        return leafletController.mc_getCurrentLayer().getLayers();
+        return _leafletController.mc_getCurrentLayer().getLayers();
     }
 }

@@ -5,6 +5,10 @@ import BootleafController from './BootleafController/BootleafController.js';
 import SocketioController from './SocketioController.js';
 import DataController from './DataController.js';
 
+let _bootleafController;
+let _socketioController;
+let _dataController;
+
 let lapsocarteAppController = null; // --> Singleton Pattern...
 export default class LapsocarteAppController {
     constructor() {
@@ -15,19 +19,19 @@ export default class LapsocarteAppController {
     }
 
     init() {
-        this.bootleafController = new BootleafController();
-        this.bootleafController.mc_initGUI();
+        _bootleafController = new BootleafController();
+        _bootleafController.mc_initGUI();
 
-        this._socketioController = new SocketioController();
-        this._socketioController.mc_initCOMM();
+        _socketioController = new SocketioController();
+        _socketioController.mc_initCOMM();
 
-        this.dataController = new DataController();
+        _dataController = new DataController();
     }
 
     // ++++++++++++++  CONTROLLER-SPECIFIC FUNCTIONS ++++++++++++++++++++++++//
     // SocketioController (sioc) -----------------------------------------------
     sioc_addTimeLayer(time, geoJSON) {
-        this.bootleafController.mc_addTimeGroupLayer(time, geoJSON);
+        _bootleafController.mc_addTimeGroupLayer(time, geoJSON);
     }
 
     // BootleafController (blc) -----------------------------------------------

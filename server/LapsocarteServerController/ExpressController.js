@@ -1,25 +1,30 @@
 import MainController from './LapsocarteServerController.js'
 
+let _mainController;
+let _express;
+let _app;
+let _server;
+
 export default class ExpressController {
     constructor() {
-        this._mainController = new MainController();
-        this._express = require('express');
-        this._app = this._express();
-        this._server = require('http').createServer(this._app);
+        _mainController = new MainController();
+        _express = require('express');
+        _app = _express();
+        _server = require('http').createServer(_app);
     }
 
     mc_init() {
-        this._app.use(this._express.static(PathHelper.relativeToAbsolute('../../app/public')));
-        this._app.get('/', function(req, res) {
+        _app.use(_express.static(PathHelper.relativeToAbsolute('../../app/public')));
+        _app.get('/', function(req, res) {
             res.sendFile(PathHelper.relativeToAbsolute('../../app/index.html'));
         });
-        this._server.listen(8080, function() {
+        _server.listen(8080, function() {
             console.log('ExpressController.init() :: Server ready and listening on port 8080');
         });
     }
 
     mc_getServer() {
-        return this._server;
+        return _server;
     }
 }
 
