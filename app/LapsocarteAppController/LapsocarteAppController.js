@@ -29,13 +29,11 @@ export default class LapsocarteAppController {
     }
 
     // ++++++++++++++  CONTROLLER-SPECIFIC FUNCTIONS ++++++++++++++++++++++++//
-    // SocketioController (sioc) -----------------------------------------------
-    sioc_addTimeLayer(time, geoJSON) {
-        _bootleafController.mc_addTimeGroupLayer(time, geoJSON);
+    // SocketioController (sioc) ----------------------------------------------
+    sioc_geoTimeJSONsArrayReceived(geoTimeJSONsArray) {
+        _dataController.mc_geoTimeJSONsRegister(geoTimeJSONsArray);
+        let geoTimeJSONsMap = _dataController.mc_getGeoTimeJSONsMap();
+
+        _bootleafController.mc_setGeoTimeData(geoTimeJSONsMap);
     }
-
-    // BootleafController (blc) -----------------------------------------------
-
 }
-
-

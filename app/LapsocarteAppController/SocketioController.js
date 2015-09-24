@@ -15,15 +15,15 @@ export default class SocketioController {
 
     // Methods exposed to my MainController (mc) ---------------------------------
     mc_initCOMM() {
-        console.log(':: Sending a ' + glbs.GET_MAP + ' request...');
-        _socket.emit(glbs.GET_MAP, '');
+        console.log(':: Sending a ' + glbs.GET_LAYERS + ' request...');
+        _socket.emit(glbs.GET_LAYERS, '');
     }
 
     // Private methods -----------------------------------------------------------
     _inMsgs () {
         _socket.on(glbs.ADD_LAYER, function (msg) {
-            console.log(':: Receiving a ' + glbs.ADD_LAYER + ' request for t =' + msg[0]);
-            _mainController.sioc_addTimeLayer(msg[0],msg[1]);
+            console.log(':: Receiving a ' + glbs.ADD_LAYER + ' request');
+            _mainController.sioc_geoTimeJSONsArrayReceived(msg);
         });
     }
 }

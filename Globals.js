@@ -1,17 +1,15 @@
 export const ADD_LAYER = 'add_layer';
-export const GET_MAP = 'get_map';
+export const GET_LAYERS = 'get_layers';
 
-export class GeoTimeJSONContainer{
-    constructor(t, geoJSON) {
-        this._t = t;
-        this._geoJSON = geoJSON;
+export class GeoTimeJSON {
+    static pack (t, geoJSON) {
+        geoJSON['time'] = t;
+        return geoJSON;
     }
 
-    get t() {
-        return this._t;
-    }
-
-    get geoJSON() {
-        return this._geoJSON;
+    static unpack(geoTimeJSON) {
+        let t = geoTimeJSON['time'];
+        delete geoTimeJSON['time'];
+        return [t, geoTimeJSON];
     }
 }

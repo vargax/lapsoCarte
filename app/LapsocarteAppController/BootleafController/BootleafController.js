@@ -1,8 +1,10 @@
 import MainController from './../LapsocarteAppController.js';
 import LeafletController from './LeafletController.js';
 import SidebarController from './SidebarController.js';
+import * as support from './Support.js';
 
 import $ from 'jquery';
+import L from'leaflet';
 import Typeahead from 'typeahead';
 
 global.jQuery = require('jquery');
@@ -18,13 +20,21 @@ const lc_MAP_ZOOM = 11;
 const lc_MAP_ZOOM_RANGE = [10, 16];
 
 // ------------------------------------------------------------------------
-// VARIABLES
+// CONTROLLERS
 // ------------------------------------------------------------------------
 let _mainController;
 let _leafletController;
 let _sidebarController;
-let _map;
 
+// ------------------------------------------------------------------------
+// VARIABLES
+// ------------------------------------------------------------------------
+let timeLayers;
+let _currentTime;
+
+// ------------------------------------------------------------------------
+// CLASSES
+// ------------------------------------------------------------------------
 let bootleafController = null; // --> Singleton Pattern...
 export default class BootleafController {
     constructor() {
@@ -34,8 +44,6 @@ export default class BootleafController {
             _mainController = new MainController();
             _leafletController = new LeafletController();
             _sidebarController = new SidebarController();
-
-            _map = _leafletController.mc_getMap();
         }
         return bootleafController;
     }
@@ -91,17 +99,23 @@ export default class BootleafController {
         $("#loading").hide();
     }
 
-    mc_addTimeGroupLayer(time, geoJSON) {
-        _leafletController.mc_addTimeGroupLayer(time, geoJSON);
-        _leafletController.mc_setTimeGroupLayer(time);
+    mc_setGeoTimeData(geoTimeJSONsMap, timeRange) {
+        timeLayers = new Map();
+
+        for (let [t, geoJSON] of geoTimeJSONsMap) {
+            let timeLayer = new TimeLayer(t, geoJSON);
+            timeLayers.set(t, timeLayer);
+        }
+
+        _leafletController.mc_setTimeLayers(timeLayers);
     }
 
     // Methods exposed to all my subcontrollers (sc) --------------------------
     sc_featureOver(featureId) {
-        _leafletController.mc_highlightLayer(featureId);
+        _leafletController.mc_highlightFeature(featureId);
     }
     sc_featureOut(featureId) {
-        _leafletController.mc_resetLayer(featureId);
+        _leafletController.mc_resetFeature(featureId);
     }
 
     // LeafletController (llc) ------------------------------------------------
@@ -114,6 +128,56 @@ export default class BootleafController {
         return _leafletController.mc_getMap();
     }
     sbc_getFeatures() {
-        return _leafletController.mc_getCurrentLayer().getLayers();
+        return _leafletController.mc_getCurrentLayer().getFeatures();
+    }
+}
+
+let features = new Map();
+class TimeLayer {
+    constructor(time, geoJSON) {
+        this.time = time;
+        this.layer = L.geoJson(geoJSON, {
+            onEachFeature: this.featureSetup
+        });
+        this._saveFeatures();
+    }
+
+    getLayer() {
+        return this.layer;
+    }
+
+    getFeatures() {
+        return this.features;
+    }
+
+    getFeature(featureId) {
+        return this.features.get(featureId);
+    }
+
+    featureSetup(feature, layer) {
+
+        layer._blController = new BootleafController();
+        layer._lfId = String(layer._leaflet_id);
+
+        features.set(layer._lfId, layer);
+
+        layer.setStyle(support.LayerStyle.choroplethStyle(layer));
+        layer.on({
+            mouseover: featureSelect,
+            mouseout: featureDeselect
+        });
+
+        function featureSelect() {
+            this._blController.sc_featureOver(this._lfId);
+        }
+
+        function featureDeselect() {
+            this._blController.sc_featureOut(this._lfId);
+        }
+    }
+
+    _saveFeatures() {
+        this.features = features;
+        features = new Map();  // Cleaning global container to be ready for the next TimeLayer...
     }
 }

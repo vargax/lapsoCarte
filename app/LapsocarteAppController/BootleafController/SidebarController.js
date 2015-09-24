@@ -16,7 +16,7 @@ export default class SidebarController {
 
     // Methods exposed to my MainController (mc) ------------------------------
     mc_syncSidebar() {
-        /* Empty sidebar layers */
+        /* Empty sidebar features */
         let featureList = $("#feature-list tbody");
         featureList.empty();
 
@@ -47,7 +47,7 @@ export default class SidebarController {
     }
 
     _sidebarClick(id) {
-        var layer = markerClusters.getLayers(id);
+        var layer = markerClusters.getFeatures(id);
         _map.setView([layer.getLatLng().lat, layer.getLatLng().lng], 17);
         layer.fire("click");
         /* Hide sidebar and go to the map on small screens */

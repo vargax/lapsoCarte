@@ -19,9 +19,9 @@ export default class SocketioController {
         this._inMsgs();
     }
 
-    mc_sendGeoJSON(socketId, geoJSON) {
+    mc_sendGeoTimeJsonLayer(socketId, geoTimeJsonLayer) {
         let client = _clients.get(socketId);
-        client.emit(glbs.ADD_LAYER,[1,geoJSON]);
+        client.emit(glbs.ADD_LAYER,geoTimeJsonLayer);
     }
 
     _inMsgs() {
@@ -39,8 +39,8 @@ export default class SocketioController {
             });
 
             // App specific methods:
-            socket.on(glbs.GET_MAP, function(msg) {
-                console.log(logString+logOK+'Receiving a '+glbs.GET_MAP+' request...');
+            socket.on(glbs.GET_LAYERS, function(msg) {
+                console.log(logString+logOK+'Receiving a '+glbs.GET_LAYERS+' request...');
                 _mainController.sioc_getMapRequest(socket.id);
             });
         });
