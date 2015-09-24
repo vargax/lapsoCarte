@@ -31,6 +31,7 @@ let _sidebarController;
 // ------------------------------------------------------------------------
 let timeLayers;
 let _currentTime;
+let _timeRange;
 
 // ------------------------------------------------------------------------
 // CLASSES
@@ -101,6 +102,8 @@ export default class BootleafController {
 
     mc_setGeoTimeData(geoTimeJSONsMap, timeRange) {
         timeLayers = new Map();
+        _timeRange = timeRange;
+        _currentTime = _timeRange[0];
 
         for (let [t, geoJSON] of geoTimeJSONsMap) {
             let timeLayer = new TimeLayer(t, geoJSON);
@@ -108,6 +111,7 @@ export default class BootleafController {
         }
 
         _leafletController.mc_setTimeLayers(timeLayers);
+        _leafletController.mc_setTime(_currentTime);
     }
 
     // Methods exposed to all my subcontrollers (sc) --------------------------
@@ -128,7 +132,7 @@ export default class BootleafController {
         return _leafletController.mc_getMap();
     }
     sbc_getFeatures() {
-        return _leafletController.mc_getCurrentLayer().getFeatures();
+        return timeLayers.get(_currentTime).getFeatures();
     }
 }
 
