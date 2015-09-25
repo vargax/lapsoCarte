@@ -20,7 +20,6 @@
     "font-awesome": "^4.4.0",
     "handlebars": "^4.0.2",
     "jquery": "^2.1.4",
-    "jquery-ui": "^1.10.5",
     "leaflet": "^0.7.5",
     "leaflet-providers": "^1.1.2",
     "leaflet.locatecontrol": "^0.44.0",
