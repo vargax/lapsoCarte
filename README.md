@@ -5,7 +5,7 @@ LapsoCarte is a web-based visual tool to interact with time-space referenced dat
 The backend is based on:
 - **PostGIS** as a database engine.
 - **NodeJS 0.12** as a server-side platform.
-- **GeoTabulaDB** between NodeJS and PostGIS.
+- [GeoTabulaDB](https://github.com/tabulaco/geotabuladb) between NodeJS and PostGIS.
 
 The frontend is a fork of [BootLeaf](https://github.com/bmcbride/bootleaf) and requires:
 - **jQuery**
