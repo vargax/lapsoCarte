@@ -1,6 +1,7 @@
 @import url("../node_modules/leaflet/dist/leaflet.css");
 @import url("../node_modules/bootstrap/dist/css/bootstrap.css");
 @import url("../node_modules/font-awesome/css/font-awesome.css");
+@import url("../node_modules/jquery-ui/themes/smoothness/jquery-ui.css");
 
 /*@import url("../node_modules/c3/c3.css");*/
 @import url("./lib/bootleaf/css/app.css");
@@ -18,4 +19,9 @@
 .info h4 {
     margin: 0 0 5px;
     color: #777;
+}
+
+.datetimeControl p {
+    margin: 0;
+    font-size: 16px;
 }

@@ -10,7 +10,7 @@ let _map;
 export default class SidebarController {
     constructor() {
         _mainController = new MainController();
-        _map = _mainController.sbc_getMap();
+        _map = _mainController.sc_getMap();
         this._init();
     }
 

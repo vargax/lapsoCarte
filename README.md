@@ -61,6 +61,7 @@ cd app/public/
 mkdir node_modules
 cd node_modules
 ln -s ../../../node_modules/font-awesome .
+ln -s ../../../node_modules/jquery-ui .
 ```
 ## App Execution
 ### Sample data database load
