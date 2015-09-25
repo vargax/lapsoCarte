@@ -5,6 +5,7 @@
 /*@import url("./lib/bootleaf/css/leaflet.groupedlayercontrol.css");*/
 /*@import url("../node_modules/c3/c3.css");*/
 @import url("./lib/bootleaf/css/app.css");
+@import url("./lib/leafletplayback/css/app.css");
 
 .info {
     padding: 6px 8px;

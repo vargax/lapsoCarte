@@ -7,7 +7,7 @@ The backend is based on:
 - **NodeJS 0.12** as a server-side platform.
 - [GeoTabulaDB](https://github.com/tabulaco/geotabuladb) between NodeJS and PostGIS.
 
-The frontend is a fork of [BootLeaf](https://github.com/bmcbride/bootleaf) and requires:
+The frontend is a fork of [BootLeaf](https://github.com/bmcbride/bootleaf) + [LeafletPlayback](https://github.com/hallahan/LeafletPlayback/) and requires:
 - **jQuery**
 - **Bootstrap**
 - **LeafletJS**
