@@ -30,7 +30,7 @@ export default class LapsocarteServerController {
     // SocketioController (sioc) -----------------------------------------------
     sioc_getMapRequest(socketId) {
         this.tmp = socketId;
-        _geotabuladbController.mc_getGeoTimeJsonLayers([1,2]);
+        _geotabuladbController.mc_getGeoTimeJsonLayers([1,10]);
     }
 
     // GeotabuladbController (gtc) ----------------------------------------------
