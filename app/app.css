@@ -5,7 +5,6 @@
 
 /*@import url("../node_modules/c3/c3.css");*/
 @import url("./lib/bootleaf/css/app.css");
-@import url("./lib/leafletplayback/css/app.css");
 
 .info {
     padding: 6px 8px;
@@ -19,9 +18,4 @@
 .info h4 {
     margin: 0 0 5px;
     color: #777;
-}
-
-.datetimeControl p {
-    margin: 0;
-    font-size: 16px;
 }

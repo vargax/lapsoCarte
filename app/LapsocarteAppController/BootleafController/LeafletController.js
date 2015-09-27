@@ -79,7 +79,7 @@ export default class LeafletController {
         map._layersMinZoom = zoomRange[0];
         map._layersMaxZoom = zoomRange[1];
 
-        map.addControl(L.control.scale({imperial: false, position: 'topleft'}));
+        map.addControl(L.control.scale({imperial: false, position: 'bottomleft'}));
         map.addControl(L.control.zoom({position: 'bottomright'}));
 
         map.addControl(support.Widgets.getLocateWidget());

@@ -32,7 +32,7 @@ export default class LeafletplaybackController {
         }
 
         _playerControl = new PlayerControl(_timeVector);
-        map.addControl(_playerControl.mc_getLeafletControll());
+        //map.addControl(_playerControl.mc_getLeafletControll());
     }
 
     pc_isPlaying() {
