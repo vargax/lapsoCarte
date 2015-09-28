@@ -115,7 +115,7 @@ export default class BootleafController {
         _leafletController.mc_setTimeLayers(timeLayers);
         _timeController.mc_setTimeVector(_timeVector);
 
-        this.sc_setTime(_timeVector[0]);
+        this.slc_setTime(_timeVector[0]);
     }
 
     // Methods exposed to all my subcontrollers (sc) --------------------------
@@ -125,7 +125,7 @@ export default class BootleafController {
     sc_featureOut(featureId) {
         _leafletController.mc_resetFeature(featureId);
     }
-    sc_setTime(newTime) {
+    slc_setTime(newTime) {
         _currentTime = newTime;
         _leafletController.mc_setTime(_currentTime);
         _sidebarController.mc_syncSidebar();

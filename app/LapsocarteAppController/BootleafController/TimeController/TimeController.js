@@ -22,7 +22,7 @@ export default class LeafletplaybackController {
         _timeVector = timeVector;
         _playerControl = new PlayerControl(_timeVector);
     }
-    pc_movedTo(newTime) {
-        _mainController.sc_setTime(newTime);
+    slc_movedTo(newTime) {
+        _mainController.slc_setTime(newTime);
     }
 }

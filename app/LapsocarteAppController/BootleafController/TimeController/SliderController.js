@@ -20,7 +20,7 @@ export default class PlaybackControl {
             step: 1,
             value: _timeVector[0],
             slide: function( event, ui ) {
-                _mainController.pc_movedTo(ui.value);
+                _mainController.slc_movedTo(ui.value);
             }
         });
     }
