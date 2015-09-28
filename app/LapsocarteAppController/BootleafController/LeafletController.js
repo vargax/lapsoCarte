@@ -70,7 +70,7 @@ export default class LeafletController {
 
     // Private methods -----------------------------------------------------------
     _initMap() {
-        let mapInitParameters = MainController.llc_getInitialMapParameters();
+        let mapInitParameters = MainController.sc_getInitialMapParameters();
         let center = mapInitParameters[0];
         let zoom = mapInitParameters[1];
         let zoomRange =   mapInitParameters[2];

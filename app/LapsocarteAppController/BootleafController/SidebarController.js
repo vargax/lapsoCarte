@@ -21,7 +21,7 @@ export default class SidebarController {
         featureList.empty();
 
         try {
-            let features = _mainController.sbc_getFeatures();
+            let features = _mainController.sc_getFeatures();
             for (let [id,feature] of features) {
                 if (_map.getBounds().contains(feature.getBounds())) {
                     featureList.append(support.HTMLHelper.genSidebarEntry(id,feature));

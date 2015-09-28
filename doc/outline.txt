@@ -1,0 +1,3 @@
+Architecture --> Modules and Mediators / Information flow example / Interaction trace example
+Advantages: Single point of intervention / Easier: Existing controllers expansion and New modules integration / Easier: Code refactoring: Estimate impact, follow impact vectors.
+?? Entregables, cronograma, proceso uniandes...

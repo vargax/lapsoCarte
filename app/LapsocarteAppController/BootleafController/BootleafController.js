@@ -115,7 +115,7 @@ export default class BootleafController {
         _leafletController.mc_setTimeLayers(timeLayers);
         _timeController.mc_setTimeVector(_timeVector);
 
-        this.slc_setTime(_timeVector[0]);
+        this.sc_setTime(_timeVector[0]);
     }
 
     // Methods exposed to all my subcontrollers (sc) --------------------------
@@ -125,7 +125,7 @@ export default class BootleafController {
     sc_featureOut(featureId) {
         _leafletController.mc_resetFeature(featureId);
     }
-    slc_setTime(newTime) {
+    sc_setTime(newTime) {
         _currentTime = newTime;
         _leafletController.mc_setTime(_currentTime);
         _sidebarController.mc_syncSidebar();
@@ -135,12 +135,12 @@ export default class BootleafController {
         return _leafletController.mc_getMap();
     }
     // LeafletController (llc) ------------------------------------------------
-    static llc_getInitialMapParameters() {
+    static sc_getInitialMapParameters() {
         return [lc_MAP_CENTER, lc_MAP_ZOOM, lc_MAP_ZOOM_RANGE];
     }
 
     // SidebarController (sbc) ------------------------------------------------
-    sbc_getFeatures() {
+    sc_getFeatures() {
         try {
             return timeLayers.get(_currentTime).getFeatures();    
         } catch (e) {
