@@ -24,6 +24,12 @@ Most of LapsoCarte code is written in **ECMAScript 6** and uses **Babel** for ba
  - The client-side main mediator is [app.js](app/app.js).
  - The server-side main mediator is [index.js](server/index.js).
 
+## Architecture
+![Architecture](doc/arch.png)
+- Module mediators are in red.
+- First request (client-side) information flow is represented by black arrows.
+- User interaction with the slider is represented by green arrows.
+
 ## Workspace Setup (Ubuntu 14.04)
 ### Packages Installation
 ```bash
@@ -78,3 +84,6 @@ npm run build
 # Server run
 nodejs bootstrap.js
 ```
+
+## App Screenshot
+![screenshot](doc/proto.png)
