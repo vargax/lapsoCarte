@@ -33,8 +33,8 @@ export default class LapsocarteAppController {
     sioc_geoTimeJSONsArrayReceived(geoTimeJSONsArray) {
         _dataController.mc_geoTimeJSONsRegister(geoTimeJSONsArray);
         let geoTimeJSONsMap = _dataController.mc_getGeoTimeJSONsMap();
-        let timeRange = _dataController.mc_getTimeRange();
+        let timeVector = _dataController.mc_getTimeVector();
 
-        _bootleafController.mc_setGeoTimeData(geoTimeJSONsMap, timeRange);
+        _bootleafController.mc_setGeoTimeData(geoTimeJSONsMap, timeVector);
     }
 }

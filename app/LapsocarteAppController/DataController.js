@@ -4,7 +4,7 @@ import * as glbs from '../../Globals.js'
 let _mainController;
 
 let geoTimeJSONsMap;
-let timeRange;
+let timeVector;
 
 export default class DataController {
     constructor() {
@@ -14,21 +14,21 @@ export default class DataController {
     // Methods exposed to my MainController (mc) ---------------------------------
     mc_geoTimeJSONsRegister (geoTimeJSONsArray) {
         geoTimeJSONsMap = new Map();
-        timeRange = [];
+        timeVector = [];
 
         for (let geoTimeJSON of geoTimeJSONsArray) {
             let [t, geoJSON] = glbs.GeoTimeJSON.unpack(geoTimeJSON);
-            timeRange.push(t);
+            timeVector.push(t);
             geoTimeJSONsMap.set(t, geoJSON);
         }
-        timeRange.sort();
+        timeVector.sort();
     }
 
     mc_getGeoTimeJSONsMap() {
         return geoTimeJSONsMap;
     }
 
-    mc_getTimeRange() {
-        return timeRange;
+    mc_getTimeVector() {
+        return timeVector;
     }
 }

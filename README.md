@@ -11,6 +11,7 @@ The frontend is a fork of [BootLeaf](https://github.com/bmcbride/bootleaf) and r
 - **jQuery**
 - **Bootstrap**
 - **LeafletJS**
+- jQuery-ui
 - Typeahead
 - Handlebars
 - ListJS
@@ -22,6 +23,12 @@ Most of LapsoCarte code is written in **ECMAScript 6** and uses **Babel** for ba
 - [Mediator Pattern](http://addyosmani.com/largescalejavascript/): Each submodule has its own mediator, who manages all interaction between all its decedent modules and its own main module. Each mediator **must initialize all his decedent modules and save a reference to them**, otherwise the submodule will be destroyed along with its state.
  - The client-side main mediator is [app.js](app/app.js).
  - The server-side main mediator is [index.js](server/index.js).
+
+## Architecture
+![Architecture](doc/arch.png)
+- Module mediators are in red.
+- First request (client-side) information flow is represented by black arrows.
+- User interaction with the slider is represented by green arrows.
 
 ## Workspace Setup (Ubuntu 14.04)
 ### Packages Installation
@@ -61,6 +68,7 @@ cd app/public/
 mkdir node_modules
 cd node_modules
 ln -s ../../../node_modules/font-awesome .
+ln -s ../../../node_modules/jquery-ui .
 ```
 ## App Execution
 ### Sample data database load
@@ -76,3 +84,6 @@ npm run build
 # Server run
 nodejs bootstrap.js
 ```
+
+## App Screenshot
+![screenshot](doc/proto.png)

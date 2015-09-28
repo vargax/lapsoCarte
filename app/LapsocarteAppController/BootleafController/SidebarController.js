@@ -10,7 +10,7 @@ let _map;
 export default class SidebarController {
     constructor() {
         _mainController = new MainController();
-        _map = _mainController.sbc_getMap();
+        _map = _mainController.sc_getMap();
         this._init();
     }
 
@@ -20,11 +20,15 @@ export default class SidebarController {
         let featureList = $("#feature-list tbody");
         featureList.empty();
 
-        let features = _mainController.sbc_getFeatures();
-        for (let [id,feature] of features) {
-            if (_map.getBounds().contains(feature.getBounds())) {
-                featureList.append(support.HTMLHelper.genSidebarEntry(id,feature));
+        try {
+            let features = _mainController.sbc_getFeatures();
+            for (let [id,feature] of features) {
+                if (_map.getBounds().contains(feature.getBounds())) {
+                    featureList.append(support.HTMLHelper.genSidebarEntry(id,feature));
+                }
             }
+        } catch(e) {
+            console.log(':! I dont get an array full of features as I expect...')
         }
     }
 

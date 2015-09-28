@@ -1,11 +1,12 @@
-import MainController from './../LapsocarteAppController.js';
-import LeafletController from './LeafletController.js';
-import SidebarController from './SidebarController.js';
+import MainController from './../LapsocarteAppController.js'
+import LeafletController from './LeafletController.js'
+import SidebarController from './SidebarController.js'
+import TimeController from './TimeController/TimeController.js'
 import * as support from './Support.js';
 
 import $ from 'jquery';
 import L from'leaflet';
-import Typeahead from 'typeahead';
+import Typeahead from 'typeahead'
 
 global.jQuery = require('jquery');
 require('bootstrap');
@@ -25,13 +26,14 @@ const lc_MAP_ZOOM_RANGE = [10, 16];
 let _mainController;
 let _leafletController;
 let _sidebarController;
+let _timeController;
 
 // ------------------------------------------------------------------------
 // VARIABLES
 // ------------------------------------------------------------------------
 let timeLayers;
 let _currentTime;
-let _timeRange;
+let _timeVector;
 
 // ------------------------------------------------------------------------
 // CLASSES
@@ -45,6 +47,7 @@ export default class BootleafController {
             _mainController = new MainController();
             _leafletController = new LeafletController();
             _sidebarController = new SidebarController();
+            _timeController = new TimeController();
         }
         return bootleafController;
     }
@@ -100,10 +103,9 @@ export default class BootleafController {
         $("#loading").hide();
     }
 
-    mc_setGeoTimeData(geoTimeJSONsMap, timeRange) {
+    mc_setGeoTimeData(geoTimeJSONsMap, timeVector) {
         timeLayers = new Map();
-        _timeRange = timeRange;
-        _currentTime = _timeRange[0];
+        _timeVector = timeVector;
 
         for (let [t, geoJSON] of geoTimeJSONsMap) {
             let timeLayer = new TimeLayer(t, geoJSON);
@@ -111,7 +113,9 @@ export default class BootleafController {
         }
 
         _leafletController.mc_setTimeLayers(timeLayers);
-        _leafletController.mc_setTime(_currentTime);
+        _timeController.mc_setTimeVector(_timeVector);
+
+        this.slc_setTime(_timeVector[0]);
     }
 
     // Methods exposed to all my subcontrollers (sc) --------------------------
@@ -121,18 +125,27 @@ export default class BootleafController {
     sc_featureOut(featureId) {
         _leafletController.mc_resetFeature(featureId);
     }
+    slc_setTime(newTime) {
+        _currentTime = newTime;
+        _leafletController.mc_setTime(_currentTime);
+        _sidebarController.mc_syncSidebar();
+    }
 
+    sc_getMap() {
+        return _leafletController.mc_getMap();
+    }
     // LeafletController (llc) ------------------------------------------------
     static llc_getInitialMapParameters() {
         return [lc_MAP_CENTER, lc_MAP_ZOOM, lc_MAP_ZOOM_RANGE];
     }
 
     // SidebarController (sbc) ------------------------------------------------
-    sbc_getMap() {
-        return _leafletController.mc_getMap();
-    }
     sbc_getFeatures() {
-        return timeLayers.get(_currentTime).getFeatures();
+        try {
+            return timeLayers.get(_currentTime).getFeatures();    
+        } catch (e) {
+            console.log(':! There are not features loaded yet!')
+        }
     }
 }
 
