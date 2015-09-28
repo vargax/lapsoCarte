@@ -1,5 +1,5 @@
 import MainController from './../BootleafController.js'
-import PlayerControl from './PlayerControl.js'
+import PlayerControl from './SliderController.js'
 
 let _mainController;
 let _playerControl;

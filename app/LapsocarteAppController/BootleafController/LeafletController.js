@@ -29,6 +29,7 @@ export default class LeafletController {
     // Methods exposed to my MainController (mc) ---------------------------------
     mc_setTime(time) {
         try {
+            this.mc_resetAllFeatures();
             map.removeLayer(timeLayers.get(_currentTime).getLayer()); // --> EAFP Pattern
         } catch (e) {
             console.log('+! This was the first layer');

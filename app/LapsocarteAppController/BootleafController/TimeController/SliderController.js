@@ -1,4 +1,4 @@
-import MainController from './LeafletplaybackController.js'
+import MainController from './TimeController.js'
 
 import $ from 'jquery';
 require('jquery-ui');

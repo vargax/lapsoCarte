@@ -1,7 +1,7 @@
 import MainController from './../LapsocarteAppController.js'
 import LeafletController from './LeafletController.js'
 import SidebarController from './SidebarController.js'
-import LeafletplaybackController from './LeafletplaybackController/LeafletplaybackController.js'
+import TimeController from './TimeController/TimeController.js'
 import * as support from './Support.js';
 
 import $ from 'jquery';
@@ -26,7 +26,7 @@ const lc_MAP_ZOOM_RANGE = [10, 16];
 let _mainController;
 let _leafletController;
 let _sidebarController;
-let _leafletplaybackController;
+let _timeController;
 
 // ------------------------------------------------------------------------
 // VARIABLES
@@ -47,7 +47,7 @@ export default class BootleafController {
             _mainController = new MainController();
             _leafletController = new LeafletController();
             _sidebarController = new SidebarController();
-            _leafletplaybackController = new LeafletplaybackController();
+            _timeController = new TimeController();
         }
         return bootleafController;
     }
@@ -113,7 +113,7 @@ export default class BootleafController {
         }
 
         _leafletController.mc_setTimeLayers(timeLayers);
-        _leafletplaybackController.mc_setTimeVector(_timeVector);
+        _timeController.mc_setTimeVector(_timeVector);
 
         this.sc_setTime(_timeVector[0]);
     }
@@ -128,6 +128,7 @@ export default class BootleafController {
     sc_setTime(newTime) {
         _currentTime = newTime;
         _leafletController.mc_setTime(_currentTime);
+        _sidebarController.mc_syncSidebar();
     }
 
     sc_getMap() {
@@ -140,7 +141,11 @@ export default class BootleafController {
 
     // SidebarController (sbc) ------------------------------------------------
     sbc_getFeatures() {
-        return timeLayers.get(_currentTime).getFeatures();
+        try {
+            return timeLayers.get(_currentTime).getFeatures();    
+        } catch (e) {
+            console.log(':! There are not features loaded yet!')
+        }
     }
 }
 
