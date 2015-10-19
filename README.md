@@ -60,7 +60,7 @@ git clone https://github.com/vargax/lapsoCarte.git
 cd lapsoCarte
 
 # Install npm modules
-npm install -g napa babel browserify
+sudo npm install -g napa babel browserify
 npm install
 
 # Publish node_modules folder
