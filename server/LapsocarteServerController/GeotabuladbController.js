@@ -4,6 +4,19 @@ import MainController from './LapsocarteServerController.js'
 import * as glbs from '../../Globals.js'
 import GeotabulaDB from 'geotabuladb'
 
+const PROJECT = 'tomsa';
+const TABLE = 'schelling';
+
+//const PROJECT = 'lapsocarte';
+//const TABLE = 'population';
+
+const DB_USER = PROJECT;
+const DB_PASS = PROJECT;
+const DB_NAME = PROJECT;
+
+const COLUMN_TIME = 't';
+const COLUMN_GEOM = 'geom';
+
 const logString = 'GeotabuladbController';
 const logOK  = ' :: ';
 const logERR = ' !! ';
@@ -23,9 +36,9 @@ export default class GeotabuladbController {
 
     mc_init() {
         _geo.setCredentials({
-            user: 'lapsocarte',
-            password: 'lapsocarte',
-            database: 'lapsocarte'
+            user: DB_USER,
+            password: DB_PASS,
+            database: DB_NAME
         });
     }
 
@@ -40,9 +53,9 @@ export default class GeotabuladbController {
         for (let t = timeRange[0]; t <= timeRange[1]; t++) {
             let parameters = {
                 // ToDo population should be dynamic...
-                tableName: 'population',	// The name of the table we are going to query
-                geometry: 'geom', 			// The name of the column who has the geometry
-                where: 't = '+ t,           // The name of the column who has the time
+                tableName: TABLE,	        // The name of the table we are going to query
+                geometry: COLUMN_GEOM, 		// The name of the column who has the geometry
+                where: COLUMN_TIME+'='+t,      // The name of the column who has the time
                 properties: 'all'			// Additional columns we want to recover --> For specific columns you have to pass columns' names as an Array
             };
 
@@ -59,7 +72,7 @@ export default class GeotabuladbController {
             _results.get(functionCallHash).push(geoTimeJsonLayer);
 
             queries--;
-            console.log(logString+log+logOK+' '+queries+' remaining...')
+            console.log(logString+log+logOK+' '+queries+' remaining...');
             if (queries == 0) {
                 sendResults(functionCallHash);
             }

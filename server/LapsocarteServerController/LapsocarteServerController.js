@@ -2,6 +2,9 @@ import GeotabuladbController from './GeotabuladbController.js'
 import SocketioController from './SocketioController.js'
 import ExpressController from './ExpressController.js'
 
+const TIME_RANGE = [1,20];      // Tomsa
+//const TIME_RANGE = [1,10];    // Lapsocarte
+
 let _geotabuladbController;
 let _expressController;
 let _socketioController;
@@ -30,7 +33,7 @@ export default class LapsocarteServerController {
     // SocketioController (sioc) -----------------------------------------------
     sioc_getMapRequest(socketId) {
         this.tmp = socketId;
-        _geotabuladbController.mc_getGeoTimeJsonLayers([1,10]);
+        _geotabuladbController.mc_getGeoTimeJsonLayers(TIME_RANGE);
     }
 
     // GeotabuladbController (gtc) ----------------------------------------------

@@ -1,10 +1,14 @@
 import L from'leaflet';
 import $ from 'jquery';
 
+//const SIDEBAR_FEATURE_TITLE = 'nomb_barr'; // lapsocarte
+const SIDEBAR_FEATURE_TITLE = 'gid';         // tomsa
+
 export class LayerStyle {
     static getFocusedLayerStyle() {
         return {
-            color: '#0000FF'
+            //color: '#0000FF' // lapsocarte
+            color: 'green' // lapsocarte
         }
     }
 
@@ -20,9 +24,18 @@ export class LayerStyle {
                                     d > 2000 ? '#FED976' :
                                         '#FFEDA0';
         }
+
+        function fixedColor(d) {
+            return  d = 0 ? 'gray' :
+                    d = 1 ? 'red'   :
+                    d = 2 ? 'blue'  :
+                    d = 3 ? 'yellow': 'black';
+        }
+
         return {
             // ToDo change hard-coded feature property 'population'... Should be dynamic...
-            color: choroplethColor(feature.feature.properties['population']),
+            //color: choroplethColor(feature.feature.properties['population']), // lapsocarte
+            color: fixedColor(feature.feature.properties['currentpop']),   // tomsa
             weight: 1.2
         }
     }
@@ -34,7 +47,7 @@ export class HTMLHelper {
         // ToDo hard-coded feature property name!!... Should be dynamic...
         let html = '<tr class="feature-row" id="'+featureId + '" lat="' + center.lat + '" lng="' + center.lng + '">'
             + '<td style="vertical-align: middle;"><img width="16" height="18" src="assets/img/theater.png"></td>'
-            + '<td class="feature-name">' + feature.feature.properties['nomb_barr'] + '</td>'
+            + '<td class="feature-name">' + feature.feature.properties[SIDEBAR_FEATURE_TITLE] + '</td>'
             + '<td style="vertical-align: middle;"><i class="fa fa-chevron-right pull-right"></i></td></tr>';
         return html;
     }
