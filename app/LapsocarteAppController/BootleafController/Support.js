@@ -26,10 +26,10 @@ export class LayerStyle {
         }
 
         function fixedColor(d) {
-            return  d = 0 ? 'gray' :
-                    d = 1 ? 'red'   :
-                    d = 2 ? 'blue'  :
-                    d = 3 ? 'yellow': 'black';
+            return  d == 0 ? 'gray' :
+                    d == 1 ? 'red'   :
+                    d == 2 ? 'blue'  :
+                    d == 3 ? 'yellow': 'black';
         }
 
         return {

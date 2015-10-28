@@ -15,12 +15,12 @@ export default class PlaybackControl {
     }
     _setupControl() {
         $('#time-slider').slider({
-            min: _timeVector[0],
-            max: _timeVector[_timeVector.length-1],
+            min: 0,
+            max: _timeVector.length-1,
             step: 1,
-            value: _timeVector[0],
+            value: 0,
             slide: function( event, ui ) {
-                _mainController.slc_movedTo(ui.value);
+                _mainController.slc_movedTo(_timeVector[ui.value]);
             }
         });
     }

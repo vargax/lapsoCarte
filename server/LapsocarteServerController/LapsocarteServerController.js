@@ -2,7 +2,7 @@ import GeotabuladbController from './GeotabuladbController.js'
 import SocketioController from './SocketioController.js'
 import ExpressController from './ExpressController.js'
 
-const TIME_RANGE = [0,3];      // Tomsa
+const TIME_RANGE = [0,3,6,9,15,18,21,27,30];      // Tomsa
 //const TIME_RANGE = [1,10];    // Lapsocarte
 
 let _geotabuladbController;
