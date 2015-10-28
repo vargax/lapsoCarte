@@ -45,7 +45,7 @@ let tomsa = {
     TABLE: 'schelling',
     COLUMN_GEOM: 'geom',
     COLUMN_TIME: 't',
-    TIME_RANGE: [0,15,30],
+    TIME_RANGE: [0,3,6,9,12,15,18,21,24,27,30],
     COLUMN_NAME: 'gid',
     COLUMN_DATA: 'currentpop',
 
