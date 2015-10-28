@@ -1,5 +1,6 @@
-import MainController from './BootleafController.js';
+import MainController from './GUIController.js';
 import * as support from './Support.js';
+import * as glbs from './../../../Globals.js';
 
 import L from'leaflet';
 require('leaflet-providers');
@@ -76,7 +77,7 @@ export default class LeafletController {
         let zoomRange =   mapInitParameters[2];
 
         map = L.map('map',{zoomControl: false}).setView(center, zoom);
-        map.addLayer(new L.tileLayer.provider('Esri.WorldGrayCanvas'));
+        map.addLayer(new L.tileLayer.provider(glbs.PROJECT.LAYER_PROVIDER));
         map._layersMinZoom = zoomRange[0];
         map._layersMaxZoom = zoomRange[1];
 

@@ -21,7 +21,7 @@ export default class DataController {
             timeVector.push(t);
             geoTimeJSONsMap.set(t, geoJSON);
         }
-        timeVector.sort();
+        timeVector.sort(function(a, b){return a-b});
     }
 
     mc_getGeoTimeJSONsMap() {

@@ -1,21 +1,16 @@
 import * as crypto from 'crypto'
+import GeotabulaDB from 'geotabuladb'
 
 import MainController from './LapsocarteServerController.js'
 import * as glbs from '../../Globals.js'
-import GeotabulaDB from 'geotabuladb'
 
-const PROJECT = 'tomsa';
-const TABLE = 'schelling';
+const DB_USER = glbs.PROJECT.DB_USER;
+const DB_PASS = glbs.PROJECT.DB_PASS;
+const DB_NAME = glbs.PROJECT.DB_NAME;
+const TABLE = glbs.PROJECT.TABLE;
 
-//const PROJECT = 'lapsocarte';
-//const TABLE = 'population';
-
-const DB_USER = PROJECT;
-const DB_PASS = PROJECT;
-const DB_NAME = PROJECT;
-
-const COLUMN_TIME = 't';
-const COLUMN_GEOM = 'geom';
+const COLUMN_TIME = glbs.PROJECT.COLUMN_TIME;
+const COLUMN_GEOM = glbs.PROJECT.COLUMN_GEOM;
 
 const logString = 'GeotabuladbController';
 const logOK  = ' :: ';
@@ -55,7 +50,7 @@ export default class GeotabuladbController {
                 // ToDo population should be dynamic...
                 tableName: TABLE,	        // The name of the table we are going to query
                 geometry: COLUMN_GEOM, 		// The name of the column who has the geometry
-                where: COLUMN_TIME+'='+t+' AND gid>=random()*44000',      // The name of the column who has the time
+                where: COLUMN_TIME+'='+t,      // The name of the column who has the time
                 limit: 2000,
                 properties: 'all'			// Additional columns we want to recover --> For specific columns you have to pass columns' names as an Array
             };

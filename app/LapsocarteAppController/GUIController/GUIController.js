@@ -1,11 +1,13 @@
+import * as glbs from './../../../Globals.js'
+import * as support from './Support.js'
+
 import MainController from './../LapsocarteAppController.js'
 import LeafletController from './LeafletController.js'
 import SidebarController from './SidebarController.js'
 import TimeController from './TimeController/TimeController.js'
-import * as support from './Support.js';
 
-import $ from 'jquery';
-import L from'leaflet';
+import $ from 'jquery'
+import L from'leaflet'
 import Typeahead from 'typeahead'
 
 global.jQuery = require('jquery');
@@ -16,9 +18,9 @@ require('list.js');
 // ------------------------------------------------------------------------
 // CONSTANTS
 // ------------------------------------------------------------------------
-const lc_MAP_CENTER = [4.66198, -74.09866];
-const lc_MAP_ZOOM = 11;
-const lc_MAP_ZOOM_RANGE = [10, 16];
+const MAP_CENTER = glbs.PROJECT.MAP_CENTER;
+const MAP_ZOOM = glbs.PROJECT.MAP_ZOOM;
+const MAP_ZOOM_RANGE = glbs.PROJECT.MAP_ZOOM_RANGE;
 
 // ------------------------------------------------------------------------
 // CONTROLLERS
@@ -38,18 +40,18 @@ let _timeVector;
 // ------------------------------------------------------------------------
 // CLASSES
 // ------------------------------------------------------------------------
-let bootleafController = null; // --> Singleton Pattern...
-export default class BootleafController {
+let guiController = null; // --> Singleton Pattern...
+export default class GUIController {
     constructor() {
-        if (!bootleafController) {
-            bootleafController = this;
+        if (!guiController) {
+            guiController = this;
 
             _mainController = new MainController();
             _leafletController = new LeafletController();
             _sidebarController = new SidebarController();
             _timeController = new TimeController();
         }
-        return bootleafController;
+        return guiController;
     }
 
     // Methods exposed to my MainController (mc) ------------------------------
@@ -136,7 +138,7 @@ export default class BootleafController {
     }
     // LeafletController (llc) ------------------------------------------------
     static sc_getInitialMapParameters() {
-        return [lc_MAP_CENTER, lc_MAP_ZOOM, lc_MAP_ZOOM_RANGE];
+        return [MAP_CENTER, MAP_ZOOM, MAP_ZOOM_RANGE];
     }
 
     // SidebarController (sbc) ------------------------------------------------
@@ -173,7 +175,7 @@ class TimeLayer {
 
     featureSetup(feature, layer) {
 
-        layer._blController = new BootleafController();
+        layer._guiController = new GUIController();
         layer._lfId = String(layer._leaflet_id);
 
         features.set(layer._lfId, layer);
@@ -185,11 +187,11 @@ class TimeLayer {
         });
 
         function featureSelect() {
-            this._blController.sc_featureOver(this._lfId);
+            this._guiController.sc_featureOver(this._lfId);
         }
 
         function featureDeselect() {
-            this._blController.sc_featureOut(this._lfId);
+            this._guiController.sc_featureOut(this._lfId);
         }
     }
 

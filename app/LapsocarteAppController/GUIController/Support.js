@@ -1,14 +1,12 @@
 import L from'leaflet';
 import $ from 'jquery';
 
-//const SIDEBAR_FEATURE_TITLE = 'nomb_barr'; // lapsocarte
-const SIDEBAR_FEATURE_TITLE = 'gid';         // tomsa
+import * as glbs from './../../../Globals.js';
 
 export class LayerStyle {
     static getFocusedLayerStyle() {
         return {
-            //color: '#0000FF' // lapsocarte
-            color: 'green' // lapsocarte
+            color: glbs.PROJECT.FOCUSED_COLOR
         }
     }
 
@@ -33,9 +31,7 @@ export class LayerStyle {
         }
 
         return {
-            // ToDo change hard-coded feature property 'population'... Should be dynamic...
-            //color: choroplethColor(feature.feature.properties['population']), // lapsocarte
-            color: fixedColor(feature.feature.properties['currentpop']),   // tomsa
+            color: glbs.PROJECT.FUNC_DATA2COLOR(feature.feature.properties[glbs.PROJECT.COLUMN_DATA]),
             weight: 1.2
         }
     }
@@ -44,10 +40,9 @@ export class LayerStyle {
 export class HTMLHelper {
     static genSidebarEntry(featureId, feature) {
         let center = feature.getBounds().getCenter();
-        // ToDo hard-coded feature property name!!... Should be dynamic...
         let html = '<tr class="feature-row" id="'+featureId + '" lat="' + center.lat + '" lng="' + center.lng + '">'
             + '<td style="vertical-align: middle;"><img width="16" height="18" src="assets/img/theater.png"></td>'
-            + '<td class="feature-name">' + feature.feature.properties[SIDEBAR_FEATURE_TITLE] + '</td>'
+            + '<td class="feature-name">' + feature.feature.properties[glbs.PROJECT.COLUMN_NAME] + '</td>'
             + '<td style="vertical-align: middle;"><i class="fa fa-chevron-right pull-right"></i></td></tr>';
         return html;
     }
