@@ -1,4 +1,4 @@
-import MainController from './BootleafController.js';
+import MainController from './GUIController.js';
 import * as support from './Support.js';
 
 import L from'leaflet';

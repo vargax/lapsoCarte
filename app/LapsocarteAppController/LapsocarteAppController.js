@@ -1,11 +1,11 @@
 /*
 I am the main controller of the application. I mediate the communication between all controllers. All controllers must register with me and I should know how to manage each controller. Other controllers only need to know how to interact with me.
  */
-import BootleafController from './BootleafController/BootleafController.js';
+import GUIController from './GUIController/GUIController.js';
 import SocketioController from './SocketioController.js';
 import DataController from './DataController.js';
 
-let _bootleafController;
+let _guiController;
 let _socketioController;
 let _dataController;
 
@@ -19,8 +19,8 @@ export default class LapsocarteAppController {
     }
 
     init() {
-        _bootleafController = new BootleafController();
-        _bootleafController.mc_initGUI();
+        _guiController = new GUIController();
+        _guiController.mc_initGUI();
 
         _socketioController = new SocketioController();
         _socketioController.mc_initCOMM();
@@ -35,6 +35,6 @@ export default class LapsocarteAppController {
         let geoTimeJSONsMap = _dataController.mc_getGeoTimeJSONsMap();
         let timeVector = _dataController.mc_getTimeVector();
 
-        _bootleafController.mc_setGeoTimeData(geoTimeJSONsMap, timeVector);
+        _guiController.mc_setGeoTimeData(geoTimeJSONsMap, timeVector);
     }
 }

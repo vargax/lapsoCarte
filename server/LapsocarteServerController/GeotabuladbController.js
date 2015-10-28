@@ -1,21 +1,16 @@
 import * as crypto from 'crypto'
+import GeotabulaDB from 'geotabuladb'
 
 import MainController from './LapsocarteServerController.js'
 import * as glbs from '../../Globals.js'
-import GeotabulaDB from 'geotabuladb'
 
-const PROJECT = 'tomsa';
-const TABLE = 'schelling';
+const DB_USER = glbs.PROJECT.DB_USER;
+const DB_PASS = glbs.PROJECT.DB_PASS;
+const DB_NAME = glbs.PROJECT.DB_NAME;
+const TABLE = glbs.PROJECT.TABLE;
 
-//const PROJECT = 'lapsocarte';
-//const TABLE = 'population';
-
-const DB_USER = PROJECT;
-const DB_PASS = PROJECT;
-const DB_NAME = PROJECT;
-
-const COLUMN_TIME = 't';
-const COLUMN_GEOM = 'geom';
+const COLUMN_TIME = glbs.PROJECT.COLUMN_TIME;
+const COLUMN_GEOM = glbs.PROJECT.COLUMN_GEOM;
 
 const logString = 'GeotabuladbController';
 const logOK  = ' :: ';

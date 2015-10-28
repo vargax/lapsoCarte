@@ -1,4 +1,4 @@
-import MainController from './../BootleafController.js'
+import MainController from './../GUIController.js'
 import PlayerControl from './SliderController.js'
 
 let _mainController;
