@@ -19,6 +19,7 @@ export default class PlaybackControl {
             max: _timeVector.length-1,
             step: 1,
             value: 0,
+            animate: true,
             slide: function( event, ui ) {
                 _mainController.slc_movedTo(_timeVector[ui.value]);
             }

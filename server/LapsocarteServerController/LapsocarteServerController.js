@@ -1,9 +1,9 @@
 import GeotabuladbController from './GeotabuladbController.js'
 import SocketioController from './SocketioController.js'
 import ExpressController from './ExpressController.js'
+import * as glbs from '../../Globals.js'
 
-const TIME_RANGE = [0,15,30];      // Tomsa
-//const TIME_RANGE = [1,10];    // Lapsocarte
+const TIME_RANGE = glbs.PROJECT.TIME_RANGE;
 
 let _geotabuladbController;
 let _expressController;

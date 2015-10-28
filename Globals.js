@@ -10,6 +10,7 @@ let demo = {
     TABLE: 'population',
     COLUMN_GEOM: 'geom',
     COLUMN_TIME: 't',
+    TIME_RANGE: [1,2,3,4,5,6,7,8,9,10],
     COLUMN_NAME: 'nomb_barr',
     COLUMN_DATA: 'population',
 
@@ -44,6 +45,7 @@ let tomsa = {
     TABLE: 'schelling',
     COLUMN_GEOM: 'geom',
     COLUMN_TIME: 't',
+    TIME_RANGE: [0,15,30],
     COLUMN_NAME: 'gid',
     COLUMN_DATA: 'currentpop',
 
@@ -64,7 +66,7 @@ tomsa.DB_USER = tomsa.PROJECT;
 tomsa.DB_PASS = tomsa.PROJECT;
 tomsa.DB_NAME = tomsa.PROJECT;
 
-export const PROJECT = tomsa;
+export const PROJECT = demo;
 
 // ---------------------------------------------------------------------------------------------------------------------
 // Server-Client socket CONSTANTS (sck)
