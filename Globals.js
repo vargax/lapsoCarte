@@ -66,13 +66,12 @@ tomsa.DB_USER = tomsa.PROJECT;
 tomsa.DB_PASS = tomsa.PROJECT;
 tomsa.DB_NAME = tomsa.PROJECT;
 
-export const PROJECT = demo;
+// Project MARS --------------------------------------------------------------------------------------------------------
 
+export const PROJECT = demo;
 // ---------------------------------------------------------------------------------------------------------------------
 // Server-Client socket CONSTANTS (sck)
 // ---------------------------------------------------------------------------------------------------------------------
-
-
 export const ADD_LAYER = 'add_layer';
 export const GET_LAYERS = 'get_layers';
 
