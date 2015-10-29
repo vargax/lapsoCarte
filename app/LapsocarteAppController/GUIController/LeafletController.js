@@ -20,8 +20,6 @@ export default class LeafletController {
         if (!leafletController) {
             leafletController = this;
             mainController = new MainController();
-            this._initMap();
-
             _currentHighlightedFeatures = new Map();
         }
         return leafletController;
@@ -69,8 +67,7 @@ export default class LeafletController {
         return map;
     }
 
-    // Private methods -----------------------------------------------------------
-    _initMap() {
+    mc_initMap() {
         let mapInitParameters = MainController.sc_getInitialMapParameters();
         let center = mapInitParameters[0];
         let zoom = mapInitParameters[1];

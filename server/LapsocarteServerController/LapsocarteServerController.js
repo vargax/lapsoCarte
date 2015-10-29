@@ -3,41 +3,82 @@ import SocketioController from './SocketioController.js'
 import ExpressController from './ExpressController.js'
 import * as glbs from '../../Globals.js'
 
-const TIME_RANGE = glbs.PROJECT.TIME_RANGE;
-
+// ------------------------------------------------------------------------
+// CONTROLLERS
+// ------------------------------------------------------------------------
 let _geotabuladbController;
 let _expressController;
 let _socketioController;
 
+// ------------------------------------------------------------------------
+// VARIABLES
+// ------------------------------------------------------------------------
+let _data = null;
+let _geometries = null;
+
+let _clientsDataQueue;
+let _clientsGeomQueue;
+// ------------------------------------------------------------------------
+// CLASSES
+// ------------------------------------------------------------------------
 let lapsocarteServerController = null; // --> Singleton Pattern...
 export default class LapsocarteServerController {
     constructor() {
         if (!lapsocarteServerController) {
             lapsocarteServerController = this;
+
+            _geotabuladbController = new GeotabuladbController();
+            _expressController = new ExpressController();
+            _socketioController = new SocketioController();
+
+            _clientsDataQueue = [];
+            _clientsGeomQueue = [];
         }
         return lapsocarteServerController;
     }
 
-    init() {
-        _geotabuladbController = new GeotabuladbController();
+    // Methods exposed to my MainController (mc) ------------------------------
+    mc_init() {
         _geotabuladbController.mc_init();
-
-        _expressController = new ExpressController();
         _expressController.mc_init();
-
-        _socketioController = new SocketioController();
         _socketioController.mc_init(_expressController.mc_getServer());
     }
 
-    // ++++++++++++++  CONTROLLER-SPECIFIC FUNCTIONS ++++++++++++++++++++++++//
-    // SocketioController (sioc) -----------------------------------------------
-    sioc_getMapRequest(socketId) {
-        this.tmp = socketId;
-        _geotabuladbController.mc_getGeoTimeJsonLayers(TIME_RANGE);
+    // Methods exposed to all my subcontrollers (sc) --------------------------
+    sc_init(socketId) {
+        if (_data) _socketioController.mc_sendData(socketId,_data);
+        else {
+            _geotabuladbController.mc_getData();
+            _clientsDataQueue.push(socketId);
+        }
+
+        if (_geometries) _socketioController.mc_sendGeometries(socketId,_geometries);
+        else {
+            _geotabuladbController.mc_getGeometries();
+            _clientsGeomQueue.push(socketId);
+        }
     }
 
-    // GeotabuladbController (gtc) ----------------------------------------------
-    gtc_giveGeoTimeJsonLayers(geoTimeJsonLayer) {
-        _socketioController.mc_sendGeoTimeJsonLayer(this.tmp, geoTimeJsonLayer);
+    sc_giveData(json) {
+        _data = json;
+        console.log('ServerController :: '+_data.length+' data elements retrieved...');
+
+        let client = _clientsDataQueue.shift();
+        while(client != undefined) {
+            _socketioController.mc_sendData(client,_data);
+            client = _clientsDataQueue.shift();
+        }
+    }
+
+    sc_giveGeometries(geoJSON) {
+        _geometries = geoJSON;
+        console.log('ServerController :: '+_geometries['features'].length+' geometries retrieved...');
+        //console.dir(_geometries['features']);
+
+        let client = _clientsGeomQueue.shift();
+        while(client != undefined) {
+            _socketioController.mc_sendGeometries(client,_geometries);
+            client = _clientsGeomQueue.shift();
+        }
     }
 }

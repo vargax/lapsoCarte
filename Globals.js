@@ -7,12 +7,14 @@ let demo = {
     PROJECT: 'lapsocarte',
 
     /* server/LapsocarteServerController/GeotabuladbController.js */
-    TABLE: 'population',
+    COLUMN_GID: 'gid',
+    TABLE_GEOM: 'barrios_catastrales_wgs84',
     COLUMN_GEOM: 'geom',
-    COLUMN_TIME: 't',
-    TIME_RANGE: [1,2,3,4,5,6,7,8,9,10],
+    TABLE_DATA: 'population',
     COLUMN_NAME: 'nomb_barr',
     COLUMN_DATA: 'population',
+    COLUMN_TIME: 't',
+    TIME_RANGE: [1,2,3,4,5,6,7,8,9,10],
 
     /* app/LapsocarteAppController/GUIController/GUIController.js */
     MAP_CENTER: [4.66198, -74.09866],
@@ -45,7 +47,8 @@ let tomsa = {
     TABLE: 'schelling',
     COLUMN_GEOM: 'geom',
     COLUMN_TIME: 't',
-    TIME_RANGE: [0,3,6,9,12,15,18,21,24,27,30],
+    //TIME_RANGE: [0,3,6,9,12,15,18,21,24,27,30],
+    TIME_RANGE: [0],
     COLUMN_NAME: 'gid',
     COLUMN_DATA: 'currentpop',
 
@@ -72,18 +75,6 @@ export const PROJECT = demo;
 // ---------------------------------------------------------------------------------------------------------------------
 // Server-Client socket CONSTANTS (sck)
 // ---------------------------------------------------------------------------------------------------------------------
-export const ADD_LAYER = 'add_layer';
-export const GET_LAYERS = 'get_layers';
-
-export class GeoTimeJSON {
-    static pack (t, geoJSON) {
-        geoJSON['time'] = t;
-        return geoJSON;
-    }
-
-    static unpack(geoTimeJSON) {
-        let t = geoTimeJSON['time'];
-        delete geoTimeJSON['time'];
-        return [t, geoTimeJSON];
-    }
-}
+export const INIT = 'init';
+export const GIVE_DATA = 'give_data';
+export const GIVE_GEOM = 'give_geom';

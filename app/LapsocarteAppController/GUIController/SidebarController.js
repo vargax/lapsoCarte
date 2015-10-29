@@ -5,13 +5,11 @@ import L from'leaflet';
 import $ from 'jquery';
 
 let _mainController;
-let _map;
+let map;
 
 export default class SidebarController {
     constructor() {
         _mainController = new MainController();
-        _map = _mainController.sc_getMap();
-        this._init();
     }
 
     // Methods exposed to my MainController (mc) ------------------------------
@@ -23,7 +21,7 @@ export default class SidebarController {
         try {
             let features = _mainController.sc_getFeatures();
             for (let [id,feature] of features) {
-                if (_map.getBounds().contains(feature.getBounds())) {
+                if (map.getBounds().contains(feature.getBounds())) {
                     featureList.append(support.HTMLHelper.genSidebarEntry(id,feature));
                 }
             }
@@ -32,9 +30,10 @@ export default class SidebarController {
         }
     }
 
-    // Private methods --------------------------------------------------------
-    _init() {
-        _map.on('moveend', this.mc_syncSidebar);
+    mc_init() {
+        map = _mainController.sc_getMap();
+
+        map.on('moveend', this.mc_syncSidebar);
 
         //$(document).on("click", ".feature-row", function(e) {
         //    $(document).off("mouseout", ".feature-row", clearHighlight);
@@ -52,12 +51,12 @@ export default class SidebarController {
 
     _sidebarClick(id) {
         var layer = markerClusters.getFeatures(id);
-        _map.setView([layer.getLatLng().lat, layer.getLatLng().lng], 17);
+        map.setView([layer.getLatLng().lat, layer.getLatLng().lng], 17);
         layer.fire("click");
         /* Hide sidebar and go to the map on small screens */
         if (document.body.clientWidth <= 767) {
             $("#sidebar").hide();
-            _map.invalidateSize();
+            map.invalidateSize();
         }
     }
 }

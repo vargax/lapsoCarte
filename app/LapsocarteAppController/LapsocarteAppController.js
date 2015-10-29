@@ -5,36 +5,42 @@ import GUIController from './GUIController/GUIController.js';
 import SocketioController from './SocketioController.js';
 import DataController from './DataController.js';
 
+// ------------------------------------------------------------------------
+// CONTROLLERS
+// ------------------------------------------------------------------------
 let _guiController;
 let _socketioController;
 let _dataController;
 
+// ------------------------------------------------------------------------
+// CLASSES
+// ------------------------------------------------------------------------
 let lapsocarteAppController = null; // --> Singleton Pattern...
 export default class LapsocarteAppController {
     constructor() {
         if (!lapsocarteAppController) {
             lapsocarteAppController = this;
+
+            _guiController = new GUIController();
+            _dataController = new DataController();
+            _socketioController = new SocketioController();
+
         }
         return lapsocarteAppController;
     }
 
+    // Methods exposed to my MainController (mc) ------------------------------
     init() {
-        _guiController = new GUIController();
-        _guiController.mc_initGUI();
-
-        _socketioController = new SocketioController();
         _socketioController.mc_initCOMM();
-
-        _dataController = new DataController();
+        _guiController.mc_initGUI();
     }
 
-    // ++++++++++++++  CONTROLLER-SPECIFIC FUNCTIONS ++++++++++++++++++++++++//
-    // SocketioController (sioc) ----------------------------------------------
-    sioc_geoTimeJSONsArrayReceived(geoTimeJSONsArray) {
-        _dataController.mc_geoTimeJSONsRegister(geoTimeJSONsArray);
-        let geoTimeJSONsMap = _dataController.mc_getGeoTimeJSONsMap();
-        let timeVector = _dataController.mc_getTimeVector();
+    // Methods exposed to all my subcontrollers (sc) --------------------------
+    sc_geomReceived(geoJSON) {
+        _dataController.mc_registerGeometries(geoJSON);
+    }
 
-        _guiController.mc_setGeoTimeData(geoTimeJSONsMap, timeVector);
+    sc_dataReceived(json) {
+        _dataController.mc_registerData(json);
     }
 }

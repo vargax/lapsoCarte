@@ -37,6 +37,7 @@ let timeLayers;
 let _currentTime;
 let _timeVector;
 
+let map;
 // ------------------------------------------------------------------------
 // CLASSES
 // ------------------------------------------------------------------------
@@ -56,6 +57,10 @@ export default class GUIController {
 
     // Methods exposed to my MainController (mc) ------------------------------
     mc_initGUI() {
+        _leafletController.mc_initMap();
+        map = _leafletController.mc_getMap();
+        _sidebarController.mc_init();
+
         $("#about-btn").click(function() {
             $("#aboutModal").modal("show");
             $(".navbar-collapse.in").collapse("hide");
@@ -63,7 +68,7 @@ export default class GUIController {
         });
 
         $("#full-extent-btn").click(function() {
-            _map.fitBounds(boroughs.getBounds());
+            map.fitBounds(boroughs.getBounds());
             $(".navbar-collapse.in").collapse("hide");
             return false;
         });
@@ -82,7 +87,7 @@ export default class GUIController {
 
         $("#list-btn").click(function() {
             $('#sidebar').toggle();
-            _map.invalidateSize();
+            map.invalidateSize();
             return false;
         });
 
@@ -93,13 +98,13 @@ export default class GUIController {
 
         $("#sidebar-toggle-btn").click(function() {
             $("#sidebar").toggle();
-            _map.invalidateSize();
+            map.invalidateSize();
             return false;
         });
 
         $("#sidebar-hide-btn").click(function() {
             $('#sidebar').hide();
-            _map.invalidateSize();
+            map.invalidateSize();
         });
 
         $("#loading").hide();

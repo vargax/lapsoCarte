@@ -19,9 +19,14 @@ export default class SocketioController {
         this._inMsgs();
     }
 
-    mc_sendGeoTimeJsonLayer(socketId, geoTimeJsonLayer) {
+    mc_sendGeometries(socketId, geoJSON) {
         let client = _clients.get(socketId);
-        client.emit(glbs.ADD_LAYER,geoTimeJsonLayer);
+        client.emit(glbs.GIVE_GEOM,geoJSON);
+    }
+
+    mc_sendData(socketId, json) {
+        let client = _clients.get(socketId);
+        client.emit(glbs.GIVE_DATA,json);
     }
 
     _inMsgs() {
@@ -39,9 +44,9 @@ export default class SocketioController {
             });
 
             // App specific methods:
-            socket.on(glbs.GET_LAYERS, function(msg) {
-                console.log(logString+logOK+'Receiving a '+glbs.GET_LAYERS+' request...');
-                _mainController.sioc_getMapRequest(socket.id);
+            socket.on(glbs.INIT, function(msg) {
+                console.log(logString+logOK+'Receiving a '+glbs.INIT+' request...');
+                _mainController.sc_init(socket.id);
             });
         });
     }
