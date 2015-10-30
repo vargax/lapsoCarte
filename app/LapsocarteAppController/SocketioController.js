@@ -15,18 +15,18 @@ export default class SocketioController {
 
     // Methods exposed to my MainController (mc) ---------------------------------
     mc_initCOMM() {
-        console.log(':: Sending a ' + glbs.INIT + ' message...');
+        console.log('socketioController.mc_initCOMM() :: Sending a ' + glbs.INIT + ' message...');
         _socket.emit(glbs.INIT, '');
     }
 
     // Private methods -----------------------------------------------------------
     _inMsgs () {
         _socket.on(glbs.GIVE_DATA, function (msg) {
-            console.log(':: Receiving a ' + glbs.GIVE_DATA + ' message...');
+            console.log('socketioController._inMsgs() :: Receiving a ' + glbs.GIVE_DATA + ' message...');
             _mainController.sc_dataReceived(msg);
         });
         _socket.on(glbs.GIVE_GEOM, function (msg) {
-            console.log(':: Receiving a ' + glbs.GIVE_GEOM + ' message...');
+            console.log('socketioController._inMsgs() :: Receiving a ' + glbs.GIVE_GEOM + ' message...');
             _mainController.sc_geomReceived(msg);
         });
     }

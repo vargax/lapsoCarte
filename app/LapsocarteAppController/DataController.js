@@ -12,7 +12,7 @@ export default class DataController {
         _mainController = new MainController();
 
         geometriesMap = new Map();
-        // Map of maps: First key time, submaps key gid.
+        // Map of maps: First key -> time, submaps key -> gid.
         dataMap = new Map();
         timeVector = [];
     }
@@ -45,6 +45,10 @@ export default class DataController {
         for (let t of dataMap.keys()) timeVector.push(t);
 
         timeVector.sort(function(a, b){return a-b});
-        console.log('dataController.mc_registerData() :: '+timeVector.length+' time periods registered!');
+        console.log('dataController.mc_registerData() :: '+timeVector+' time periods registered!');
+    }
+
+    mc_getGeometries() {
+        return geometriesMap;
     }
 }

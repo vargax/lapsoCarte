@@ -38,6 +38,7 @@ export default class LapsocarteAppController {
     // Methods exposed to all my subcontrollers (sc) --------------------------
     sc_geomReceived(geoJSON) {
         _dataController.mc_registerGeometries(geoJSON);
+        _guiController.mc_setGeometries(_dataController.mc_getGeometries());
     }
 
     sc_dataReceived(json) {

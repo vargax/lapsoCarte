@@ -18,6 +18,7 @@ let _geometries = null;
 
 let _clientsDataQueue;
 let _clientsGeomQueue;
+
 // ------------------------------------------------------------------------
 // CLASSES
 // ------------------------------------------------------------------------
@@ -61,7 +62,7 @@ export default class LapsocarteServerController {
 
     sc_giveData(json) {
         _data = json;
-        console.log('ServerController :: '+_data.length+' data elements retrieved...');
+        console.log('serverController.sc_giveData() :: '+_data.length+' data elements retrieved...');
 
         let client = _clientsDataQueue.shift();
         while(client != undefined) {
@@ -72,7 +73,7 @@ export default class LapsocarteServerController {
 
     sc_giveGeometries(geoJSON) {
         _geometries = geoJSON;
-        console.log('ServerController :: '+_geometries['features'].length+' geometries retrieved...');
+        console.log('serverController.sc_giveGeometries() :: '+_geometries['features'].length+' geometries retrieved...');
         //console.dir(_geometries['features']);
 
         let client = _clientsGeomQueue.shift();

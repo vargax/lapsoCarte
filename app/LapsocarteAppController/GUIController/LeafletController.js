@@ -5,27 +5,57 @@ import * as glbs from './../../../Globals.js';
 import L from'leaflet';
 require('leaflet-providers');
 
+// ------------------------------------------------------------------------
+// CONSTANTS
+// ------------------------------------------------------------------------
+const MAP_CENTER = glbs.PROJECT.MAP_CENTER;
+const MAP_ZOOM = glbs.PROJECT.MAP_ZOOM;
+const MAP_ZOOM_RANGE = glbs.PROJECT.MAP_ZOOM_RANGE;
+
+// ------------------------------------------------------------------------
+// CONTROLLERS
+// ------------------------------------------------------------------------
 let mainController;
 
+// ------------------------------------------------------------------------
+// VARIABLES
+// ------------------------------------------------------------------------
 let map;
+let _geoJsonLayer;
+
+let geometriesMap;
+
 let timeLayers;
 let _currentTime;
 let _currentHighlightedFeatures;
 
 let infoWidget;
 
+// ------------------------------------------------------------------------
+// CLASSES
+// ------------------------------------------------------------------------
 let leafletController = null; // --> Singleton Pattern, so groupTimeLayer instances could access the controller...
 export default class LeafletController {
     constructor() {
         if (!leafletController) {
             leafletController = this;
             mainController = new MainController();
+
+            _geoJsonLayer = L.geoJson();
             _currentHighlightedFeatures = new Map();
         }
         return leafletController;
     }
 
     // Methods exposed to my MainController (mc) ---------------------------------
+    mc_setGeometries(geomMap) {
+        geometriesMap = geomMap;
+
+        for (let [gid, geometry] of geometriesMap) {
+            _geoJsonLayer.addData(geometry);
+        }
+    }
+
     mc_setTime(time) {
         try {
             this.mc_resetAllFeatures();
@@ -68,15 +98,13 @@ export default class LeafletController {
     }
 
     mc_initMap() {
-        let mapInitParameters = MainController.sc_getInitialMapParameters();
-        let center = mapInitParameters[0];
-        let zoom = mapInitParameters[1];
-        let zoomRange =   mapInitParameters[2];
+        map = L.map('map',{zoomControl: false}).setView(MAP_CENTER, MAP_ZOOM);
 
-        map = L.map('map',{zoomControl: false}).setView(center, zoom);
+        map.addLayer(_geoJsonLayer);
+
         map.addLayer(new L.tileLayer.provider(glbs.PROJECT.LAYER_PROVIDER));
-        map._layersMinZoom = zoomRange[0];
-        map._layersMaxZoom = zoomRange[1];
+        map._layersMinZoom = MAP_ZOOM_RANGE[0];
+        map._layersMaxZoom = MAP_ZOOM_RANGE[1];
 
         map.addControl(L.control.scale({imperial: false, position: 'bottomleft'}));
         map.addControl(L.control.zoom({position: 'bottomright'}));

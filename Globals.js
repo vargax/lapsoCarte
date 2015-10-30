@@ -16,11 +16,10 @@ let demo = {
     COLUMN_TIME: 't',
     TIME_RANGE: [1,2,3,4,5,6,7,8,9,10],
 
-    /* app/LapsocarteAppController/GUIController/GUIController.js */
+    /* app/LapsocarteAppController/GUIController/LeafletController.js */
     MAP_CENTER: [4.66198, -74.09866],
     MAP_ZOOM: 11,
     MAP_ZOOM_RANGE: [10, 16],
-    /* app/LapsocarteAppController/GUIController/LeafletController.js */
     LAYER_PROVIDER: 'Esri.WorldGrayCanvas',
 
     /* app/LapsocarteAppController/GUIController/Support.js */

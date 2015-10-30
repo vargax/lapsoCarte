@@ -16,13 +16,6 @@ require('handlebars');
 require('list.js');
 
 // ------------------------------------------------------------------------
-// CONSTANTS
-// ------------------------------------------------------------------------
-const MAP_CENTER = glbs.PROJECT.MAP_CENTER;
-const MAP_ZOOM = glbs.PROJECT.MAP_ZOOM;
-const MAP_ZOOM_RANGE = glbs.PROJECT.MAP_ZOOM_RANGE;
-
-// ------------------------------------------------------------------------
 // CONTROLLERS
 // ------------------------------------------------------------------------
 let _mainController;
@@ -33,11 +26,14 @@ let _timeController;
 // ------------------------------------------------------------------------
 // VARIABLES
 // ------------------------------------------------------------------------
+let geometriesMap;
+
 let timeLayers;
 let _currentTime;
 let _timeVector;
 
 let map;
+
 // ------------------------------------------------------------------------
 // CLASSES
 // ------------------------------------------------------------------------
@@ -61,53 +57,61 @@ export default class GUIController {
         map = _leafletController.mc_getMap();
         _sidebarController.mc_init();
 
-        $("#about-btn").click(function() {
-            $("#aboutModal").modal("show");
-            $(".navbar-collapse.in").collapse("hide");
-            return false;
-        });
-
-        $("#full-extent-btn").click(function() {
-            map.fitBounds(boroughs.getBounds());
-            $(".navbar-collapse.in").collapse("hide");
-            return false;
-        });
-
-        $("#legend-btn").click(function() {
-            $("#legendModal").modal("show");
-            $(".navbar-collapse.in").collapse("hide");
-            return false;
-        });
-
-        $("#login-btn").click(function() {
-            $("#loginModal").modal("show");
-            $(".navbar-collapse.in").collapse("hide");
-            return false;
-        });
-
-        $("#list-btn").click(function() {
-            $('#sidebar').toggle();
-            map.invalidateSize();
-            return false;
-        });
-
-        $("#nav-btn").click(function() {
-            $(".navbar-collapse").collapse("toggle");
-            return false;
-        });
-
-        $("#sidebar-toggle-btn").click(function() {
-            $("#sidebar").toggle();
-            map.invalidateSize();
-            return false;
-        });
-
-        $("#sidebar-hide-btn").click(function() {
-            $('#sidebar').hide();
-            map.invalidateSize();
-        });
-
+        initLegacy();
         $("#loading").hide();
+
+        function initLegacy() {
+            $("#about-btn").click(function() {
+                $("#aboutModal").modal("show");
+                $(".navbar-collapse.in").collapse("hide");
+                return false;
+            });
+
+            $("#full-extent-btn").click(function() {
+                map.fitBounds(boroughs.getBounds());
+                $(".navbar-collapse.in").collapse("hide");
+                return false;
+            });
+
+            $("#legend-btn").click(function() {
+                $("#legendModal").modal("show");
+                $(".navbar-collapse.in").collapse("hide");
+                return false;
+            });
+
+            $("#login-btn").click(function() {
+                $("#loginModal").modal("show");
+                $(".navbar-collapse.in").collapse("hide");
+                return false;
+            });
+
+            $("#list-btn").click(function() {
+                $('#sidebar').toggle();
+                map.invalidateSize();
+                return false;
+            });
+
+            $("#nav-btn").click(function() {
+                $(".navbar-collapse").collapse("toggle");
+                return false;
+            });
+
+            $("#sidebar-toggle-btn").click(function() {
+                $("#sidebar").toggle();
+                map.invalidateSize();
+                return false;
+            });
+
+            $("#sidebar-hide-btn").click(function() {
+                $('#sidebar').hide();
+                map.invalidateSize();
+            });
+        }
+    }
+
+    mc_setGeometries(geomMap) {
+        geometriesMap = geomMap;
+        _leafletController.mc_setGeometries(geometriesMap);
     }
 
     mc_setGeoTimeData(geoTimeJSONsMap, timeVector) {
@@ -137,13 +141,8 @@ export default class GUIController {
         _leafletController.mc_setTime(_currentTime);
         _sidebarController.mc_syncSidebar();
     }
-
     sc_getMap() {
         return _leafletController.mc_getMap();
-    }
-    // LeafletController (llc) ------------------------------------------------
-    static sc_getInitialMapParameters() {
-        return [MAP_CENTER, MAP_ZOOM, MAP_ZOOM_RANGE];
     }
 
     // SidebarController (sbc) ------------------------------------------------
