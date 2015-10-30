@@ -43,5 +43,8 @@ export default class LapsocarteAppController {
 
     sc_dataReceived(json) {
         _dataController.mc_registerData(json);
+        let tVector = _dataController.mc_getTimeVector();
+        let dMap = _dataController.mc_getData();
+        _guiController.mc_setData(tVector,dMap);
     }
 }

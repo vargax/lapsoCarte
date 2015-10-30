@@ -3,6 +3,7 @@ import * as support from './Support.js'
 
 import MainController from './../LapsocarteAppController.js'
 import LeafletController from './LeafletController.js'
+import InfoWidgetController from './InfoWidgetController.js'
 import SidebarController from './SidebarController.js'
 import TimeController from './TimeController/TimeController.js'
 
@@ -20,20 +21,19 @@ require('list.js');
 // ------------------------------------------------------------------------
 let _mainController;
 let _leafletController;
+let _infoWidgetController;
 let _sidebarController;
 let _timeController;
 
 // ------------------------------------------------------------------------
 // VARIABLES
 // ------------------------------------------------------------------------
-let geometriesMap;
+let geometriesMap = null;
+let dataMap = null;
+let timeVector;
 
-let timeLayers;
 let _currentTime;
-let _timeVector;
-
 let map;
-
 // ------------------------------------------------------------------------
 // CLASSES
 // ------------------------------------------------------------------------
@@ -45,6 +45,7 @@ export default class GUIController {
 
             _mainController = new MainController();
             _leafletController = new LeafletController();
+            _infoWidgetController = new InfoWidgetController();
             _sidebarController = new SidebarController();
             _timeController = new TimeController();
         }
@@ -55,10 +56,11 @@ export default class GUIController {
     mc_initGUI() {
         _leafletController.mc_initMap();
         map = _leafletController.mc_getMap();
+        map.addControl(_infoWidgetController.mc_getLeafletControl());
+
         _sidebarController.mc_init();
 
         initLegacy();
-        $("#loading").hide();
 
         function initLegacy() {
             $("#about-btn").click(function() {
@@ -112,40 +114,39 @@ export default class GUIController {
     mc_setGeometries(geomMap) {
         geometriesMap = geomMap;
         _leafletController.mc_setGeometries(geometriesMap);
+
+        this._amIready();
     }
 
-    mc_setGeoTimeData(geoTimeJSONsMap, timeVector) {
-        timeLayers = new Map();
-        _timeVector = timeVector;
+    mc_setData(tVector, dMap) {
+        timeVector = tVector;
+        dataMap = dMap;
 
-        for (let [t, geoJSON] of geoTimeJSONsMap) {
-            let timeLayer = new TimeLayer(t, geoJSON);
-            timeLayers.set(t, timeLayer);
-        }
-
-        _leafletController.mc_setTimeLayers(timeLayers);
-        _timeController.mc_setTimeVector(_timeVector);
-
-        this.sc_setTime(_timeVector[0]);
+        _timeController.mc_setTimeVector(timeVector);
+        this._amIready();
     }
 
     // Methods exposed to all my subcontrollers (sc) --------------------------
-    sc_featureOver(featureId) {
-        _leafletController.mc_highlightFeature(featureId);
+    sc_spatialObjectOver(gid) {
+        let color = glbs.PROJECT.FOCUSED_COLOR;
+        _leafletController.mc_colorGeometry(gid, color);
+        _infoWidgetController.mc_updateInfo(dataMap.get(_currentTime).get(gid));
+
     }
-    sc_featureOut(featureId) {
-        _leafletController.mc_resetFeature(featureId);
-    }
-    sc_setTime(newTime) {
-        _currentTime = newTime;
-        _leafletController.mc_setTime(_currentTime);
-        _sidebarController.mc_syncSidebar();
-    }
-    sc_getMap() {
-        return _leafletController.mc_getMap();
+    sc_spatialObjectOut(gid) {
+        this._resetGeometry(gid);
     }
 
-    // SidebarController (sbc) ------------------------------------------------
+    sc_setTime(newTime) {
+        _currentTime = newTime;
+        this._resetAllGeometries();
+        _sidebarController.mc_syncSidebar();
+    }
+
+    sc_getMap() {
+        return map;
+    }
+
     sc_getFeatures() {
         try {
             return timeLayers.get(_currentTime).getFeatures();    
@@ -153,54 +154,25 @@ export default class GUIController {
             console.log(':! There are not features loaded yet!')
         }
     }
-}
 
-let features = new Map();
-class TimeLayer {
-    constructor(time, geoJSON) {
-        this.time = time;
-        this.layer = L.geoJson(geoJSON, {
-            onEachFeature: this.featureSetup
-        });
-        this._saveFeatures();
+    // Private Methods --------------------------------------------------------
+    _resetGeometry(gid) {
+        let data = dataMap.get(_currentTime).get(gid)[glbs.PROJECT.COLUMN_DATA];
+        let color = glbs.PROJECT.FUNC_DATA2COLOR(data);
+        _leafletController.mc_colorGeometry(gid, color);
     }
 
-    getLayer() {
-        return this.layer;
+    _resetAllGeometries() {
+        for (let gid of geometriesMap.keys())
+            this._resetGeometry(gid);
     }
 
-    getFeatures() {
-        return this.features;
-    }
-
-    getFeature(featureId) {
-        return this.features.get(featureId);
-    }
-
-    featureSetup(feature, layer) {
-
-        layer._guiController = new GUIController();
-        layer._lfId = String(layer._leaflet_id);
-
-        features.set(layer._lfId, layer);
-
-        layer.setStyle(support.LayerStyle.choroplethStyle(layer));
-        layer.on({
-            mouseover: featureSelect,
-            mouseout: featureDeselect
-        });
-
-        function featureSelect() {
-            this._guiController.sc_featureOver(this._lfId);
+    _amIready() {
+        if (geometriesMap && dataMap) {
+            this.sc_setTime(timeVector[0]);
+            $("#loading").hide();
+            return true;
         }
-
-        function featureDeselect() {
-            this._guiController.sc_featureOut(this._lfId);
-        }
-    }
-
-    _saveFeatures() {
-        this.features = features;
-        features = new Map();  // Cleaning global container to be ready for the next TimeLayer...
+        return false;
     }
 }

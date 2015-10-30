@@ -20,10 +20,9 @@ export default class DataController {
     // Methods exposed to my MainController (mc) ---------------------------------
     mc_registerGeometries(geoJSON) {
         for (let feature of geoJSON['features']) {
-            let geometry = feature['geometry'];
             let gid = feature['properties'][glbs.PROJECT.COLUMN_GID];
 
-            geometriesMap.set(gid,geometry);
+            geometriesMap.set(gid,feature);
         }
         console.log('dataController.mc_registerGeometries() :: '+geometriesMap.size+' geometries registered!');
     }
@@ -50,5 +49,13 @@ export default class DataController {
 
     mc_getGeometries() {
         return geometriesMap;
+    }
+
+    mc_getData() {
+        return dataMap;
+    }
+
+    mc_getTimeVector() {
+        return timeVector;
     }
 }

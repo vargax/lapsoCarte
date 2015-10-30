@@ -22,14 +22,11 @@ let mainController;
 // ------------------------------------------------------------------------
 let map;
 let _geoJsonLayer;
-
-let geometriesMap;
+let _gid2leafletObjectMap;
 
 let timeLayers;
 let _currentTime;
-let _currentHighlightedFeatures;
-
-let infoWidget;
+let _currentHighlightedLayers;
 
 // ------------------------------------------------------------------------
 // CLASSES
@@ -41,56 +38,23 @@ export default class LeafletController {
             leafletController = this;
             mainController = new MainController();
 
-            _geoJsonLayer = L.geoJson();
-            _currentHighlightedFeatures = new Map();
+            _gid2leafletObjectMap = new Map();
+            _currentHighlightedLayers = new Map();
         }
         return leafletController;
     }
 
     // Methods exposed to my MainController (mc) ---------------------------------
-    mc_setGeometries(geomMap) {
-        geometriesMap = geomMap;
-
-        for (let [gid, geometry] of geometriesMap) {
-            _geoJsonLayer.addData(geometry);
-        }
+    mc_colorGeometies(gid2colorArray) {
+        for (let tuple of gid2colorArray)
+            this.mc_colorGeometry(tuple[0],tuple[1]);
     }
 
-    mc_setTime(time) {
-        try {
-            this.mc_resetAllFeatures();
-            map.removeLayer(timeLayers.get(_currentTime).getLayer()); // --> EAFP Pattern
-        } catch (e) {
-            console.log('+! This was the first layer');
-        }
-        _currentTime = time;
-        map.addLayer(timeLayers.get(_currentTime).getLayer());
-    }
-
-    mc_resetFeature(featureId) {
-        let feature = timeLayers.get(_currentTime).getFeature(featureId);
-        feature.setStyle(support.LayerStyle.choroplethStyle(feature));
-        _currentHighlightedFeatures.delete(featureId);
-        infoWidget.update();
-    }
-
-    mc_resetAllFeatures() {
-        for (let feature of _currentHighlightedFeatures.values()) {
-            feature.setStyle(support.LayerStyle.choroplethStyle(feature));
-        }
-        _currentHighlightedFeatures.clear();
-        infoWidget.update();
-    }
-
-    mc_highlightFeature(featureId) {
-        let feature = timeLayers.get(_currentTime).getFeature(featureId);
-        feature.setStyle(support.LayerStyle.getFocusedLayerStyle());
-        _currentHighlightedFeatures.set(featureId,feature);
-        infoWidget.update(feature);
-    }
-
-    mc_setTimeLayers(timeLayersP) {
-        timeLayers = timeLayersP;
+    mc_colorGeometry(gid, color) {
+        let leafletObject = _gid2leafletObjectMap.get(gid);
+        leafletObject.layer.setStyle({
+            color: color
+        });
     }
 
     mc_getMap() {
@@ -100,8 +64,6 @@ export default class LeafletController {
     mc_initMap() {
         map = L.map('map',{zoomControl: false}).setView(MAP_CENTER, MAP_ZOOM);
 
-        map.addLayer(_geoJsonLayer);
-
         map.addLayer(new L.tileLayer.provider(glbs.PROJECT.LAYER_PROVIDER));
         map._layersMinZoom = MAP_ZOOM_RANGE[0];
         map._layersMaxZoom = MAP_ZOOM_RANGE[1];
@@ -110,9 +72,74 @@ export default class LeafletController {
         map.addControl(L.control.zoom({position: 'bottomright'}));
 
         map.addControl(support.Widgets.getLocateWidget());
+    }
 
-        infoWidget = support.Widgets.getInfoWidget();
-        map.addControl(infoWidget);
+    mc_setGeometries(geometriesMap) {
+        try {
+            _geoJsonLayer.clearLayers();
+        } catch (e) {
+            console.log('LeafletController.mc_setGeometries() :! This is the first time you set geometries!');
+            initGeoJsonLayer();
+        }
+
+        for (let [gid, geometry] of geometriesMap) {
+            _geoJsonLayer.addData(geometry);
+        }
+
+        /*
+         In Leaflet:
+         - Feature is the spatial object (geoJSON feature)
+         - Has a 'geometry' Object
+         - Has a 'properties' Object
+         - Layer is the JS object
+         - Has all the methods / listeners / etc.
+
+         In the Leaflet's geoJSON implementation each geoJSON feature is one Leaflet LAYER
+         with one Leaflet FEATURE!
+
+         The Leaflet's geoJSON object is a Leaflet's LayerGroup, in which each geoJSON feature
+         is one layer of that group.
+         */
+        function initGeoJsonLayer() {
+
+            _geoJsonLayer = L.geoJson([],{
+                onEachFeature: geometrySetup
+            });
+            map.addLayer(_geoJsonLayer);
+
+            function geometrySetup(feature, layer) {
+                layer.gid = feature['properties'][glbs.PROJECT.COLUMN_GID];
+                layer.mainController = leafletController;
+                layer.setStyle(glbs.PROJECT.DEFAULT_STYLE);
+
+                _gid2leafletObjectMap.set(layer.gid, {
+                    layer: layer,
+                    feature: feature
+                });
+
+                layer.on({
+                    mouseover: geometryOver,
+                    mouseout: geometryOut
+                });
+            }
+
+            function geometryOver() {
+                this.mainController.sc_geometryOver(this.gid);
+            }
+
+            function geometryOut() {
+                this.mainController.sc_geometryOut(this.gid);
+            }
+        }
+    }
+
+    // Methods exposed to all my subcontrollers (sc) --------------------------
+    sc_geometryOver(gid) {
+        mainController.sc_spatialObjectOver(gid);
+    }
+
+    sc_geometryOut(gid) {
+        mainController.sc_spatialObjectOut(gid);
     }
 }
 

@@ -22,7 +22,8 @@ let demo = {
     MAP_ZOOM_RANGE: [10, 16],
     LAYER_PROVIDER: 'Esri.WorldGrayCanvas',
 
-    /* app/LapsocarteAppController/GUIController/Support.js */
+    /* app/LapsocarteAppController/GUIController/LeafletController.js */
+    DEFAULT_STYLE: {color: 'blue', weight: 1.2},
     FOCUSED_COLOR: '#0000FF',
     FUNC_DATA2COLOR: function (d) {
         // To get the color of each COLUMN_GEOM in function of COLUMN_DATA
@@ -43,19 +44,22 @@ demo.DB_NAME = demo.PROJECT;
 let tomsa = {
     PROJECT: 'tomsa',
 
-    TABLE: 'schelling',
+    COLUMN_GID: 'gid',
+    TABLE_GEOM: 'manzanas',
     COLUMN_GEOM: 'geom',
-    COLUMN_TIME: 't',
-    //TIME_RANGE: [0,3,6,9,12,15,18,21,24,27,30],
-    TIME_RANGE: [0],
+    TABLE_DATA: 'schelling',
     COLUMN_NAME: 'gid',
     COLUMN_DATA: 'currentpop',
+    COLUMN_TIME: 't',
+    TIME_RANGE: [0,3,6,9,12,15,18,21,24,27,30],
+    //TIME_RANGE: [0],
 
     MAP_CENTER: [4.66198, -74.09866],
     MAP_ZOOM: 11,
     MAP_ZOOM_RANGE: [10, 16],
     LAYER_PROVIDER: 'Esri.WorldGrayCanvas',
 
+    DEFAULT_STYLE: {color: 'blue', weight: 1.2},
     FOCUSED_COLOR: 'green',
     FUNC_DATA2COLOR: function (d) {
         return  d == 0 ? 'gray'  :
@@ -70,7 +74,7 @@ tomsa.DB_NAME = tomsa.PROJECT;
 
 // Project MARS --------------------------------------------------------------------------------------------------------
 
-export const PROJECT = demo;
+export const PROJECT = tomsa;
 // ---------------------------------------------------------------------------------------------------------------------
 // Server-Client socket CONSTANTS (sck)
 // ---------------------------------------------------------------------------------------------------------------------

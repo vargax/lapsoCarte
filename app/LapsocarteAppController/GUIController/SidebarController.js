@@ -41,11 +41,11 @@ export default class SidebarController {
         //});
 
         $(document).on("mouseover", ".feature-row", function(e) {
-            _mainController.sc_featureOver($(this).attr("id"));
+            _mainController.sc_spatialObjectOver($(this).attr("id"));
         });
 
         $(document).on("mouseout", ".feature-row", function(e) {
-            _mainController.sc_featureOut($(this).attr("id"));
+            _mainController.sc_spatialObjectOut($(this).attr("id"));
         });
     }
 
