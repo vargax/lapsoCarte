@@ -47,11 +47,10 @@ export default class GeotabuladbController {
         let queries = 0;
         for (let t of timeRange) {
             let parameters = {
-                // ToDo population should be dynamic...
                 tableName: TABLE,	        // The name of the table we are going to query
                 geometry: COLUMN_GEOM, 		// The name of the column who has the geometry
                 where: COLUMN_TIME+'='+t,      // The name of the column who has the time
-                limit: 2000,
+                //limit: 2000,
                 properties: 'all'			// Additional columns we want to recover --> For specific columns you have to pass columns' names as an Array
             };
 
