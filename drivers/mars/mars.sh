@@ -1,8 +1,11 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
 cd ../data/ignore/mars
 unzip Shape.zip -d /tmp/mars
-cp datos.csv /tmp/mars/.
+
+python ../../../drivers/mars/csv_parser.py
+cd output
+mv *.csv /tmp/mars/.
 
 cd /tmp/mars
 

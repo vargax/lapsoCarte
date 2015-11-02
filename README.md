@@ -43,17 +43,7 @@ sudo service postgresql restart
 ```
 For details on how to install NodeJS 0.12 please refer to [NODESOURCE](https://nodesource.com/blog/nodejs-v012-iojs-and-the-nodesource-linux-repositories).
 
-### PostGIS setup
-```bash
-# Create lapsocarte user
-sudo -i -u postgres
-createuser -P -s -e lapsocarte
-psql -h localhost -U lapsocarte lapsocarte
-# Create LapsoCarte database and enable Postgis
-createdb -O lapsocarte lapsocarte
-psql -c "CREATE EXTENSION postgis; CREATE EXTENSION postgis_topology;" lapsocarte
-```
-### Project setup and NPM dependencies
+### App setup and NPM dependencies
 ```bash
 cd pathToProjectRoot
 git clone https://github.com/vargax/lapsoCarte.git
@@ -70,6 +60,26 @@ cd node_modules
 ln -s ../../../node_modules/font-awesome .
 ln -s ../../../node_modules/jquery-ui .
 ```
+
+### PostGIS setup
+```bash
+cd drivers
+chmod +x create_user.sh
+sudo ./create_user.sh lapsocarte
+```
+The create_user script will create a new postgresql user 'lapsocarte' with password 'lapsocarte' in localhost. Then it will create the database 'lapsocarte' and enable the postgis extension on it.
+The idea is to have one postgresql user and database per project.
+
+### Globals
+The [Globals.js](Globals.js) define an object with all the required parameters for a given project. It is possible to change between projects changing the `export const PROJECT` constant.
+  You must recompile and rerun the application to see the changes:
+  ```bash
+  # Compile client-side libraries
+  npm run build
+  # Server run
+  node bootstrap.js
+  ```
+
 ## App Execution
 ### Sample data database load
 ```bash
@@ -82,8 +92,7 @@ chmod +x shp+csv.sh
 # Compile client-side libraries
 npm run build
 # Server run
-nodejs bootstrap.js
+node bootstrap.js
 ```
-
-## App Screenshot
+### Sample Screenshot
 ![screenshot](doc/proto.png)
