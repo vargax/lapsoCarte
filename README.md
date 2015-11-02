@@ -67,11 +67,11 @@ cd drivers
 chmod +x create_user.sh
 sudo ./create_user.sh lapsocarte
 ```
-The create_user script will create a new postgresql user 'lapsocarte' with password 'lapsocarte' in localhost. Then it will create the database 'lapsocarte' and enable the postgis extension on it.
-The idea is to have one postgresql user and database per project.
+The `create_user.sh` script will create a new postgresql user *lapsocarte* with password *lapsocarte* in *localhost*. Then it will create the database *lapsocarte* and enable the PostGIS extension on it.
+The idea is to have one PostgreSQL user and database per project.
 
 ### Globals
-The [Globals.js](Globals.js) define an object with all the required parameters for a given project. It is possible to change between projects changing the `export const PROJECT` constant.
+The [Globals.js](Globals.js) define a JavaScript object with all the required parameters for a given project. It is possible to change between projects changing the `export const PROJECT` constant.
   You must recompile and rerun the application to see the changes:
   ```bash
   # Compile client-side libraries
