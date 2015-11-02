@@ -45,7 +45,7 @@ For details on how to install NodeJS 0.12 please refer to [NODESOURCE](https://n
 
 ### PostGIS setup
 ```bash
-# Create geotabula user
+# Create lapsocarte user
 sudo -i -u postgres
 createuser -P -s -e lapsocarte
 psql -h localhost -U lapsocarte lapsocarte
