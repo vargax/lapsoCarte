@@ -29,6 +29,11 @@ export default class SocketioController {
         client.emit(glbs.GIVE_DATA,json);
     }
 
+    mc_sendStats(socketId, object) {
+        let client = _clients.get(socketId);
+        client.emit(glbs.GIVE_STATS,object);
+    }
+
     _inMsgs() {
         this._socket.on('connection', function(socket) {
             console.log(logString+'._inMsgs()'+logOK+' Socket connection from client '+socket.id);

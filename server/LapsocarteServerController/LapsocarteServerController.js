@@ -1,6 +1,7 @@
 import GeotabuladbController from './GeotabuladbController.js'
 import SocketioController from './SocketioController.js'
 import ExpressController from './ExpressController.js'
+import DataController from './DataController.js'
 import * as glbs from '../../Globals.js'
 
 // ------------------------------------------------------------------------
@@ -9,6 +10,7 @@ import * as glbs from '../../Globals.js'
 let _geotabuladbController;
 let _expressController;
 let _socketioController;
+let _dataController;
 
 // ------------------------------------------------------------------------
 // VARIABLES
@@ -31,6 +33,7 @@ export default class LapsocarteServerController {
             _geotabuladbController = new GeotabuladbController();
             _expressController = new ExpressController();
             _socketioController = new SocketioController();
+            _dataController = new DataController();
 
             _clientsDataQueue = [];
             _clientsGeomQueue = [];
@@ -47,7 +50,10 @@ export default class LapsocarteServerController {
 
     // Methods exposed to all my subcontrollers (sc) --------------------------
     sc_init(socketId) {
-        if (_data) _socketioController.mc_sendData(socketId,_data);
+        if (_data) {
+            _socketioController.mc_sendData(socketId,_data);
+            _socketioController.mc_sendStats(socketId,_dataController.mc_getDescriptiveStats());
+        }
         else {
             _geotabuladbController.mc_getData();
             _clientsDataQueue.push(socketId);
@@ -63,10 +69,12 @@ export default class LapsocarteServerController {
     sc_giveData(json) {
         _data = json;
         console.log('serverController.sc_giveData() :: '+_data.length+' data elements retrieved...');
+        _dataController.mc_setData(_data);
 
         let client = _clientsDataQueue.shift();
         while(client != undefined) {
             _socketioController.mc_sendData(client,_data);
+            _socketioController.mc_sendStats(client,_dataController.mc_getDescriptiveStats());
             client = _clientsDataQueue.shift();
         }
     }

@@ -1,9 +1,12 @@
 import * as crypto from 'crypto'
 import GeotabulaDB from 'geotabuladb'
 
-import MainController from './LapsocarteServerController.js'
 import * as glbs from '../../Globals.js'
+import MainController from './LapsocarteServerController.js'
 
+// ------------------------------------------------------------------------
+// CONSTANTS
+// ------------------------------------------------------------------------
 const DB_USER = glbs.PROJECT.DB_USER;
 const DB_PASS = glbs.PROJECT.DB_PASS;
 const DB_NAME = glbs.PROJECT.DB_NAME;
@@ -19,11 +22,21 @@ const logString = 'GeotabuladbController';
 const logOK  = ' :: ';
 const logERR = ' !! ';
 
+// ------------------------------------------------------------------------
+// CONTROLLERS
+// ------------------------------------------------------------------------
 let _mainController;
 let _geo;
+
+// ------------------------------------------------------------------------
+// VARIABLES
+// ------------------------------------------------------------------------
 let _queries;
 let _results;
 
+// ------------------------------------------------------------------------
+// CLASSES
+// ------------------------------------------------------------------------
 export default class GeotabuladbController {
     constructor() {
         _mainController = new MainController();

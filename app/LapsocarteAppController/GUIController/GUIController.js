@@ -157,9 +157,13 @@ export default class GUIController {
 
     // Private Methods --------------------------------------------------------
     _resetGeometry(gid) {
-        let data = dataMap.get(_currentTime).get(gid)[glbs.PROJECT.COLUMN_DATA];
-        let color = glbs.PROJECT.FUNC_DATA2COLOR(data);
-        _leafletController.mc_colorGeometry(gid, color);
+        try {
+            let data = dataMap.get(_currentTime).get(gid)[glbs.PROJECT.COLUMN_DATA];
+            let color = glbs.PROJECT.FUNC_DATA2COLOR(data);
+            _leafletController.mc_colorGeometry(gid, color);
+        } catch (e) {
+            console.log('GUIController._resetGeometry('+gid+')!: No '+glbs.PROJECT.COLUMN_DATA+' data for gid '+gid);
+        }
     }
 
     _resetAllGeometries() {
