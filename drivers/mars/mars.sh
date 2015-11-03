@@ -9,7 +9,9 @@ rmdir output
 
 cd /tmp/mars
 psql -U mars -d mars -f db.sql
-shp2pgsql MARS-Bogota.shp > shape.sql
+shp2pgsql -d -e -G -W 'latin1' MARS-Bogota.shp > shape.sql
+sed -i "s/PRIMARY KEY (gid);/PRIMARY KEY (mars);/g" shape.sql
+
 psql -U mars -d mars -f shape.sql
 
 rm -r /tmp/mars
