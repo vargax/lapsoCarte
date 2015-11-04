@@ -25,6 +25,7 @@ let demo = {
     /* app/LapsocarteAppController/GUIController/LeafletController.js */
     DEFAULT_STYLE: {color: 'blue', weight: 1.2},
     FOCUSED_COLOR: '#0000FF',
+    /* app/LapsocarteAppController/GUIController/GUIController.js */
     FUNC_DATA2COLOR: function (d) {
         // To get the color of each COLUMN_GEOM in function of COLUMN_DATA
         return  d > 8000 ? '#800026' :
@@ -83,7 +84,7 @@ let mars = {
     COLUMN_NAME: 'mars',
     COLUMN_DATA: 'trips_car',
     COLUMN_TIME: 't',
-    TIME_RANGE: [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30],
+    TIME_RANGE: range(0,30),
     //TIME_RANGE: [0],
 
     MAP_CENTER: [4.66198, -74.09866],
@@ -93,15 +94,7 @@ let mars = {
 
     DEFAULT_STYLE: {color: 'blue', weight: 1.2},
     FOCUSED_COLOR: 'green',
-    FUNC_DATA2COLOR: function (d) {
-        return  d > 1150 ? '#800026' :
-                d > 1000 ? '#BD0026' :
-                d > 850 ? '#E31A1C' :
-                d > 700 ? '#FC4E2A' :
-                d > 550 ? '#FD8D3C' :
-                d > 400 ? '#FEB24C' :
-                d > 250 ? '#FED976' : '#FFEDA0';
-    }
+    FUNC_DATA2COLOR: choropleth
 };
 mars.DB_USER = mars.PROJECT;
 mars.DB_PASS = mars.PROJECT;
@@ -112,8 +105,34 @@ export const PROJECT = mars;
 // ---------------------------------------------------------------------------------------------------------------------
 // Generic FUNC_DATA2COLOR functions
 // ---------------------------------------------------------------------------------------------------------------------
+// ToDo review this choropleth implementation
 function choropleth(d) {
+    let colors = ['#FFEDA0','#FED976','#FEB24C','#FD8D3C','#FC4E2A','#E31A1C','#BD0026','#800026'];
+    if (this.choropleth_range == undefined) {
+        this.choropleth_range = [];
+        let step = (this[DESC_STATS].MAX - this[DESC_STATS].MIN) / colors.length;
+        for (let i = this[DESC_STATS].MIN + step; i <= this[DESC_STATS].MAX; i += step)
+            this.choropleth_range.push(i);
 
+        console.dir(this.choropleth_range);
+    }
+
+    for (let i = 0; i < colors.length; i++)
+        if (d <= this.choropleth_range[i]) return colors[i];
+
+    // I should never reach this!!
+    return PROJECT.DEFAULT_STYLE.color;
+}
+
+// ---------------------------------------------------------------------------------------------------------------------
+// Utility Functions
+// ---------------------------------------------------------------------------------------------------------------------
+function range(begin, end, step = 1) {
+    let result = [];
+    for (let i = begin; i <= end; i+= step)
+        result.push(i)
+
+    return result;
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
@@ -123,3 +142,8 @@ export const INIT = 'init';
 export const GIVE_DATA = 'give_data';
 export const GIVE_GEOM = 'give_geom';
 export const GIVE_STATS = 'give_stats';
+
+// ---------------------------------------------------------------------------------------------------------------------
+// Objects Name Constants
+// ---------------------------------------------------------------------------------------------------------------------
+export const DESC_STATS = 'descStats';

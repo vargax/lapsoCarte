@@ -48,6 +48,8 @@ export default class GUIController {
             _infoWidgetController = new InfoWidgetController();
             _sidebarController = new SidebarController();
             _timeController = new TimeController();
+
+            this.data2color = glbs.PROJECT.FUNC_DATA2COLOR;
         }
         return guiController;
     }
@@ -118,9 +120,10 @@ export default class GUIController {
         this._amIready();
     }
 
-    mc_setData(tVector, dMap) {
+    mc_setData(tVector, dMap, dStats) {
         timeVector = tVector;
         dataMap = dMap;
+        this[glbs.DESC_STATS] = dStats;
 
         _timeController.mc_setTimeVector(timeVector);
         this._amIready();
@@ -159,7 +162,7 @@ export default class GUIController {
     _resetGeometry(gid) {
         try {
             let data = dataMap.get(_currentTime).get(gid)[glbs.PROJECT.COLUMN_DATA];
-            let color = glbs.PROJECT.FUNC_DATA2COLOR(data);
+            let color = this.data2color(data);
             _leafletController.mc_colorGeometry(gid, color);
         } catch (e) {
             console.log('GUIController._resetGeometry('+gid+')!: No '+glbs.PROJECT.COLUMN_DATA+' data for gid '+gid);
@@ -172,9 +175,10 @@ export default class GUIController {
     }
 
     _amIready() {
-        if (geometriesMap && dataMap) {
+        if (geometriesMap && dataMap && this[glbs.DESC_STATS] != undefined) {
             this.sc_setTime(timeVector[0]);
             $("#loading").hide();
+            _mainController.sc_ready(this);
             return true;
         }
         return false;

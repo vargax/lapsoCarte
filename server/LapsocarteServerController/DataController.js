@@ -27,14 +27,20 @@ export default class DataController{
         for (let item of JSON)
             _data.push(item[glbs.PROJECT.COLUMN_DATA]);
 
-        _descriptiveStats = {
-            MAX: JStat.jStat.max(_data),
-            MIN: JStat.jStat.min(_data)
-        };
+        this._genDescriptiveStats();
         console.dir(_descriptiveStats);
     }
 
     mc_getDescriptiveStats() {
         return _descriptiveStats;
+    }
+
+    _genDescriptiveStats() {
+        _descriptiveStats = {};
+
+        _descriptiveStats.MIN = JStat.jStat.min(_data);
+        _descriptiveStats.MAX = JStat.jStat.max(_data);
+        _descriptiveStats.MEAN = JStat.jStat.mean(_data);
+
     }
 }
