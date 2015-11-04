@@ -47,4 +47,8 @@ export default class LapsocarteAppController {
         let dMap = _dataController.mc_getData();
         _guiController.mc_setData(tVector,dMap);
     }
+
+    sc_descriptiveStatsReceived(object) {
+        _dataController.mc_registerDescriptiveStats(object);
+    }
 }

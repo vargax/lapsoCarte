@@ -27,7 +27,6 @@ export default class DataController {
             geometriesMap.set(gid,feature);
         }
         console.log('dataController.mc_registerGeometries() :: '+geometriesMap.size+' geometries registered!');
-        console.dir(geometriesMap)
     }
 
     mc_registerData(json) {
@@ -48,7 +47,12 @@ export default class DataController {
 
         timeVector.sort(function(a, b){return a-b});
         console.log('dataController.mc_registerData() :: '+timeVector+' time periods registered!');
-        console.dir(dataMap)
+    }
+
+    mc_registerDescriptiveStats(object) {
+        descriptiveStats = object;
+        console.log('dataController.mc_registerDescriptiveStats() :: Data descriptive statistics registered!');
+        console.dir(descriptiveStats);
     }
 
     mc_getGeometries() {

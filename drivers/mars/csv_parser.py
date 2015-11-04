@@ -185,5 +185,8 @@ for topic in patterns.values():
             sql_select += select
             sql_join += join
 
-sql.write(sql_select+sql_join)
+
+inner_join_query = 'CREATE TABLE mars AS('+sql_select+sql_join+');\n'
+inner_join_query += 'CREATE INDEX t ON mars (t ASC NULLS LAST);'
+sql.write(inner_join_query)
 sql.close()

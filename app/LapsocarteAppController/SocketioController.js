@@ -25,6 +25,10 @@ export default class SocketioController {
             console.log('socketioController._inMsgs() :: Receiving a ' + glbs.GIVE_DATA + ' message...');
             _mainController.sc_dataReceived(msg);
         });
+        _socket.on(glbs.GIVE_STATS, function (msg) {
+            console.log('socketioController._inMsgs() :: Receiving a ' + glbs.GIVE_STATS + ' message...');
+            _mainController.sc_descriptiveStatsReceived(msg);
+        });
         _socket.on(glbs.GIVE_GEOM, function (msg) {
             console.log('socketioController._inMsgs() :: Receiving a ' + glbs.GIVE_GEOM + ' message...');
             _mainController.sc_geomReceived(msg);

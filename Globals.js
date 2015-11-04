@@ -79,8 +79,9 @@ let mars = {
     COLUMN_GID: 'mars',
     TABLE_GEOM: 'mars_bogota',
     COLUMN_GEOM: 'geom',
-    TABLE_DATA: 'cars',
+    TABLE_DATA: 'mars',
     COLUMN_NAME: 'mars',
+    COLUMN_DATA: 'trips_car',
     COLUMN_TIME: 't',
     TIME_RANGE: [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30],
     //TIME_RANGE: [0],
@@ -105,8 +106,6 @@ let mars = {
 mars.DB_USER = mars.PROJECT;
 mars.DB_PASS = mars.PROJECT;
 mars.DB_NAME = mars.PROJECT;
-
-mars.COLUMN_DATA = mars.TABLE_DATA;
 
 export const PROJECT = mars;
 

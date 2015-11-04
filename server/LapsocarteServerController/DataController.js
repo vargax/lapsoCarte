@@ -1,6 +1,6 @@
 import MainController from './LapsocarteServerController.js'
 import * as glbs from '../../Globals.js'
-require('descriptive-statistics');
+import JStat from 'jStat'
 
 // ------------------------------------------------------------------------
 // CONTROLLERS
@@ -28,7 +28,8 @@ export default class DataController{
             _data.push(item[glbs.PROJECT.COLUMN_DATA]);
 
         _descriptiveStats = {
-
+            MAX: JStat.jStat.max(_data),
+            MIN: JStat.jStat.min(_data)
         };
         console.dir(_descriptiveStats);
     }
