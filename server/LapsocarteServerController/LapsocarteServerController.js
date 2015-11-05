@@ -58,13 +58,16 @@ export default class LapsocarteServerController {
             _geotabuladbController.mc_getData();
             _clientsDataQueue.push(socketId);
         }
-        _geometries = null;
 
-        if (_geometries) _socketioController.mc_sendGeometries(socketId,_geometries);
-        else {
-            _geotabuladbController.mc_getGeometries();
-            _clientsGeomQueue.push(socketId);
-        }
+        _geometries = null;
+        setTimeout(function() {
+            if (_geometries) _socketioController.mc_sendGeometries(socketId,_geometries);
+            else {
+                _geotabuladbController.mc_getGeometries();
+                _clientsGeomQueue.push(socketId);
+            }
+        }, 10000)
+
     }
 
     sc_giveData(json) {
