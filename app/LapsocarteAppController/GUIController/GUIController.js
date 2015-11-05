@@ -119,7 +119,6 @@ export default class GUIController {
     // Methods exposed to all my subcontrollers (sc) --------------------------
     sc_spatialObjectOver(gid) {
         let color = glbs.PROJECT.FOCUSED_COLOR;
-        let currentTime = glbs.PROJECT[glbs.DATA_CONSTANTS.CURRENT_TIME];
 
         _leafletController.mc_colorGeometry(gid, color);
         _infoWidgetController.mc_updateInfo(geometriesMap.get(gid)['properties']);
@@ -127,6 +126,7 @@ export default class GUIController {
 
     sc_spatialObjectOut(gid) {
         this._resetGeometry(gid);
+        _infoWidgetController.mc_updateInfo();
     }
 
     sc_timeChange() {

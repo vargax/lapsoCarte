@@ -186,7 +186,10 @@ for topic in patterns.values():
             sql_join += join
 
 
-inner_join_query = 'CREATE TABLE mars AS('+sql_select+sql_join+');\n'
-inner_join_query += 'CREATE INDEX t ON mars (t ASC NULLS LAST);'
+inner_join_query = 'DROP TABLE IF EXISTS mars;\n'
+inner_join_query += 'CREATE TABLE mars AS('+sql_select+sql_join+');\n'
+inner_join_query += 'CREATE INDEX t_index ON mars (t ASC NULLS LAST);\n'
+inner_join_query += 'CREATE INDEX mars_index ON mars (mars ASC NULLS LAST);\n'
+inner_join_query += 'ALTER TABLE mars ADD COLUMN id SERIAL PRIMARY KEY;'
 sql.write(inner_join_query)
 sql.close()
