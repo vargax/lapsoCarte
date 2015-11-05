@@ -1,10 +1,8 @@
 @import url("../node_modules/leaflet/dist/leaflet.css");
-@import url("../node_modules/bootstrap/dist/css/bootstrap.css");
 @import url("../node_modules/font-awesome/css/font-awesome.css");
 @import url("../node_modules/jquery-ui/themes/smoothness/jquery-ui.css");
 
 /*@import url("../node_modules/c3/c3.css");*/
-@import url("./lib/bootleaf/css/app.css");
 
 .info {
     padding: 6px 8px;
@@ -21,23 +19,53 @@
 }
 
 #map {
-    width: auto;
-    height: 100%;
-    box-shadow: 0 0 10px rgba(0,0,0,0.5);
+    height: calc(100% - 50px);
 }
 
-#main-wrapper {
-    height: 100%;
-    padding-bottom: 40px;
-}
-
-#slider-wrapper {
+.time-controllers {
+    width: 100%;
+    margin: auto;
     position: relative;
-    padding-left: 250px;
-    height: 40px;
+    top: 50%;
+    transform: translateY(-50%);
 }
 
 #time-slider {
-    top: 50%;
-    transform: translateY(-50%);
+
+}
+
+html {
+    height: 100%;
+}
+
+body {
+    margin: 0px;
+    height: 100%;
+}
+
+.header {
+    background-color: aliceblue;
+    height: 80px;
+}
+
+.mainWrapper {
+    height: calc(100% - 80px);
+}
+
+.sidebar {
+    float: left;
+    height: 100%;
+    width: 250px;
+    background-color: red;
+}
+
+.mapWrapper {
+    float: left;
+    height: 100%;
+    width: calc(100% - 250px);
+}
+
+.footer {
+    background-color: aliceblue;
+    height: 50px;
 }
