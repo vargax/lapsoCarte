@@ -107,18 +107,23 @@ export const PROJECT = mars;
 // ---------------------------------------------------------------------------------------------------------------------
 // ToDo review this choropleth implementation
 function choropleth(d) {
+    const CHOROPLETH_RANGE = 'CHOROPLETH_RANGE';
     let colors = ['#FFEDA0','#FED976','#FEB24C','#FD8D3C','#FC4E2A','#E31A1C','#BD0026','#800026'];
-    if (this.choropleth_range == undefined) {
-        this.choropleth_range = [];
-        let step = (this[DESC_STATS].MAX - this[DESC_STATS].MIN) / colors.length;
-        for (let i = this[DESC_STATS].MIN + step; i <= this[DESC_STATS].MAX; i += step)
-            this.choropleth_range.push(i);
+    if (this[CHOROPLETH_RANGE] == undefined) {
+        let range = [];
+        let max = this[DATA_CONSTANTS.DESCRIPTIVE_STATS].MAX;
+        let min = this[DATA_CONSTANTS.DESCRIPTIVE_STATS].MIN;
 
-        console.dir(this.choropleth_range);
+        let step = (max - min) / colors.length;
+        for (let i = min + step; i <= max; i += step)
+            range.push(i);
+
+        this[CHOROPLETH_RANGE] = range;
+        console.dir(this[CHOROPLETH_RANGE]);
     }
 
     for (let i = 0; i < colors.length; i++)
-        if (d <= this.choropleth_range[i]) return colors[i];
+        if (d <= this[CHOROPLETH_RANGE][i]) return colors[i];
 
     // I should never reach this!!
     return PROJECT.DEFAULT_STYLE.color;
@@ -146,4 +151,11 @@ export const GIVE_STATS = 'give_stats';
 // ---------------------------------------------------------------------------------------------------------------------
 // Objects Name Constants
 // ---------------------------------------------------------------------------------------------------------------------
-export const DESC_STATS = 'descStats';
+export const DATA_CONSTANTS = {
+    GEOMETRIES_MAP: 'GEOMETRIES_MAP',         // Key gid, value geoJSON object
+    DATA_MAP: 'DATA_MAP',                     // Map of maps: First key -> time, submaps key -> gid.
+    DESCRIPTIVE_STATS: 'DESCRIPTIVE_STATS',   // Object with MIN, MAX, MEAN, etc...
+    TIME_VECTOR: 'TIME_VECTOR',               // Ordered vector with time dimension
+    LEAFLET_MAP: 'LEAFLET_MAP',               // Leaflet MAP object
+    CURRENT_TIME: 'CURRENT_TIME'              // Current selected time in GUI
+};

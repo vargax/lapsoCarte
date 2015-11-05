@@ -8,6 +8,8 @@ require('leaflet-providers');
 // ------------------------------------------------------------------------
 // CONSTANTS
 // ------------------------------------------------------------------------
+const GEOM_MAP = glbs.DATA_CONSTANTS.GEOMETRIES_MAP;
+
 const MAP_CENTER = glbs.PROJECT.MAP_CENTER;
 const MAP_ZOOM = glbs.PROJECT.MAP_ZOOM;
 const MAP_ZOOM_RANGE = glbs.PROJECT.MAP_ZOOM_RANGE;
@@ -15,7 +17,7 @@ const MAP_ZOOM_RANGE = glbs.PROJECT.MAP_ZOOM_RANGE;
 // ------------------------------------------------------------------------
 // CONTROLLERS
 // ------------------------------------------------------------------------
-let mainController;
+let _mainController;
 
 // ------------------------------------------------------------------------
 // VARIABLES
@@ -23,10 +25,6 @@ let mainController;
 let map;
 let _geoJsonLayer;
 let _gid2leafletObjectMap;
-
-let timeLayers;
-let _currentTime;
-let _currentHighlightedLayers;
 
 // ------------------------------------------------------------------------
 // CLASSES
@@ -36,10 +34,9 @@ export default class LeafletController {
     constructor() {
         if (!leafletController) {
             leafletController = this;
-            mainController = new MainController();
+            _mainController = new MainController();
 
             _gid2leafletObjectMap = new Map();
-            _currentHighlightedLayers = new Map();
         }
         return leafletController;
     }
@@ -57,10 +54,6 @@ export default class LeafletController {
         });
     }
 
-    mc_getMap() {
-        return map;
-    }
-
     mc_initMap() {
         map = L.map('map',{zoomControl: false}).setView(MAP_CENTER, MAP_ZOOM);
 
@@ -72,19 +65,22 @@ export default class LeafletController {
         map.addControl(L.control.zoom({position: 'bottomright'}));
 
         map.addControl(support.Widgets.getLocateWidget());
+
+        glbs.PROJECT[glbs.DATA_CONSTANTS.LEAFLET_MAP] = map;
     }
 
-    mc_setGeometries(geometriesMap) {
+    mc_loadGeometries() {
         try {
             _geoJsonLayer.clearLayers();
         } catch (e) {
-            console.log('LeafletController.mc_setGeometries() :! This is the first time you set geometries!');
+            console.log('LeafletController.mc_loadGeometries() :! This is the first time you set geometries!');
             initGeoJsonLayer();
         }
 
-        for (let [gid, geometry] of geometriesMap) {
+        for (let [gid, geometry] of glbs.PROJECT[GEOM_MAP]) {
             _geoJsonLayer.addData(geometry);
         }
+        _mainController.sc_ready(this);
 
         /*
          In Leaflet:
@@ -135,11 +131,11 @@ export default class LeafletController {
 
     // Methods exposed to all my subcontrollers (sc) --------------------------
     sc_geometryOver(gid) {
-        mainController.sc_spatialObjectOver(gid);
+        _mainController.sc_spatialObjectOver(gid);
     }
 
     sc_geometryOut(gid) {
-        mainController.sc_spatialObjectOut(gid);
+        _mainController.sc_spatialObjectOut(gid);
     }
 }
 

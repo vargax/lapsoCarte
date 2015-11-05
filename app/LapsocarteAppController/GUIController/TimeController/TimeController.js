@@ -1,5 +1,7 @@
+import * as glbs from './../../../../Globals.js'
+
 import MainController from './../GUIController.js'
-import PlayerControl from './SliderController.js'
+import SliderController from './SliderController.js'
 
 let _mainController;
 let _playerControl;
@@ -11,18 +13,18 @@ export default class TimeController {
     constructor() {
         if (!timeController) {
             timeController = this;
-
             _mainController = new MainController();
         }
         return timeController;
     }
 
-    mc_setTimeVector(tVector) {
-        timeVector = tVector;
-        _playerControl = new PlayerControl(timeVector);
+    mc_loadTimeVector() {
+        _playerControl = new SliderController();
+        _mainController.sc_ready(this);
     }
 
     slc_movedTo(newTime) {
-        _mainController.sc_setTime(newTime);
+        glbs.PROJECT[glbs.DATA_CONSTANTS.CURRENT_TIME] = newTime;
+        _mainController.sc_timeChange();
     }
 }

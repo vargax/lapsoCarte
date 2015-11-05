@@ -57,8 +57,7 @@ export default class GeotabuladbController {
         let log = '.mc_getGeometries()';
         let parameters = {
             tableName: TABLE_GEOM,
-            geometry: COLUMN_GEOM,
-            properties: [glbs.PROJECT.COLUMN_GID]
+            geometry: COLUMN_GEOM
         };
         _geo.geoQuery(parameters, _mainController.sc_giveGeometries);
     }

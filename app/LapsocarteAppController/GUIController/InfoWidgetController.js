@@ -1,8 +1,12 @@
+import MainController from './GUIController.js'
 import L from'leaflet'
+
+let _mainController;
 
 let leafletControl;
 export default class InfoWidgetController {
     constructor() {
+        _mainController = new MainController();
         leafletControl = new L.control();
 
         leafletControl.setPosition('topright');
@@ -26,6 +30,7 @@ export default class InfoWidgetController {
     }
 
     mc_getLeafletControl() {
+        _mainController.sc_ready(this);
         return leafletControl;
     }
 }

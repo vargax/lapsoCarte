@@ -1,14 +1,28 @@
 import MainController from './LapsocarteAppController.js'
 import * as glbs from '../../Globals.js'
 
-let _mainController;
+// ------------------------------------------------------------------------
+// CONSTANTS
+// ------------------------------------------------------------------------
+const GEOM_MAP = glbs.DATA_CONSTANTS.GEOMETRIES_MAP;
+const DATA_MAP = glbs.DATA_CONSTANTS.DATA_MAP;
+const TIME_VECT = glbs.DATA_CONSTANTS.TIME_VECTOR;
+const DESC_STATS = glbs.DATA_CONSTANTS.DESCRIPTIVE_STATS;
 
-let geometriesMap = null;
+const CURRENT_TIME = glbs.DATA_CONSTANTS.CURRENT_TIME;
+// ------------------------------------------------------------------------
+// VARIABLES
+// ------------------------------------------------------------------------
+let geometriesMap  = null;
 let dataMap = null;
+let timeVector =  null;
 let descriptiveStats = null;
 
-let timeVector;
+let _mainController;
 
+// ------------------------------------------------------------------------
+// CLASSES
+// ------------------------------------------------------------------------
 export default class DataController {
     constructor() {
         _mainController = new MainController();
@@ -24,6 +38,8 @@ export default class DataController {
 
             geometriesMap.set(gid,feature);
         }
+
+        glbs.PROJECT[GEOM_MAP] = geometriesMap;
         console.log('dataController.mc_registerGeometries() :: '+geometriesMap.size+' geometries registered!');
 
         this._amIready();
@@ -49,6 +65,11 @@ export default class DataController {
         for (let t of dataMap.keys()) timeVector.push(t);
 
         timeVector.sort(function(a, b){return a-b});
+
+        glbs.PROJECT[DATA_MAP] = dataMap;
+        glbs.PROJECT[TIME_VECT] = timeVector;
+        glbs.PROJECT[CURRENT_TIME] = timeVector[0];
+
         console.log('dataController.mc_registerData() :: '+timeVector.length+' time periods registered!');
         console.dir(timeVector);
 
@@ -57,6 +78,8 @@ export default class DataController {
 
     mc_registerDescriptiveStats(object) {
         descriptiveStats = object;
+
+        glbs.PROJECT[DESC_STATS] = descriptiveStats;
         console.log('dataController.mc_registerDescriptiveStats() :: Data descriptive statistics registered!');
         console.dir(descriptiveStats);
 
