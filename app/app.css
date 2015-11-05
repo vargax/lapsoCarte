@@ -22,7 +22,7 @@
     height: calc(100% - 50px);
 }
 
-.time-controllers {
+.centered-table {
     width: 100%;
     margin: auto;
     position: relative;
@@ -34,6 +34,16 @@
 
 }
 
+#loading {
+    position: absolute;
+    width: 220px;
+    height: 19px;
+    top: 50%;
+    left: 50%;
+    margin: -10px 0 0 -110px;
+    z-index: 20001;
+}
+
 html {
     height: 100%;
 }
@@ -41,15 +51,23 @@ html {
 body {
     margin: 0px;
     height: 100%;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
 .header {
     background-color: black;
-    height: 40px;
+    height: 50px;
+    vertical-align: middle;
+}
+
+.title {
+    color: white;
+    font-size: 20px;
+    font-weight: bold;
 }
 
 .mainWrapper {
-    height: calc(100% - 80px);
+    height: calc(100% - 50px);
 }
 
 .sidebar {
