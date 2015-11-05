@@ -1,26 +1,42 @@
 import * as crypto from 'crypto'
 import GeotabulaDB from 'geotabuladb'
 
-import MainController from './LapsocarteServerController.js'
 import * as glbs from '../../Globals.js'
+import MainController from './LapsocarteServerController.js'
 
+// ------------------------------------------------------------------------
+// CONSTANTS
+// ------------------------------------------------------------------------
 const DB_USER = glbs.PROJECT.DB_USER;
 const DB_PASS = glbs.PROJECT.DB_PASS;
 const DB_NAME = glbs.PROJECT.DB_NAME;
-const TABLE = glbs.PROJECT.TABLE;
 
-const COLUMN_TIME = glbs.PROJECT.COLUMN_TIME;
+const COLUMN_GID = glbs.PROJECT.COLUMN_GID;
+const TABLE_GEOM = glbs.PROJECT.TABLE_GEOM;
 const COLUMN_GEOM = glbs.PROJECT.COLUMN_GEOM;
+const TABLE_DATA = glbs.PROJECT.TABLE_DATA;
+const COLUMN_TIME = glbs.PROJECT.COLUMN_TIME;
+const TIME_RANGE = glbs.PROJECT.TIME_RANGE;
 
 const logString = 'GeotabuladbController';
 const logOK  = ' :: ';
 const logERR = ' !! ';
 
+// ------------------------------------------------------------------------
+// CONTROLLERS
+// ------------------------------------------------------------------------
 let _mainController;
 let _geo;
+
+// ------------------------------------------------------------------------
+// VARIABLES
+// ------------------------------------------------------------------------
 let _queries;
 let _results;
 
+// ------------------------------------------------------------------------
+// CLASSES
+// ------------------------------------------------------------------------
 export default class GeotabuladbController {
     constructor() {
         _mainController = new MainController();
@@ -37,58 +53,24 @@ export default class GeotabuladbController {
         });
     }
 
-    mc_getGeoTimeJsonLayers(timeRange) {
-        let log = '.mc_getGeoTimeJsonLayers('+timeRange+')';
-
-        let functionCallHash = GeotabuladbController.genHash(timeRange);
-        let queriesResults = [];
-        _results.set(functionCallHash, queriesResults);
-
-        let queries = 0;
-        for (let t of timeRange) {
-            let parameters = {
-                tableName: TABLE,	        // The name of the table we are going to query
-                geometry: COLUMN_GEOM, 		// The name of the column who has the geometry
-                where: COLUMN_TIME+'='+t,      // The name of the column who has the time
-                //limit: 2000,
-                properties: 'all'			// Additional columns we want to recover --> For specific columns you have to pass columns' names as an Array
-            };
-
-            let queryHash = _geo.geoQuery(parameters, callBack);
-            _queries.set(queryHash, t);
-            queries++;
-        }
-
-        function callBack(geoJSON, queryHash) {
-            let t = _queries.get(queryHash);
-            _queries.delete(queryHash);
-
-            let geoTimeJsonLayer = glbs.GeoTimeJSON.pack(t, geoJSON);
-            _results.get(functionCallHash).push(geoTimeJsonLayer);
-
-            queries--;
-            console.log(logString+log+logOK+' '+queries+' remaining...');
-            if (queries == 0) {
-                sendResults(functionCallHash);
-            }
-        }
-
-        function sendResults(functionCallHash) {
-            console.log(logString+log+'.sendResults('+functionCallHash+')');
-
-            let result = _results.get(functionCallHash);
-            _results.delete(functionCallHash);
-
-            _mainController.gtc_giveGeoTimeJsonLayers(result);
-        }
+    mc_getGeometries() {
+        let log = '.mc_getGeometries()';
+        let parameters = {
+            tableName: TABLE_GEOM,
+            geometry: COLUMN_GEOM
+        };
+        _geo.geoQuery(parameters, _mainController.sc_giveGeometries);
     }
 
-    static genHash(object) {
-        let string = object.toString()+Math.random();
+    mc_getData() {
+        let log = '.mc_getData('+TIME_RANGE+')';
 
-        let hash = crypto.createHash('sha1');
-        hash.update(string);
-
-        return hash.digest('hex');
+        let query = 'SELECT * FROM '+TABLE_DATA+' WHERE ';
+        for (let t of TIME_RANGE) {
+            query += COLUMN_TIME+'='+t+' OR ';
+        }
+        query = query.slice(0,-4);
+        query += ';';
+        _geo.query(query, _mainController.sc_giveData);
     }
 }

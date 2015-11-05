@@ -1,9 +1,10 @@
 import $ from 'jquery'
+import * as glbs from './../Globals.js'
 import LapsocarteAppController from './LapsocarteAppController/LapsocarteAppController.js';
 
 require('./app.css');
 
-var lapsocarteAppController = new LapsocarteAppController();
+let lapsocarteAppController = new LapsocarteAppController();
 
 $(function () {
     $('.timeslider').slider({

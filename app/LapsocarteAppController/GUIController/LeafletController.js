@@ -5,89 +5,137 @@ import * as glbs from './../../../Globals.js';
 import L from'leaflet';
 require('leaflet-providers');
 
-let mainController;
+// ------------------------------------------------------------------------
+// CONSTANTS
+// ------------------------------------------------------------------------
+const GEOM_MAP = glbs.DATA_CONSTANTS.GEOMETRIES_MAP;
 
+const MAP_CENTER = glbs.PROJECT.MAP_CENTER;
+const MAP_ZOOM = glbs.PROJECT.MAP_ZOOM;
+const MAP_ZOOM_RANGE = glbs.PROJECT.MAP_ZOOM_RANGE;
+
+// ------------------------------------------------------------------------
+// CONTROLLERS
+// ------------------------------------------------------------------------
+let _mainController;
+
+// ------------------------------------------------------------------------
+// VARIABLES
+// ------------------------------------------------------------------------
 let map;
-let timeLayers;
-let _currentTime;
-let _currentHighlightedFeatures;
+let _geoJsonLayer;
+let _gid2leafletObjectMap;
 
-let infoWidget;
-
+// ------------------------------------------------------------------------
+// CLASSES
+// ------------------------------------------------------------------------
 let leafletController = null; // --> Singleton Pattern, so groupTimeLayer instances could access the controller...
 export default class LeafletController {
     constructor() {
         if (!leafletController) {
             leafletController = this;
-            mainController = new MainController();
-            this._initMap();
+            _mainController = new MainController();
 
-            _currentHighlightedFeatures = new Map();
+            _gid2leafletObjectMap = new Map();
         }
         return leafletController;
     }
 
     // Methods exposed to my MainController (mc) ---------------------------------
-    mc_setTime(time) {
-        try {
-            this.mc_resetAllFeatures();
-            map.removeLayer(timeLayers.get(_currentTime).getLayer()); // --> EAFP Pattern
-        } catch (e) {
-            console.log('+! This was the first layer');
-        }
-        _currentTime = time;
-        map.addLayer(timeLayers.get(_currentTime).getLayer());
+    mc_colorGeometies(gid2colorArray) {
+        for (let tuple of gid2colorArray)
+            this.mc_colorGeometry(tuple[0],tuple[1]);
     }
 
-    mc_resetFeature(featureId) {
-        let feature = timeLayers.get(_currentTime).getFeature(featureId);
-        feature.setStyle(support.LayerStyle.choroplethStyle(feature));
-        _currentHighlightedFeatures.delete(featureId);
-        infoWidget.update();
+    mc_colorGeometry(gid, color) {
+        let leafletObject = _gid2leafletObjectMap.get(gid);
+        leafletObject.layer.setStyle({
+            color: color
+        });
     }
 
-    mc_resetAllFeatures() {
-        for (let feature of _currentHighlightedFeatures.values()) {
-            feature.setStyle(support.LayerStyle.choroplethStyle(feature));
-        }
-        _currentHighlightedFeatures.clear();
-        infoWidget.update();
-    }
+    mc_initMap() {
+        map = L.map('map',{zoomControl: false}).setView(MAP_CENTER, MAP_ZOOM);
 
-    mc_highlightFeature(featureId) {
-        let feature = timeLayers.get(_currentTime).getFeature(featureId);
-        feature.setStyle(support.LayerStyle.getFocusedLayerStyle());
-        _currentHighlightedFeatures.set(featureId,feature);
-        infoWidget.update(feature);
-    }
-
-    mc_setTimeLayers(timeLayersP) {
-        timeLayers = timeLayersP;
-    }
-
-    mc_getMap() {
-        return map;
-    }
-
-    // Private methods -----------------------------------------------------------
-    _initMap() {
-        let mapInitParameters = MainController.sc_getInitialMapParameters();
-        let center = mapInitParameters[0];
-        let zoom = mapInitParameters[1];
-        let zoomRange =   mapInitParameters[2];
-
-        map = L.map('map',{zoomControl: false}).setView(center, zoom);
         map.addLayer(new L.tileLayer.provider(glbs.PROJECT.LAYER_PROVIDER));
-        map._layersMinZoom = zoomRange[0];
-        map._layersMaxZoom = zoomRange[1];
+        map._layersMinZoom = MAP_ZOOM_RANGE[0];
+        map._layersMaxZoom = MAP_ZOOM_RANGE[1];
 
         map.addControl(L.control.scale({imperial: false, position: 'bottomleft'}));
         map.addControl(L.control.zoom({position: 'bottomright'}));
 
         map.addControl(support.Widgets.getLocateWidget());
 
-        infoWidget = support.Widgets.getInfoWidget();
-        map.addControl(infoWidget);
+        glbs.PROJECT[glbs.DATA_CONSTANTS.LEAFLET_MAP] = map;
+    }
+
+    mc_loadGeometries() {
+        try {
+            _geoJsonLayer.clearLayers();
+        } catch (e) {
+            console.log('LeafletController.mc_loadGeometries() :! This is the first time you set geometries!');
+            initGeoJsonLayer();
+        }
+
+        for (let [gid, geometry] of glbs.PROJECT[GEOM_MAP]) {
+            _geoJsonLayer.addData(geometry);
+        }
+        _mainController.sc_ready(this);
+
+        /*
+         In Leaflet:
+         - Feature is the spatial object (geoJSON feature)
+         - Has a 'geometry' Object
+         - Has a 'properties' Object
+         - Layer is the JS object
+         - Has all the methods / listeners / etc.
+
+         In the Leaflet's geoJSON implementation each geoJSON feature is one Leaflet LAYER
+         with one Leaflet FEATURE!
+
+         The Leaflet's geoJSON object is a Leaflet's LayerGroup, in which each geoJSON feature
+         is one layer of that group.
+         */
+        function initGeoJsonLayer() {
+
+            _geoJsonLayer = L.geoJson([],{
+                onEachFeature: geometrySetup
+            });
+            map.addLayer(_geoJsonLayer);
+
+            function geometrySetup(feature, layer) {
+                layer.gid = feature['properties'][glbs.PROJECT.COLUMN_GID];
+                layer.mainController = leafletController;
+                layer.setStyle(glbs.PROJECT.DEFAULT_STYLE);
+
+                _gid2leafletObjectMap.set(layer.gid, {
+                    layer: layer,
+                    feature: feature
+                });
+
+                layer.on({
+                    mouseover: geometryOver,
+                    mouseout: geometryOut
+                });
+            }
+
+            function geometryOver() {
+                this.mainController.sc_geometryOver(this.gid);
+            }
+
+            function geometryOut() {
+                this.mainController.sc_geometryOut(this.gid);
+            }
+        }
+    }
+
+    // Methods exposed to all my subcontrollers (sc) --------------------------
+    sc_geometryOver(gid) {
+        _mainController.sc_spatialObjectOver(gid);
+    }
+
+    sc_geometryOut(gid) {
+        _mainController.sc_spatialObjectOut(gid);
     }
 }
 

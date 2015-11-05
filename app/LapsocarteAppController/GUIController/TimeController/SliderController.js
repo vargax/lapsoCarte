@@ -1,27 +1,28 @@
 import MainController from './TimeController.js'
+import * as glbs from './../../../../Globals.js'
 
 import $ from 'jquery';
 require('jquery-ui');
 
 let _mainController;
-let _timeVector;
+let timeVector;
 
 export default class PlaybackControl {
-    constructor(timeVector) {
+    constructor() {
         _mainController = new MainController();
-        _timeVector = timeVector;
+        timeVector = glbs.PROJECT[glbs.DATA_CONSTANTS.TIME_VECTOR];
 
         this._setupControl();
     }
     _setupControl() {
         $('#time-slider').slider({
             min: 0,
-            max: _timeVector.length-1,
+            max: timeVector.length-1,
             step: 1,
             value: 0,
             animate: true,
             slide: function( event, ui ) {
-                _mainController.slc_movedTo(_timeVector[ui.value]);
+                _mainController.slc_movedTo(timeVector[ui.value]);
             }
         });
     }

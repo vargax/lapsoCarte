@@ -1,28 +1,30 @@
+import * as glbs from './../../../../Globals.js'
+
 import MainController from './../GUIController.js'
-import PlayerControl from './SliderController.js'
+import SliderController from './SliderController.js'
 
 let _mainController;
 let _playerControl;
 
-let _timeVector;
+let timeVector;
 
-let leafletplaybackController = null; // --> Singleton Pattern...
-export default class LeafletplaybackController {
+let timeController = null; // --> Singleton Pattern...
+export default class TimeController {
     constructor() {
-        if (!leafletplaybackController) {
-            leafletplaybackController = this;
-
+        if (!timeController) {
+            timeController = this;
             _mainController = new MainController();
-
         }
-        return leafletplaybackController;
+        return timeController;
     }
 
-    mc_setTimeVector(timeVector) {
-        _timeVector = timeVector;
-        _playerControl = new PlayerControl(_timeVector);
+    mc_loadTimeVector() {
+        _playerControl = new SliderController();
+        _mainController.sc_ready(this);
     }
+
     slc_movedTo(newTime) {
-        _mainController.sc_setTime(newTime);
+        glbs.PROJECT[glbs.DATA_CONSTANTS.CURRENT_TIME] = newTime;
+        _mainController.sc_timeChange();
     }
 }

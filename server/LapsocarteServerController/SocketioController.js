@@ -1,7 +1,7 @@
 import MainController from './LapsocarteServerController.js'
 import * as glbs from '../../Globals.js'
 
-const logString = 'SocketioController';
+const logString = 'socketioController';
 const logOK  = ' :: ';
 const logERR = ' !! ';
 
@@ -19,29 +19,39 @@ export default class SocketioController {
         this._inMsgs();
     }
 
-    mc_sendGeoTimeJsonLayer(socketId, geoTimeJsonLayer) {
+    mc_sendGeometries(socketId, geoJSON) {
         let client = _clients.get(socketId);
-        client.emit(glbs.ADD_LAYER,geoTimeJsonLayer);
+        client.emit(glbs.GIVE_GEOM,geoJSON);
+    }
+
+    mc_sendData(socketId, json) {
+        let client = _clients.get(socketId);
+        client.emit(glbs.GIVE_DATA,json);
+    }
+
+    mc_sendStats(socketId, object) {
+        let client = _clients.get(socketId);
+        client.emit(glbs.GIVE_STATS,object);
     }
 
     _inMsgs() {
         this._socket.on('connection', function(socket) {
-            console.log(logString+logOK+'Socket connection from client '+socket.id);
+            console.log(logString+'._inMsgs()'+logOK+' Socket connection from client '+socket.id);
 
             // Standard socket administration methods:
             if (!_clients.has(socket.id)) {
-                console.log(logString+logOK+'This is a new connection request...');
+                console.log('| --> This is a new connection request...');
                 _clients.set(socket.id, socket);
             }
             socket.on('disconnect', function() {
-                console.log(logString+logOK+'This is a disconnection request...');
+                console.log('| --> This is a disconnection request...');
                 _clients.delete(socket.id);
             });
 
             // App specific methods:
-            socket.on(glbs.GET_LAYERS, function(msg) {
-                console.log(logString+logOK+'Receiving a '+glbs.GET_LAYERS+' request...');
-                _mainController.sioc_getMapRequest(socket.id);
+            socket.on(glbs.INIT, function(msg) {
+                console.log('| --> Receiving a '+glbs.INIT+' request...');
+                _mainController.sc_init(socket.id);
             });
         });
     }
