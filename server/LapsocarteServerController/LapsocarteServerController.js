@@ -58,6 +58,7 @@ export default class LapsocarteServerController {
             _geotabuladbController.mc_getData();
             _clientsDataQueue.push(socketId);
         }
+        _geometries = null;
 
         if (_geometries) _socketioController.mc_sendGeometries(socketId,_geometries);
         else {

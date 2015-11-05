@@ -73,14 +73,14 @@ body {
 .sidebar {
     float: left;
     height: 100%;
-    width: 1px;
+    width: 250px;
     background-color: red;
 }
 
 .mapWrapper {
     float: left;
     height: 100%;
-    width: calc(100% - 1px);
+    width: calc(100% - 250px);
 }
 
 .footer {
