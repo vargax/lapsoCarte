@@ -10,6 +10,10 @@ export default class ExpressController {
         _mainController = new MainController();
         _express = require('express');
         _app = _express();
+
+        let compress = require('compression');
+        _app.use(compress());
+
         _server = require('http').createServer(_app);
     }
 
