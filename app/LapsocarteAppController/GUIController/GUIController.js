@@ -54,56 +54,6 @@ export default class GUIController {
         _leafletController.mc_initMap();
         let leafletMap = glbs.PROJECT[glbs.DATA_CONSTANTS.LEAFLET_MAP];
         leafletMap.addControl(_infoWidgetController.mc_getLeafletControl());
-
-        initLegacy();
-
-        function initLegacy() {
-            $("#about-btn").click(function() {
-                $("#aboutModal").modal("show");
-                $(".navbar-collapse.in").collapse("hide");
-                return false;
-            });
-
-            $("#full-extent-btn").click(function() {
-                map.fitBounds(boroughs.getBounds());
-                $(".navbar-collapse.in").collapse("hide");
-                return false;
-            });
-
-            $("#legend-btn").click(function() {
-                $("#legendModal").modal("show");
-                $(".navbar-collapse.in").collapse("hide");
-                return false;
-            });
-
-            $("#login-btn").click(function() {
-                $("#loginModal").modal("show");
-                $(".navbar-collapse.in").collapse("hide");
-                return false;
-            });
-
-            $("#list-btn").click(function() {
-                $('#sidebar').toggle();
-                map.invalidateSize();
-                return false;
-            });
-
-            $("#nav-btn").click(function() {
-                $(".navbar-collapse").collapse("toggle");
-                return false;
-            });
-
-            $("#sidebar-toggle-btn").click(function() {
-                $("#sidebar").toggle();
-                map.invalidateSize();
-                return false;
-            });
-
-            $("#sidebar-hide-btn").click(function() {
-                $('#sidebar').hide();
-                map.invalidateSize();
-            });
-        }
     }
 
     mc_loadGeometries() {
@@ -119,9 +69,11 @@ export default class GUIController {
     // Methods exposed to all my subcontrollers (sc) --------------------------
     sc_spatialObjectOver(gid) {
         let color = glbs.PROJECT.FOCUSED_COLOR;
+        let currentTime = glbs.PROJECT[glbs.DATA_CONSTANTS.CURRENT_TIME];
 
         _leafletController.mc_colorGeometry(gid, color);
-        _infoWidgetController.mc_updateInfo(geometriesMap.get(gid)['properties']);
+        let data = Object.assign(geometriesMap.get(gid)['properties'], dataMap.get(currentTime).get(gid));
+        _infoWidgetController.mc_updateInfo(data);
     }
 
     sc_spatialObjectOut(gid) {
