@@ -41,7 +41,7 @@ export default class DataController {
 
         glbs.PROJECT[GEOM_MAP] = geometriesMap;
         console.log('dataController.mc_registerGeometries() :: '+geometriesMap.size+' geometries registered!');
-        console.dir(geometriesMap);
+        console.dir(glbs.PROJECT[GEOM_MAP]);
 
         this._amIready();
     }

@@ -1,0 +1,162 @@
+@import "node_modules/leaflet/dist/leaflet.css";
+@import "node_modules/font-awesome/css/font-awesome.css";
+@import "node_modules/nouislider/distribute/nouislider.min.css";
+
+@header-height: 50px;
+@sidebar-width: 250px;
+@footer-height: 80px;
+
+/* MAIN ELEMENTS */
+html {
+  height: 100%;
+}
+
+body {
+  margin: 0px;
+  height: 100%;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+.lpc-header {
+  background-color: black;
+  height: @header-height;
+
+  .title {
+    color: white;
+    font-size: 20px;
+    font-weight: bold;
+  }
+}
+
+.lpc-sidebar {
+  float: left;
+  height: calc(~'100%' - @header-height);
+  width: @sidebar-width;
+  background-color: red;
+}
+
+#lpc-map-container {
+  background: grey;
+  float: right;
+  height: calc(~'100%' - (@header-height + @footer-height));
+  width: calc(~'100%' - @sidebar-width);
+}
+
+.lpc-map-controllers {
+  float: right;
+  background-color: saddlebrown;
+  height: @footer-height;
+  width: calc(~'100%' - @sidebar-width);
+
+  /* Controllers ------------------------------------*/
+  .lpc-controllers-container {
+
+    .lpc-controllers-menu {
+      margin: 0;
+      padding: 0;
+      width: auto;
+
+      li { /* the "buttons" */
+        list-style: none;
+        float: left;
+        font-size: 12px;
+        padding: 12px 14px 14px 14px;
+        /* cool glass look */
+        border-right:1px solid rgba(0,0,0,0.4);
+        background: rgba(0,0,0,0.1);
+        :hover {
+          background: rgba(0,0,0,0.3); /*a little darker on hover*/
+        }
+
+        //a { /*text on the buttons*/
+        //  display: block;
+        //  color: #cccccc;
+        //  text-decoration: none;
+        //  :hover {
+        //    color: #ffffff; /*gray to white looks like it glows*/
+        //  }
+        //}
+
+        ul.dropup {
+          display: none;
+        }
+      }
+      li:hover ul.dropup{ /*Programs menu*/
+        display: block;
+        position: absolute;
+        margin: 0 0 0 -15px; /*move left 15px to line up properly*/
+        bottom:40px; /* distance to the bottom of the browser */
+        //border: 1px solid #111111;
+        //border-bottom:none;
+        background: rgba(0,0,0,0.5);
+        //border-radius: 7px 7px 0px 0px; /*top-left, top-right, bottom-right, bottom-left*/
+      }
+      li:hover li { /* items in Programs menu */
+        float: none;
+        //background:none;
+        //border:none;
+        //border-bottom:1px solid #161616;
+        //padding:12px 10px 12px 10px;
+      }
+    }
+  }
+
+  /* Slider -----------------------------------------*/
+  .lpc-slider-container {
+    padding: 15px 25px;
+    width: 500px;
+    float: right;
+
+    @slider-height: 10px;
+    #time-slider {
+      height: @slider-height;
+    }
+
+    @handle-width: 20px;
+    .noUi-handle {
+      height: 2*@slider-height;
+      width: @handle-width;
+      left: -@handle-width/2;
+    }
+
+    .noUi-handle:after, .noUi-handle:before {
+      content: none;
+    }
+
+    .noUi-connect {
+      background: lightgrey;
+    }
+
+    .noUi-pips-horizontal {
+      padding: 0px;
+    }
+
+    .noUi-origin:focus .noUi-handle {
+      box-shadow: 0 0 8px orange;
+    }
+  }
+}
+
+/* InfoWidget Controller */
+.info {
+  padding: 6px 8px;
+  font: 14px/16px Arial, Helvetica, sans-serif;
+  background: white;
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 0 25px rgba(0, 0, 0, 0.2);
+  border-radius: 5px;
+}
+
+.info h4 {
+  margin: 0 0 5px;
+  color: #777;
+}
+
+/* HELPER CLASSES */
+.lpc-centered-container {
+  margin: auto;
+  padding: 10px;
+  position: relative;
+  top: 50%;
+  transform: translateY(-50%);
+}

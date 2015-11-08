@@ -10,6 +10,7 @@ The backend is based on:
 The frontend is based on:
 - **jQuery**
 - **LeafletJS**
+- [noUiSlider](http://refreshless.com/nouislider/)
 - jQuery-ui
 - Handlebars
 

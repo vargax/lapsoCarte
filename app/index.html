@@ -3,34 +3,66 @@
 <head>
     <meta charset="utf-8">
     <meta name="description" content="LapsoCarte is a web-based visual tool to interact with time-space referenced data.">
-    <meta name="author" content="">
+    <meta name="author" content="Camilo Vargas Cabrera">
     <title>LapsoCarte</title>
-    <!--<link rel="stylesheet" href="app.css">-->
+
+    <link rel="stylesheet/less" type="text/css" href="app.less" />
+    <script>
+        less = {
+            env: "development",
+            logLevel: 2,
+            async: false,
+            fileAsync: false,
+            poll: 1000,
+            functions: {},
+            dumpLineNumbers: "comments",
+//            relativeUrls: false,
+            globalVars: {
+            }
+//            rootpath: ":/a.com/"
+        };
+    </script>
+    <script src="node_modules/less/dist/less.js"></script>
     <script src="bundle.js"></script>
 </head>
 <body>
-<div class="header">
-    <table class="centered-table">
-        <tr>
-            <td><span class="title">LapsoCarte</span></td>
-        </tr>
-    </table>
-</div>
-<div class="mainWrapper">
-    <div class="sidebar"></div>
-    <div class="mapWrapper">
-        <div id="map" ></div>
-        <div class="footer">
-            <table class="centered-table">
-                <tr>
-                    <td>
-                        <div id="time-slider">
-                        </div>
-                    </td>
-                </tr>
-            </table>
-        </div>
+<div class="lpc-header">
+    <div class="lpc-centered-container">
+        <span class="title">LapsoCarte</span>
     </div>
 </div>
+
+<div class="lpc-sidebar"></div>
+<div id="lpc-map-container" ></div>
+<div class="lpc-map-controllers">
+    <!--<div class="lpc-button lpc-vertical-align">-->
+        <!--<i class="fa fa-play"></i>-->
+    <!--</div>-->
+    <div class="lpc-controllers-container">
+        <ul class="lpc-controllers-menu">
+            <li>
+                Data Set
+                <ul class="dropup">
+                    <li>DataSet1</li>
+                    <li>DataSet2</li>
+                    <li>DataSetN</li>
+                </ul>
+            </li>
+            <li>Control 2</li>
+            <li>Control 3</li>
+        </ul>
+    </div>
+
+
+    <div class="lpc-slider-container">
+        <div id="time-slider" ></div>
+    </div>
+</div>
+
+<!--<div class="lpc-instance">-->
+    <!-- -->
+<!--</div>-->
+
+
 </body>
 </html>

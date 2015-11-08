@@ -9,10 +9,7 @@ import TimeController from './TimeController/TimeController.js'
 import $ from 'jquery'
 import L from'leaflet'
 
-global.jQuery = require('jquery');
-require('bootstrap');
 require('handlebars');
-require('list.js');
 
 // ------------------------------------------------------------------------
 // CONTROLLERS
@@ -77,12 +74,22 @@ export default class GUIController {
     }
 
     sc_spatialObjectOut(gid) {
-        this._resetGeometry(gid);
-        _infoWidgetController.mc_updateInfo();
+        try {
+            _infoWidgetController.mc_updateInfo();
+            this._resetGeometry(gid);
+        } catch (e) {
+            console.log(e);
+        }
     }
 
     sc_timeChange() {
-        this._resetAllGeometries();
+        try {
+            this._resetAllGeometries()
+            _infoWidgetController.mc_updateInfo();
+        } catch (e) {
+            console.log("GUIController.sc_timeChange() !: I can not change time now... Maybe I'm not ready yet...");
+            console.dir(e);
+        }
     }
 
     sc_ready(controller) {
@@ -112,20 +119,35 @@ export default class GUIController {
 
     // Private Methods --------------------------------------------------------
     _resetGeometry(gid) {
+        let currentTime = glbs.PROJECT[glbs.DATA_CONSTANTS.CURRENT_TIME];
+        let data, color, error;
         try {
-            let currentTime = glbs.PROJECT[glbs.DATA_CONSTANTS.CURRENT_TIME];
-
-            let data = dataMap.get(currentTime).get(gid)[glbs.PROJECT.COLUMN_DATA];
-            let color = glbs.PROJECT.FUNC_DATA2COLOR(data);
-
-            _leafletController.mc_colorGeometry(gid, color);
+            data = dataMap.get(currentTime).get(gid)[glbs.PROJECT.COLUMN_DATA];
+            color = glbs.PROJECT.FUNC_DATA2COLOR(data);
         } catch (e) {
-            console.log('GUIController._resetGeometry('+gid+')!: No '+glbs.PROJECT.COLUMN_DATA+' data for gid '+gid);
+            color = glbs.PROJECT.DEFAULT_STYLE.color;
+            error = 'GUIController._resetGeometry()!: No data for '+gid+' in t='+currentTime;
         }
+        _leafletController.mc_colorGeometry(gid, color);
+
+        if (error != undefined) throw error;
     }
 
     _resetAllGeometries() {
-        for (let gid of geometriesMap.keys())
-            this._resetGeometry(gid);
+        let noData = [];
+        for (let gid of geometriesMap.keys()) {
+            try {
+                this._resetGeometry(gid);
+            } catch (e) {
+                noData.push(gid);
+            }
+        }
+        if (noData.length != 0) {
+            let currentTime = glbs.PROJECT[glbs.DATA_CONSTANTS.CURRENT_TIME];
+            console.log('GUIController._resetAllGeometries()!: No '+glbs.PROJECT.COLUMN_DATA
+                +' data for '+noData.length+' geometries in '+currentTime+'!');
+            console.dir(noData);
+        }
+
     }
 }

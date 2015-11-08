@@ -55,7 +55,7 @@ export default class LeafletController {
     }
 
     mc_initMap() {
-        map = L.map('map',{zoomControl: false}).setView(MAP_CENTER, MAP_ZOOM);
+        map = L.map('lpc-map-container',{zoomControl: false}).setView(MAP_CENTER, MAP_ZOOM);
 
         map.addLayer(new L.tileLayer.provider(glbs.PROJECT.LAYER_PROVIDER));
         map._layersMinZoom = MAP_ZOOM_RANGE[0];
