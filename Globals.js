@@ -84,7 +84,7 @@ let mars = {
     COLUMN_NAME: 'mars',
     COLUMN_DATA: 'trips_car',
     COLUMN_TIME: 't',
-    TIME_RANGE: [0,5,15,20,25,30],
+    TIME_RANGE: range(0,30,3),
     //TIME_RANGE: [0],
 
     MAP_CENTER: [4.66198, -74.09866],

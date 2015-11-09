@@ -35,25 +35,30 @@
 <div class="lpc-sidebar"></div>
 <div id="lpc-map-container" ></div>
 <div class="lpc-map-controllers">
-    <!--<div class="lpc-button lpc-vertical-align">-->
-        <!--<i class="fa fa-play"></i>-->
-    <!--</div>-->
     <div class="lpc-controllers-container">
-        <ul class="lpc-controllers-menu">
-            <li>
-                Data Set
-                <ul class="dropup">
-                    <li>DataSet1</li>
-                    <li>DataSet2</li>
-                    <li>DataSetN</li>
-                </ul>
-            </li>
-            <li>Control 2</li>
-            <li>Control 3</li>
-        </ul>
+        <form>
+            <table>
+                <tr>
+                    <td style="font-weight: bold;">Data Set</td>
+                    <td>
+                        <select>
+                            <option value="dataSet1">dataSet1</option>
+                            <option value="dataSet2">dataSet2</option>
+                            <option value="dataSet3">dataSet3</option>
+                            <option value="dataSet4">dataSet4</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="font-weight: bold;">Data View</td>
+                    <td>
+                        <input type="radio" name="view" value="level">Level
+                        <input type="radio" name="view" value="delta">Delta
+                    </td>
+                </tr>
+            </table>
+        </form>
     </div>
-
-
     <div class="lpc-slider-container">
         <div id="time-slider" ></div>
     </div>
