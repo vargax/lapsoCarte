@@ -18,6 +18,9 @@ ALTER TABLE mars_bogota DROP COLUMN gid;
 ALTER TABLE mars_bogota DROP COLUMN upz;
 ALTER TABLE mars_bogota DROP COLUMN localidad;
 ALTER TABLE mars_bogota DROP COLUMN muni;
+
+ALTER TABLE mars_bogota RENAME TO shape;
+ALTER TABLE shape RENAME COLUMN mars TO gid;
 EOF
 
 psql -U mars -d mars -f shape.sql

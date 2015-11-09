@@ -54,7 +54,7 @@ export default class GUIController {
     }
 
     mc_loadGeometries() {
-        geometriesMap = glbs.PROJECT[glbs.DATA_CONSTANTS.GEOMETRIES_MAP];
+        geometriesMap = glbs.PROJECT[glbs.DATA_CONSTANTS.WHERE_MAP];
         _leafletController.mc_loadGeometries();
     }
 

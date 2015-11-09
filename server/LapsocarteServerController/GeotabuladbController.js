@@ -11,11 +11,16 @@ const DB_USER = glbs.PROJECT.DB_USER;
 const DB_PASS = glbs.PROJECT.DB_PASS;
 const DB_NAME = glbs.PROJECT.DB_NAME;
 
-const COLUMN_GID = glbs.PROJECT.COLUMN_GID;
+const TABLE_DATA = glbs.PROJECT.TABLE_DATA;
+const COLUMN_GROUP = glbs.PROJECT.COLUMN_GROUP;
+const COLUMN_WHAT  = glbs.PROJECT.COLUMN_WHAT;
+const COLUMN_WHERE = glbs.PROJECT.COLUMN_WHERE;
+const COLUMN_WHEN  = glbs.PROJECT.COLUMN_WHEN;
+const COLUMN_DATA  = glbs.PROJECT.COLUMN_DATA;
+
 const TABLE_GEOM = glbs.PROJECT.TABLE_GEOM;
 const COLUMN_GEOM = glbs.PROJECT.COLUMN_GEOM;
-const TABLE_DATA = glbs.PROJECT.TABLE_DATA;
-const COLUMN_TIME = glbs.PROJECT.COLUMN_TIME;
+
 const TIME_RANGE = glbs.PROJECT.TIME_RANGE;
 
 const logString = 'GeotabuladbController';
@@ -67,7 +72,7 @@ export default class GeotabuladbController {
 
         let query = 'SELECT * FROM '+TABLE_DATA+' WHERE ';
         for (let t of TIME_RANGE) {
-            query += COLUMN_TIME+'='+t+' OR ';
+            query += COLUMN_WHEN+'='+t+' OR ';
         }
         query = query.slice(0,-4);
         query += ';';

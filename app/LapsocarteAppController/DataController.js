@@ -1,12 +1,11 @@
 import MainController from './LapsocarteAppController.js'
 import * as glbs from '../../Globals.js'
-
+import $ from 'jquery'
 // ------------------------------------------------------------------------
 // CONSTANTS
 // ------------------------------------------------------------------------
-const GEOM_MAP = glbs.DATA_CONSTANTS.GEOMETRIES_MAP;
+const GEOM_MAP = glbs.DATA_CONSTANTS.WHERE_MAP;
 const DATA_MAP = glbs.DATA_CONSTANTS.DATA_MAP;
-const TIME_VECT = glbs.DATA_CONSTANTS.TIME_VECTOR;
 const DESC_STATS = glbs.DATA_CONSTANTS.DESCRIPTIVE_STATS;
 
 const CURRENT_TIME = glbs.DATA_CONSTANTS.CURRENT_TIME;
@@ -47,21 +46,47 @@ export default class DataController {
     }
 
     mc_registerData(json) {
-        // Map of maps: First key -> time, submaps key -> gid.
+        /*
+         4 dimensions map:
+            |-> First  key -> GROUP
+            |-> Second key -> WHAT  -> data set
+            |-> Third  key -> WHEN  -> t
+            |-> Fourth key -> WHERE -> gid.
+            |-> Element    -> The actual data...
+          */
         dataMap = new Map();
+        timeVector = [];
 
-        for (let data of json) {
-            let time = data[glbs.PROJECT.COLUMN_TIME];
-            let gid = data[glbs.PROJECT.COLUMN_GID];
+        for (let row of json) {
+            let group = row[glbs.PROJECT.COLUMN_GROUP];
+            let what  = row[glbs.PROJECT.COLUMN_WHAT];
+            let when  = row[glbs.PROJECT.COLUMN_WHEN];
+            let where = row[glbs.PROJECT.COLUMN_WHERE];
+            let data  = row[glbs.PROJECT.COLUMN_DATA];
 
-            try {
-                dataMap.get(time).set(gid,data);
-            } catch (e) {
-                let gidMap = new Map();
-                gidMap.set(gid,data);
-                dataMap.set(time,gidMap);
+            let stack = [data, where, when, what, group];
+
+            recursiveInsert(dataMap, stack);
+
+            function recursiveInsert(map, stack) {
+                let key = stack.pop();
+
+                if (stack.length == 1) {
+                    let data = stack.pop();
+                    map.set(key, data);
+                    return;
+                }
+
+                let nextMap = map.get(key);
+
+                if (nextMap == undefined) {
+                    nextMap = new Map();
+                    map.set(key, nextMap);
+                }
+                recursiveInsert(nextMap, stack);
             }
         }
+        console.dir(dataMap);
 
         for (let t of dataMap.keys()) timeVector.push(t);
 

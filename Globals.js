@@ -27,7 +27,7 @@ let demo = {
     FOCUSED_COLOR: '#0000FF',
     /* app/LapsocarteAppController/GUIController/GUIController.js */
     FUNC_DATA2COLOR: function (d) {
-        // To get the color of each COLUMN_GEOM in function of COLUMN_DATA
+        // To get the color of each COLUMN_GEOM in function of COLUMN_WHAT
         return  d > 8000 ? '#800026' :
                 d > 7000 ? '#BD0026' :
                 d > 6000 ? '#E31A1C' :
@@ -77,15 +77,18 @@ tomsa.DB_NAME = tomsa.PROJECT;
 let mars = {
     PROJECT: 'mars',
 
-    COLUMN_GID: 'mars',
-    TABLE_GEOM: 'mars_bogota',
-    COLUMN_GEOM: 'geom',
     TABLE_DATA: 'mars',
-    COLUMN_NAME: 'mars',
-    COLUMN_DATA: 'trips_car',
-    COLUMN_TIME: 't',
+    COLUMN_GROUP: 'type',
+
+    COLUMN_WHERE: 'gid',
+    COLUMN_WHEN: 't',
+    COLUMN_WHAT: 'name',
+    COLUMN_DATA: 'data',
+
+    TABLE_GEOM: 'shape',
+    COLUMN_GEOM: 'geom',
+
     TIME_RANGE: range(0,30,3),
-    //TIME_RANGE: [0],
 
     MAP_CENTER: [4.66198, -74.09866],
     MAP_ZOOM: 11,
@@ -152,10 +155,23 @@ export const GIVE_STATS = 'give_stats';
 // Objects Name Constants
 // ---------------------------------------------------------------------------------------------------------------------
 export const DATA_CONSTANTS = {
-    GEOMETRIES_MAP: 'GEOMETRIES_MAP',         // Key gid, value geoJSON object
-    DATA_MAP: 'DATA_MAP',                     // Map of maps: First key -> time, submaps key -> gid.
-    DESCRIPTIVE_STATS: 'DESCRIPTIVE_STATS',   // Object with MIN, MAX, MEAN, etc...
-    TIME_VECTOR: 'TIME_VECTOR',               // Ordered vector with time dimension
+
+
+    WHEREs_MAP:   'WHEREs_MAP',
+    WHENs_VECTOR: 'WHENs_VECTOR',
+
+    /*
+     4 dimensions map:
+     |-> First  key -> GROUP
+     |-> Second key -> WHAT  -> data set
+     |-> Third  key -> WHEN  -> t
+     |-> Fourth key -> WHERE -> gid.
+     |-> Element    -> The actual data...
+     */
+    DATA_MAP: 'DATA_MAP',
+    // Object with MIN, MAX, MEAN, etc...
+    DESCRIPTIVE_STATS: 'DESCRIPTIVE_STATS',
+
     LEAFLET_MAP: 'LEAFLET_MAP',               // Leaflet MAP object
     CURRENT_TIME: 'CURRENT_TIME'              // Current selected time in GUI
 };

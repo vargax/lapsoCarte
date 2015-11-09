@@ -82,7 +82,6 @@ export default class LapsocarteServerController {
     sc_giveGeometries(geoJSON) {
         _geometries = geoJSON;
         console.log('serverController.sc_giveGeometries() :: '+_geometries['features'].length+' geometries retrieved...');
-        //console.dir(_geometries['features']);
 
         let client = _clientsGeomQueue.shift();
         while(client != undefined) {
