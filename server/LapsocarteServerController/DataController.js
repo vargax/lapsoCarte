@@ -44,7 +44,7 @@ export default class DataController{
         let array = this.__json2array(key,json);
         glbs.PROJECT[glbs.DATA_CONSTANTS.HOWs_VECTOR] = array;
 
-        console.log('_dataController.mc_setHows() :: '+array.length+' HOWs registered!');
+        console.log('_dataController.mc_setHows() :: '+array.length+' HOWs ('+key+') registered!');
         done.hows = true;
         this._genDescriptiveStats();
     }
@@ -54,7 +54,7 @@ export default class DataController{
         let array = this.__json2array(key,json);
         glbs.PROJECT[glbs.DATA_CONSTANTS.WHATs_VECTOR] = array;
 
-        console.log('_dataController.mc_setWhats() :: '+array.length+' WHATs registered!');
+        console.log('_dataController.mc_setWhats() :: '+array.length+' WHATs ('+key+') registered!');
         done.whats = true;
         this._genDescriptiveStats();
     }
@@ -64,21 +64,22 @@ export default class DataController{
         let array = this.__json2array(key,json);
         glbs.PROJECT[glbs.DATA_CONSTANTS.WHENs_VECTOR] = array;
 
-        console.log('_dataController.mc_setWhens() :: '+array.length+' WHENs registered!');
+        console.log('_dataController.mc_setWhens() :: '+array.length+' WHENs ('+key+') registered!');
         done.whens = true;
     }
 
     mc_setWheres(geoJSON) {
         let geometriesMap = new Map();
 
+        let key = glbs.PROJECT.COLUMN_WHERE;
         for (let feature of geoJSON['features']) {
-            let gid = feature['properties'][glbs.PROJECT.COLUMN_WHERE];
+            let gid = feature['properties'][key];
             geometriesMap.set(gid,feature);
         }
 
         glbs.PROJECT[WHEREs_MAP] = geometriesMap;
 
-        console.log('_dataController.mc_setWheres() :: '+geometriesMap.size+' WHEREs registered!');
+        console.log('_dataController.mc_setWheres() :: '+geometriesMap.size+' WHEREs ('+key+') registered!');
         done.wheres = true;
     }
 
@@ -125,7 +126,7 @@ export default class DataController{
 
         glbs.PROJECT[DATA_MAP] = dataMap;
 
-        console.log('_dataController.mc_setData() :: '+json.length+' data elements registered!');
+        console.log('_dataController.mc_setData() :: '+json.length+' DATA ('+glbs.PROJECT.COLUMN_DATA+') elements registered!');
         done.data = true;
         this._genDescriptiveStats();
     }
