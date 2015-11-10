@@ -1,4 +1,4 @@
-import GeotabuladbController from './GeotabuladbController.js'
+import DatabaseController from './DatabaseController.js'
 import SocketioController from './SocketioController.js'
 import ExpressController from './ExpressController.js'
 import DataController from './DataController.js'
@@ -7,7 +7,7 @@ import * as glbs from '../../Globals.js'
 // ------------------------------------------------------------------------
 // CONTROLLERS
 // ------------------------------------------------------------------------
-let _geotabuladbController;
+let _databaseController;
 let _expressController;
 let _socketioController;
 let _dataController;
@@ -30,7 +30,7 @@ export default class LapsocarteServerController {
         if (!lapsocarteServerController) {
             lapsocarteServerController = this;
 
-            _geotabuladbController = new GeotabuladbController();
+            _databaseController = new DatabaseController();
             _expressController = new ExpressController();
             _socketioController = new SocketioController();
             _dataController = new DataController();
@@ -43,50 +43,36 @@ export default class LapsocarteServerController {
 
     // Methods exposed to my MainController (mc) ------------------------------
     mc_init() {
-        _geotabuladbController.mc_init();
+        _databaseController.mc_init();
         _expressController.mc_init();
         _socketioController.mc_init(_expressController.mc_getServer());
     }
 
-    // Methods exposed to all my subcontrollers (sc) --------------------------
-    sc_init(socketId) {
-        if (_data) {
-            _socketioController.mc_sendData(socketId,_data);
-            _socketioController.mc_sendStats(socketId,_dataController.mc_getDescriptiveStats());
-        }
-        else {
-            _geotabuladbController.mc_getData();
-            _clientsDataQueue.push(socketId);
-        }
+    // Methods exposed my subcontrollers (sc) --------------------------
 
-        if (_geometries) _socketioController.mc_sendGeometries(socketId,_geometries);
-        else {
-            _geotabuladbController.mc_getGeometries();
-            _clientsGeomQueue.push(socketId);
-        }
+    // Used by _socketioController
+    sc_init(socketId) {
+
+    }
+
+    // Used by _databaseController
+    sc_giveHows(json) {
+        _dataController.mc_setHows(json);
+    }
+
+    sc_giveWhats(json) {
+        _dataController.mc_setWhats(json);
+    }
+
+    sc_giveWhens(json) {
+        _dataController.mc_setWhens(json);
+    }
+    
+    sc_giveWheres(geoJSON) {
+        _dataController.mc_setWheres(geoJSON);
     }
 
     sc_giveData(json) {
-        _data = json;
-        console.log('serverController.sc_giveData() :: '+_data.length+' data elements retrieved...');
-        _dataController.mc_setData(_data);
-
-        let client = _clientsDataQueue.shift();
-        while(client != undefined) {
-            _socketioController.mc_sendData(client,_data);
-            _socketioController.mc_sendStats(client,_dataController.mc_getDescriptiveStats());
-            client = _clientsDataQueue.shift();
-        }
-    }
-
-    sc_giveGeometries(geoJSON) {
-        _geometries = geoJSON;
-        console.log('serverController.sc_giveGeometries() :: '+_geometries['features'].length+' geometries retrieved...');
-
-        let client = _clientsGeomQueue.shift();
-        while(client != undefined) {
-            _socketioController.mc_sendGeometries(client,_geometries);
-            client = _clientsGeomQueue.shift();
-        }
+        _dataController.mc_setData(json);
     }
 }

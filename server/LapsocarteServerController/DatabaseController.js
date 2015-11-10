@@ -12,7 +12,7 @@ const DB_PASS = glbs.PROJECT.DB_PASS;
 const DB_NAME = glbs.PROJECT.DB_NAME;
 
 const TABLE_DATA = glbs.PROJECT.TABLE_DATA;
-const COLUMN_GROUP = glbs.PROJECT.COLUMN_GROUP;
+const COLUMN_HOW = glbs.PROJECT.COLUMN_HOW;
 const COLUMN_WHAT  = glbs.PROJECT.COLUMN_WHAT;
 const COLUMN_WHERE = glbs.PROJECT.COLUMN_WHERE;
 const COLUMN_WHEN  = glbs.PROJECT.COLUMN_WHEN;
@@ -56,26 +56,72 @@ export default class GeotabuladbController {
             password: DB_PASS,
             database: DB_NAME
         });
+
+        this._getWheres();
+
+        let queries = [];
+        let sqlTimeWhere = this.__genFilteredTimeWhere();
+
+        let howQuery = {
+            query: 'SELECT DISTINCT '+COLUMN_HOW+' FROM '+TABLE_DATA + sqlTimeWhere,
+            callback: _mainController.sc_giveHows
+        };
+        queries.push(howQuery);
+
+        let whatsQuery = {
+            query: 'SELECT DISTINCT '+COLUMN_WHAT+' FROM '+TABLE_DATA + sqlTimeWhere,
+            callback: _mainController.sc_giveWhats
+        };
+        queries.push(whatsQuery);
+
+        let whensQuery = {
+            query: 'SELECT DISTINCT '+COLUMN_WHEN+' FROM '+TABLE_DATA + sqlTimeWhere,
+            callback: _mainController.sc_giveWhens
+        };
+        queries.push(whensQuery);
+
+        let dataQuery = {
+            query: 'SELECT * FROM '+TABLE_DATA + sqlTimeWhere,
+            callback: _mainController.sc_giveData
+        };
+        queries.push(dataQuery);
+
+        let hashMap = new Map();
+        recursiveQuery();
+
+        function recursiveQuery(result, hash) {
+            try {
+                let callback = hashMap.get(hash);
+                callback(result);
+            } catch (e) {
+                console.log('! First recursiveQuery() call...');
+            }
+
+            let nextQuery = queries.pop();
+            if (nextQuery != undefined) {
+                let nextHash = _geo.query(nextQuery.query, recursiveQuery);
+                hashMap.set(nextHash, nextQuery.callback)
+            }
+        }
     }
 
-    mc_getGeometries() {
-        let log = '.mc_getGeometries()';
+    _getWheres() {
+        // ToDo improve this method to only retrieve the geometries who have related data
         let parameters = {
             tableName: TABLE_GEOM,
             geometry: COLUMN_GEOM
         };
-        _geo.geoQuery(parameters, _mainController.sc_giveGeometries);
+        _geo.geoQuery(parameters, _mainController.sc_giveWheres);
     }
 
-    mc_getData() {
-        let log = '.mc_getData('+TIME_RANGE+')';
-
-        let query = 'SELECT * FROM '+TABLE_DATA+' WHERE ';
+    __genFilteredTimeWhere() {
+        let where = ' WHERE ';
         for (let t of TIME_RANGE) {
-            query += COLUMN_WHEN+'='+t+' OR ';
+            where += COLUMN_WHEN+'='+t+' OR ';
         }
-        query = query.slice(0,-4);
-        query += ';';
-        _geo.query(query, _mainController.sc_giveData);
+        where = where.slice(0,-4);
+        where += ';';
+
+        return where;
     }
 }

@@ -4,19 +4,19 @@ import $ from 'jquery'
 // ------------------------------------------------------------------------
 // CONSTANTS
 // ------------------------------------------------------------------------
-const GEOM_MAP = glbs.DATA_CONSTANTS.WHERE_MAP;
+const HOWs_VECTOR = glbs.DATA_CONSTANTS.HOWs_VECTOR;
+const WHATs_VECTOR = glbs.DATA_CONSTANTS.WHATs_VECTOR;
+const WHENs_VECTOR = glbs.DATA_CONSTANTS.WHENs_VECTOR;
+const WHEREs_MAP =   glbs.DATA_CONSTANTS.WHEREs_MAP;
+
 const DATA_MAP = glbs.DATA_CONSTANTS.DATA_MAP;
 const DESC_STATS = glbs.DATA_CONSTANTS.DESCRIPTIVE_STATS;
 
 const CURRENT_TIME = glbs.DATA_CONSTANTS.CURRENT_TIME;
-// ------------------------------------------------------------------------
-// VARIABLES
-// ------------------------------------------------------------------------
-let geometriesMap  = null;
-let dataMap = null;
-let timeVector =  null;
-let descriptiveStats = null;
 
+// ------------------------------------------------------------------------
+// CONTROLLERS
+// ------------------------------------------------------------------------
 let _mainController;
 
 // ------------------------------------------------------------------------
@@ -25,12 +25,11 @@ let _mainController;
 export default class DataController {
     constructor() {
         _mainController = new MainController();
-        timeVector = [];
     }
 
     // Methods exposed to my MainController (mc) ---------------------------------
     mc_registerGeometries(geoJSON) {
-        geometriesMap = new Map();
+        let geometriesMap = new Map();
 
         for (let feature of geoJSON['features']) {
             let gid = feature['properties'][glbs.PROJECT.COLUMN_GID];
@@ -38,9 +37,9 @@ export default class DataController {
             geometriesMap.set(gid,feature);
         }
 
-        glbs.PROJECT[GEOM_MAP] = geometriesMap;
+        glbs.PROJECT[WHEREs_MAP] = geometriesMap;
         console.log('dataController.mc_registerGeometries() :: '+geometriesMap.size+' geometries registered!');
-        console.dir(glbs.PROJECT[GEOM_MAP]);
+        console.dir(glbs.PROJECT[WHEREs_MAP]);
 
         this._amIready();
     }

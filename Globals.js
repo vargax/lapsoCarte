@@ -6,7 +6,7 @@
 let demo = {
     PROJECT: 'lapsocarte',
 
-    /* server/LapsocarteServerController/GeotabuladbController.js */
+    /* server/LapsocarteServerController/DatabaseController.js */
     COLUMN_GID: 'gid',
     TABLE_GEOM: 'barrios_catastrales_wgs84',
     COLUMN_GEOM: 'geom',
@@ -78,17 +78,17 @@ let mars = {
     PROJECT: 'mars',
 
     TABLE_DATA: 'mars',
-    COLUMN_GROUP: 'type',
 
-    COLUMN_WHERE: 'gid',
-    COLUMN_WHEN: 't',
+    COLUMN_HOW: 'type',
     COLUMN_WHAT: 'name',
+    COLUMN_WHEN: 't',
+    COLUMN_WHERE: 'gid',
     COLUMN_DATA: 'data',
 
     TABLE_GEOM: 'shape',
     COLUMN_GEOM: 'geom',
 
-    TIME_RANGE: range(0,30,3),
+    TIME_RANGE: range(0,30,2),
 
     MAP_CENTER: [4.66198, -74.09866],
     MAP_ZOOM: 11,
@@ -155,21 +155,27 @@ export const GIVE_STATS = 'give_stats';
 // Objects Name Constants
 // ---------------------------------------------------------------------------------------------------------------------
 export const DATA_CONSTANTS = {
-
-
-    WHEREs_MAP:   'WHEREs_MAP',
+    HOWs_VECTOR: 'HOWs_VECTOR',
+    WHATs_VECTOR: 'WHATs_VECTOR',
     WHENs_VECTOR: 'WHENs_VECTOR',
+    WHEREs_MAP:   'WHEREs_MAP',
 
     /*
      4 dimensions map:
-     |-> First  key -> GROUP
+     |-> First  key -> HOW
      |-> Second key -> WHAT  -> data set
      |-> Third  key -> WHEN  -> t
      |-> Fourth key -> WHERE -> gid.
      |-> Element    -> The actual data...
      */
     DATA_MAP: 'DATA_MAP',
-    // Object with MIN, MAX, MEAN, etc...
+    /*
+     2 dimensions map:
+     |-> First  key -> HOW
+     |-> Second key -> WHAT  -> data set
+     |-> Element
+         |-> Object with MAX, MIN, AVERAGE for the given WHAT in the given HOW
+     */
     DESCRIPTIVE_STATS: 'DESCRIPTIVE_STATS',
 
     LEAFLET_MAP: 'LEAFLET_MAP',               // Leaflet MAP object
