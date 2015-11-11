@@ -178,10 +178,10 @@ export const DATA_CONSTANTS = {
      To get the DATA_VECTOR but at WHEN level:
         descStats.get(givenHow).get(givenWhat).get(givenWhen).get(DS_DATA_VECTOR)
 
-     Note that due to the hierarchy data structure implementation:
-        - There is not descriptive stats at WHERE level
+     Note that given the hierarchically DATA_MAP implementation:
+        - There are not descriptive stats at WHERE level.
         - Descriptive statistics at HOW level are available but in general doesn't make
-        sense from the statistical point of view (they are comparing apples and oranges).
+        statistical sense (they are comparing apples and oranges).
      */
     DESCRIPTIVE_STATS: 'lpc_DESCRIPTIVE_STATS',
     DS_MIN: 'lpc_MIN',
