@@ -94,7 +94,9 @@ export default class GeotabuladbController {
                 let callback = hashMap.get(hash);
                 callback(result);
             } catch (e) {
-                console.log('! First recursiveQuery() call...');
+                if (e instanceof TypeError)
+                    console.log('! First recursiveQuery() call...');
+                else console.dir(e);
             }
 
             let nextQuery = queries.pop();

@@ -1,6 +1,8 @@
 import MainController from './LapsocarteServerController.js'
 import * as glbs from '../../Globals.js'
 import JStat from 'jStat'
+
+import util from 'util'
 // ------------------------------------------------------------------------
 // CONSTANTS
 // ------------------------------------------------------------------------
@@ -92,7 +94,7 @@ export default class DataController{
          |-> Fourth key -> WHERE -> gid.
          |-> Element    -> The actual data...
          */
-        let dataMap = new Map();
+        let dataMap = new Map(), counter = 0;
 
         for (let row of json) {
             let how = row[glbs.PROJECT.COLUMN_HOW];
@@ -111,6 +113,7 @@ export default class DataController{
                 if (stack.length == 1) {
                     let data = stack.pop();
                     map.set(key, data);
+                    counter++;
                     return;
                 }
 
@@ -126,7 +129,7 @@ export default class DataController{
 
         glbs.PROJECT[DATA_MAP] = dataMap;
 
-        console.log('_dataController.mc_setData() :: '+json.length+' DATA ('+glbs.PROJECT.COLUMN_DATA+') elements registered!');
+        console.log('_dataController.mc_setData() :: '+counter+' DATA ('+glbs.PROJECT.COLUMN_DATA+') elements registered!');
         done.data = true;
         this._genDescriptiveStats();
     }
@@ -137,92 +140,34 @@ export default class DataController{
         const   DS_MIN            = glbs.DATA_CONSTANTS.DS_MIN,
                 DS_MAX            = glbs.DATA_CONSTANTS.DS_MAX,
                 DS_MEAN           = glbs.DATA_CONSTANTS.DS_MEAN,
-                DS_WHAT_VECTOR    = glbs.DATA_CONSTANTS.DS_WHAT_VECTOR,
-                DS_WHEN_VECTOR    = glbs.DATA_CONSTANTS.DS_WHEN_VECTOR,
-                DS_WHERE_VECTOR   = glbs.DATA_CONSTANTS.DS_WHERE_VECTOR,
+                DS_KEYS_VECTOR   = glbs.DATA_CONSTANTS.DS_KEYS_VECTOR,
                 DS_DATA_VECTOR    = glbs.DATA_CONSTANTS.DS_DATA_VECTOR;
 
         let dataMap = glbs.PROJECT[DATA_MAP];
         //  |-> How -> What -> When -> Where -> Data
 
-
-        let descriptiveStats = {};
-        for (let how in dataMap.keys()) { // --------------------------------------------> Group
-            let howStats = {};
-
-            let groupLevel_whatsvector = [];
-
-            howStats[DS_WHAT_VECTOR] = new Set();
-            howStats[DS_WHEN_VECTOR] = new Set();
-            howStats[DS_WHERE_VECTOR] = new Set();
-
-            for (let what in dataMap.get(how).keys()) { // ------------------------------> DataSet
-                let whatStats = {};
-
-                let dataSetLevel_whensVector = [];
-                let dataSetLevel_wheresVector = [];
-                let dataSetLevel_dataVector = [];
-
-                for (let when in dataMap.get(how).get(what).keys()) { // ----------------> Time
-                    let whenStats = {};
-
-                    let timeLevel_wheresVector = [];
-                    let timeLevel_dataVector = [];
-
-                    for (let where in dataMap.get(how).get(what).get(when).keys()) { //--> Spatial Objects
-                        let data = dataMap.get(how).get(what).get(when).get(where);
-
-                        timeLevel_dataVector.push(data);
-                        timeLevel_wheresVector.push(where);
-
-                    }                                                                //--> Spatial Objects
-
-                    whenStats[DS_DATA_VECTOR] = timeLevel_dataVector;
-                    whenStats[DS_WHERE_VECTOR] = timeLevel_wheresVector;
-
-                    whenStats[DS_MIN] = JStat.jStat.min(timeLevel_dataVector);
-                    whenStats[DS_MAX] = JStat.jStat.max(timeLevel_dataVector);
-                    whenStats[DS_MEAN] = JStat.jStat.mean(timeLevel_dataVector);
-
-                    whatStats[when] = whenStats;
-                    dataSetLevel_whensVector.push(when);
-                    dataSetLevel_dataVector.concat(timeLevel_dataVector);
-                    dataSetLevel_wheresVector.concat(timeLevel_wheresVector);
-                }                                                     // ----------------> Time
-
-                whatStats[DS_DATA_VECTOR]  = dataSetLevel_dataVector;
-                whatStats[DS_WHEN_VECTOR]  = (Array.from(new Set(dataSetLevel_whensVector))).sort(function(a, b){return a-b});
-                whatStats[DS_WHERE_VECTOR] = (Array.from(new Set(dataSetLevel_wheresVector))).sort();
-
-
-            }                                           // ------------------------------> DataSet
-
-
-        }                                 // --------------------------------------------> Group
-
+        let descriptiveStats = recursiveStats(dataMap);
         glbs.PROJECT[DESC_STATS] = descriptiveStats;
 
-
         function recursiveStats(map) {
+            let stats = {}, dataArray = [], keysArray = [];
 
-            let stats = {};
-            let dataArray = [], keysArray = [];
+            for (let [key, candidate] of map) {
 
-            for (let key in map.keys()) {
-                let candidate = map.get(key);
-
-                if(!Number.isNaN(candidate)) {
-
-                    dataArray.push(candidate);
-                    keysArray.push(key);
-
+                if(typeof candidate == 'object') {
+                    let childStats = recursiveStats(candidate);
+                    dataArray = dataArray.concat(childStats[DS_DATA_VECTOR]);
+                    stats[key] = childStats;
                 } else {
-                    stats[key] = recursiveStats(candidate);
-                    return;
+                    dataArray.push(candidate);
                 }
+                keysArray.push(key);
             }
 
             stats[DS_DATA_VECTOR] = dataArray;
+
+            let keysSet = new Set(keysArray);
+            stats[DS_KEYS_VECTOR] = new Array.from(keysSet);
 
             stats[DS_MIN] = JStat.jStat.min(dataArray);
             stats[DS_MAX] = JStat.jStat.max(dataArray);
@@ -230,7 +175,6 @@ export default class DataController{
 
             return stats;
         }
-
     }
 
     __json2array(key, json) {
@@ -240,21 +184,5 @@ export default class DataController{
             array.push(row[key]);
 
         return array;
-    }
-
-    __unique(array) {
-
-
-
-        array = Number.isNaN(array[0]) ? array.sort() : array.sort(function(a, b){return a-b});
-
-        let i = 0, currentItem, nextItem;
-        do {
-            currentItem = array[i];
-            nextItem = array[i +1];
-            i++;
-        } while (currentItem == nextItem)
-
-
     }
 }
