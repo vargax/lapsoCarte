@@ -155,10 +155,10 @@ export const GIVE_STATS = 'give_stats';
 // Objects Name Constants
 // ---------------------------------------------------------------------------------------------------------------------
 export const DATA_CONSTANTS = {
-    HOWs_VECTOR: 'HOWs_VECTOR',
-    WHATs_VECTOR: 'WHATs_VECTOR',
-    WHENs_VECTOR: 'WHENs_VECTOR',
-    WHEREs_MAP:   'WHEREs_MAP',
+    HOWs_VECTOR: 'lpc_HOWs_VECTOR',
+    WHATs_VECTOR: 'lpc_WHATs_VECTOR',
+    WHENs_VECTOR: 'lpc_WHENs_VECTOR',
+    WHEREs_MAP:   'lpc_WHEREs_MAP',
 
     /*
      4 dimensions map:
@@ -168,7 +168,7 @@ export const DATA_CONSTANTS = {
      |-> Fourth key -> WHERE -> gid.
      |-> Element    -> The actual data...
      */
-    DATA_MAP: 'DATA_MAP',
+    DATA_MAP: 'lpc_DATA_MAP',
     /*
      2 dimensions map:
      |-> First  key -> HOW
@@ -176,13 +176,13 @@ export const DATA_CONSTANTS = {
      |-> Element
          |-> Object with MAX, MIN, AVERAGE for the given WHAT in the given HOW
      */
-    DESCRIPTIVE_STATS: 'DESCRIPTIVE_STATS',
-    DS_MIN: 'MIN',
-    DS_MAX: 'MAX',
-    DS_MEAN: 'AVERAGE',
-    DS_KEYS_VECTOR: 'KEYS_VECTOR',
-    DS_DATA_VECTOR: 'DATA_VECTOR',
+    DESCRIPTIVE_STATS: 'lpc_DESCRIPTIVE_STATS',
+    DS_MIN: 'lpc_MIN',
+    DS_MAX: 'lpc_MAX',
+    DS_MEAN: 'lpc_AVERAGE',
+    DS_KEYS_VECTOR: 'lpc_KEYS_VECTOR',
+    DS_DATA_VECTOR: 'lpc_DATA_VECTOR',
 
-    LEAFLET_MAP: 'LEAFLET_MAP',               // Leaflet MAP object
-    CURRENT_TIME: 'CURRENT_TIME'              // Current selected time in GUI
+    LEAFLET_MAP: 'lpc_LEAFLET_MAP',               // Leaflet MAP object
+    CURRENT_TIME: 'lpc_CURRENT_TIME'              // Current selected time in GUI
 };

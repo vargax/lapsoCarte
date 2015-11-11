@@ -37,7 +37,8 @@ export default class DataController{
             whats: false,
             whens: false,
             wheres: false,
-            data: false
+            data: false,
+            descriptiveStats: false
         }
     }
 
@@ -48,7 +49,6 @@ export default class DataController{
 
         console.log('_dataController.mc_setHows() :: '+array.length+' HOWs ('+key+') registered!');
         done.hows = true;
-        this._genDescriptiveStats();
     }
 
     mc_setWhats(json) {
@@ -58,7 +58,6 @@ export default class DataController{
 
         console.log('_dataController.mc_setWhats() :: '+array.length+' WHATs ('+key+') registered!');
         done.whats = true;
-        this._genDescriptiveStats();
     }
 
     mc_setWhens(json) {
@@ -135,8 +134,6 @@ export default class DataController{
     }
 
     _genDescriptiveStats() {
-        if (!done.data || !done.whats || !done.hows) return;
-
         const   DS_MIN            = glbs.DATA_CONSTANTS.DS_MIN,
                 DS_MAX            = glbs.DATA_CONSTANTS.DS_MAX,
                 DS_MEAN           = glbs.DATA_CONSTANTS.DS_MEAN,
@@ -146,35 +143,42 @@ export default class DataController{
         let dataMap = glbs.PROJECT[DATA_MAP];
         //  |-> How -> What -> When -> Where -> Data
 
-        let descriptiveStats = recursiveStats(dataMap);
+        let counter = 0, descriptiveStats = recursiveStats(dataMap);
         glbs.PROJECT[DESC_STATS] = descriptiveStats;
 
+        console.log('_dataController._genDescriptiveStats() :: Descriptive statistics done for '+counter+' elements!');
+        done.descriptiveStats = true;
+        //console.log(util.inspect(descriptiveStats,{depth: 2}));
+
         function recursiveStats(map) {
-            let stats = {}, dataArray = [], keysArray = [];
+            let stats = new Map(), dataArray = [], keysArray = [];
 
             for (let [key, candidate] of map) {
 
                 if(typeof candidate == 'object') {
                     let childStats = recursiveStats(candidate);
-                    dataArray = dataArray.concat(childStats[DS_DATA_VECTOR]);
-                    stats[key] = childStats;
+                    dataArray = dataArray.concat(childStats.get(DS_DATA_VECTOR));
+                    stats.set(key, childStats);
                 } else {
                     dataArray.push(candidate);
                 }
                 keysArray.push(key);
             }
 
-            stats[DS_DATA_VECTOR] = dataArray;
+            stats.set(DS_DATA_VECTOR, dataArray);
+            stats.set(DS_KEYS_VECTOR, new Array.from(new Set(keysArray))); // --> Removing duplicates
 
-            let keysSet = new Set(keysArray);
-            stats[DS_KEYS_VECTOR] = new Array.from(keysSet);
+            stats.set(DS_MIN, JStat.jStat.min(dataArray));
+            stats.set(DS_MAX, JStat.jStat.max(dataArray));
+            stats.set(DS_MEAN, JStat.jStat.mean(dataArray));
 
-            stats[DS_MIN] = JStat.jStat.min(dataArray);
-            stats[DS_MAX] = JStat.jStat.max(dataArray);
-            stats[DS_MEAN] = JStat.jStat.mean(dataArray);
-
+            counter++;
             return stats;
         }
+    }
+
+    _amIdone() {
+
     }
 
     __json2array(key, json) {
