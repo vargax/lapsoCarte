@@ -23,8 +23,10 @@ export default class ExpressController {
             res.sendFile(PathHelper.relativeToAbsolute('../../app/index.html'));
         });
         _server.listen(8080, function() {
-            console.log('ExpressController.init() :: Server ready and listening on port 8080');
+            console.log('ExpressController.init() :: Server listening on port 8080');
         });
+
+        _mainController.sc_ready(this);
     }
 
     mc_getServer() {

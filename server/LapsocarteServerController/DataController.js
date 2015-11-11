@@ -14,7 +14,12 @@ const WHEREs_MAP =   glbs.DATA_CONSTANTS.WHEREs_MAP;
 const DATA_MAP = glbs.DATA_CONSTANTS.DATA_MAP;
 const DESC_STATS = glbs.DATA_CONSTANTS.DESCRIPTIVE_STATS;
 
-const CURRENT_TIME = glbs.DATA_CONSTANTS.CURRENT_TIME;
+const HOWs_READY       = 'HOWs_READY';
+const WHATs_READY      = 'WHATs_READY';
+const WHENs_READY      = 'WHENs_READY';
+const WHEREs_READY     = 'WHEREs_READY';
+const DATA_READY       = 'DATA_READY';
+const DESC_STATS_READY = 'DESC_STATS_READY';
 
 // ------------------------------------------------------------------------
 // CONTROLLERS
@@ -32,14 +37,9 @@ let done;
 export default class DataController{
     constructor() {
         _mainController = new MainController();
-        done = {
-            hows: false,
-            whats: false,
-            whens: false,
-            wheres: false,
-            data: false,
-            descriptiveStats: false
-        }
+        done = new Map();
+        done.set(DESC_STATS_READY, false).set(DATA_READY, false);
+        done.set(HOWs_READY, false).set(WHATs_READY, false).set(WHENs_READY, false).set(WHEREs_READY, false);
     }
 
     mc_setHows(json) {
@@ -48,7 +48,8 @@ export default class DataController{
         glbs.PROJECT[glbs.DATA_CONSTANTS.HOWs_VECTOR] = array;
 
         console.log('_dataController.mc_setHows() :: '+array.length+' HOWs ('+key+') registered!');
-        done.hows = true;
+        done.set(HOWs_READY, true);
+        this._amIready();
     }
 
     mc_setWhats(json) {
@@ -57,7 +58,8 @@ export default class DataController{
         glbs.PROJECT[glbs.DATA_CONSTANTS.WHATs_VECTOR] = array;
 
         console.log('_dataController.mc_setWhats() :: '+array.length+' WHATs ('+key+') registered!');
-        done.whats = true;
+        done.set(WHATs_READY, true);
+        this._amIready();
     }
 
     mc_setWhens(json) {
@@ -66,7 +68,8 @@ export default class DataController{
         glbs.PROJECT[glbs.DATA_CONSTANTS.WHENs_VECTOR] = array;
 
         console.log('_dataController.mc_setWhens() :: '+array.length+' WHENs ('+key+') registered!');
-        done.whens = true;
+        done.set(WHENs_READY, true);
+        this._amIready();
     }
 
     mc_setWheres(geoJSON) {
@@ -81,7 +84,8 @@ export default class DataController{
         glbs.PROJECT[WHEREs_MAP] = geometriesMap;
 
         console.log('_dataController.mc_setWheres() :: '+geometriesMap.size+' WHEREs ('+key+') registered!');
-        done.wheres = true;
+        done.set(WHEREs_READY, true);
+        this._amIready();
     }
 
     mc_setData(json) {
@@ -105,32 +109,34 @@ export default class DataController{
             let stack = [data, where, when, what, how];
 
             recursiveInsert(dataMap, stack);
-
-            function recursiveInsert(map, stack) {
-                let key = stack.pop();
-
-                if (stack.length == 1) {
-                    let data = stack.pop();
-                    map.set(key, data);
-                    counter++;
-                    return;
-                }
-
-                let nextMap = map.get(key);
-
-                if (nextMap == undefined) {
-                    nextMap = new Map();
-                    map.set(key, nextMap);
-                }
-                recursiveInsert(nextMap, stack);
-            }
         }
 
         glbs.PROJECT[DATA_MAP] = dataMap;
 
         console.log('_dataController.mc_setData() :: '+counter+' DATA ('+glbs.PROJECT.COLUMN_DATA+') elements registered!');
-        done.data = true;
+        done.set(DATA_READY, true);
+        this._amIready();
+
         this._genDescriptiveStats();
+
+        function recursiveInsert(map, stack) {
+            let key = stack.pop();
+
+            if (stack.length == 1) {
+                let data = stack.pop();
+                map.set(key, data);
+                counter++;
+                return;
+            }
+
+            let nextMap = map.get(key);
+
+            if (nextMap == undefined) {
+                nextMap = new Map();
+                map.set(key, nextMap);
+            }
+            recursiveInsert(nextMap, stack);
+        }
     }
 
     _genDescriptiveStats() {
@@ -147,8 +153,8 @@ export default class DataController{
         glbs.PROJECT[DESC_STATS] = descriptiveStats;
 
         console.log('_dataController._genDescriptiveStats() :: Descriptive statistics done for '+counter+' elements!');
-        done.descriptiveStats = true;
-        //console.log(util.inspect(descriptiveStats,{depth: 2}));
+        done.set(DESC_STATS_READY, true);
+        this._amIready();
 
         function recursiveStats(map) {
             let stats = new Map(), dataArray = [], keysArray = [];
@@ -177,8 +183,11 @@ export default class DataController{
         }
     }
 
-    _amIdone() {
+    _amIready() {
+        for (let method of done.values())
+            if (!method) return;
 
+        _mainController.sc_ready(this);
     }
 
     __json2array(key, json) {

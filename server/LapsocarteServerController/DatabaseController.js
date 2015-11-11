@@ -23,10 +23,6 @@ const COLUMN_GEOM = glbs.PROJECT.COLUMN_GEOM;
 
 const TIME_RANGE = glbs.PROJECT.TIME_RANGE;
 
-const logString = 'GeotabuladbController';
-const logOK  = ' :: ';
-const logERR = ' !! ';
-
 // ------------------------------------------------------------------------
 // CONTROLLERS
 // ------------------------------------------------------------------------
@@ -36,18 +32,20 @@ let _geo;
 // ------------------------------------------------------------------------
 // VARIABLES
 // ------------------------------------------------------------------------
-let _queries;
-let _results;
 
 // ------------------------------------------------------------------------
 // CLASSES
 // ------------------------------------------------------------------------
-export default class GeotabuladbController {
+let databaseController = null; // --> Singleton Pattern...
+export default class DatabaseController {
     constructor() {
-        _mainController = new MainController();
-        _geo = new GeotabulaDB();
-        _queries = new Map();
-        _results = new Map();
+        if (!databaseController) {
+            databaseController = this;
+
+            _mainController = new MainController();
+            _geo = new GeotabulaDB();
+        }
+        return databaseController;
     }
 
     mc_init() {
@@ -103,7 +101,7 @@ export default class GeotabuladbController {
             if (nextQuery != undefined) {
                 let nextHash = _geo.query(nextQuery.query, recursiveQuery);
                 hashMap.set(nextHash, nextQuery.callback)
-            }
+            } else _mainController.sc_ready(databaseController);
         }
     }
 

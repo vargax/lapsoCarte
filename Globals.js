@@ -169,12 +169,19 @@ export const DATA_CONSTANTS = {
      |-> Element    -> The actual data...
      */
     DATA_MAP: 'lpc_DATA_MAP',
+
     /*
-     2 dimensions map:
-     |-> First  key -> HOW
-     |-> Second key -> WHAT  -> data set
-     |-> Element
-         |-> Object with MAX, MIN, AVERAGE for the given WHAT in the given HOW
+     Multidimensional map with cumulative data descriptive statistics:
+     EXAMPLE:
+     To get the DATA_VECTOR at WHAT level:
+        descStats.get(givenHow).get(givenWhat).get(DS_DATA_VECTOR)
+     To get the DATA_VECTOR but at WHEN level:
+        descStats.get(givenHow).get(givenWhat).get(givenWhen).get(DS_DATA_VECTOR)
+
+     Note that due to the hierarchy data structure implementation:
+        - There is not descriptive stats at WHERE level
+        - Descriptive statistics at HOW level are available but in general doesn't make
+        sense from the statistical point of view (they are comparing apples and oranges).
      */
     DESCRIPTIVE_STATS: 'lpc_DESCRIPTIVE_STATS',
     DS_MIN: 'lpc_MIN',

@@ -15,11 +15,7 @@ let _dataController;
 // ------------------------------------------------------------------------
 // VARIABLES
 // ------------------------------------------------------------------------
-let _data = null;
-let _geometries = null;
-
-let _clientsDataQueue;
-let _clientsGeomQueue;
+let _notReady = 0;
 
 // ------------------------------------------------------------------------
 // CLASSES
@@ -30,13 +26,11 @@ export default class LapsocarteServerController {
         if (!lapsocarteServerController) {
             lapsocarteServerController = this;
 
-            _databaseController = new DatabaseController();
-            _expressController = new ExpressController();
-            _socketioController = new SocketioController();
-            _dataController = new DataController();
+            _databaseController = new DatabaseController(); _notReady++;
+            _expressController = new ExpressController();   _notReady++;
+            _socketioController = new SocketioController(); _notReady++;
+            _dataController = new DataController();         _notReady++;
 
-            _clientsDataQueue = [];
-            _clientsGeomQueue = [];
         }
         return lapsocarteServerController;
     }
@@ -44,11 +38,34 @@ export default class LapsocarteServerController {
     // Methods exposed to my MainController (mc) ------------------------------
     mc_init() {
         _databaseController.mc_init();
-        _expressController.mc_init();
-        _socketioController.mc_init(_expressController.mc_getServer());
     }
 
     // Methods exposed my subcontrollers (sc) --------------------------
+    sc_ready(controller) {
+        switch (controller) {
+            case _databaseController:
+                _notReady--;
+                console.log("_databaseController ready! "+_notReady+" controllers pending...");
+                break;
+
+            case _dataController:
+                _notReady--;
+                console.log("_dataController ready! "+_notReady+" controllers pending...");
+                _expressController.mc_init();
+                break;
+
+            case _expressController:
+                _notReady--;
+                console.log("_expressController ready! "+_notReady+" controllers pending...");
+                _socketioController.mc_init(_expressController.mc_getServer());
+                break;
+
+            case _socketioController:
+                _notReady--;
+                console.log("_socketioController ready! "+_notReady+" controllers pending...");
+                break;
+        }
+    }
 
     // Used by _socketioController
     sc_init(socketId) {

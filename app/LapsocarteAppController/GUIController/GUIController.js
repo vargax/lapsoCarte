@@ -54,7 +54,7 @@ export default class GUIController {
     }
 
     mc_loadGeometries() {
-        geometriesMap = glbs.PROJECT[glbs.DATA_CONSTANTS.WHERE_MAP];
+        geometriesMap = glbs.PROJECT[glbs.DATA_CONSTANTS.WHEREs_MAP];
         _leafletController.mc_loadGeometries();
     }
 
@@ -112,7 +112,6 @@ export default class GUIController {
         }
         if (_notReady == 0) {
             this.sc_timeChange();
-            $("#loading").hide();
             _mainController.sc_ready(this);
         }
     }
