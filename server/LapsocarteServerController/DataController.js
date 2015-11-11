@@ -134,8 +134,7 @@ export default class DataController{
     _genDescriptiveStats() {
         if (!done.data || !done.whats || !done.hows) return;
 
-        const   DESCRIPTIVE_STATS = glbs.DATA_CONSTANTS.DESCRIPTIVE_STATS,
-                DS_MIN            = glbs.DATA_CONSTANTS.DS_MIN,
+        const   DS_MIN            = glbs.DATA_CONSTANTS.DS_MIN,
                 DS_MAX            = glbs.DATA_CONSTANTS.DS_MAX,
                 DS_MEAN           = glbs.DATA_CONSTANTS.DS_MEAN,
                 DS_WHAT_VECTOR    = glbs.DATA_CONSTANTS.DS_WHAT_VECTOR,
@@ -148,52 +147,90 @@ export default class DataController{
 
 
         let descriptiveStats = {};
-        for (let how in dataMap.keys()) {
+        for (let how in dataMap.keys()) { // --------------------------------------------> Group
             let howStats = {};
-            howStats[DS_WHAT_VECTOR] = [];
-            howStats[DS_WHEN_VECTOR] = [];
-            howStats[DS_WHERE_VECTOR] = [];
 
-            for (let what in dataMap.get(how).keys()) {
+            let groupLevel_whatsvector = [];
+
+            howStats[DS_WHAT_VECTOR] = new Set();
+            howStats[DS_WHEN_VECTOR] = new Set();
+            howStats[DS_WHERE_VECTOR] = new Set();
+
+            for (let what in dataMap.get(how).keys()) { // ------------------------------> DataSet
                 let whatStats = {};
-                whatStats[DS_WHEN_VECTOR] = [];
-                whatStats[DS_WHERE_VECTOR] = [];
-                whatStats[DS_DATA_VECTOR] = [];
 
-                for (let when in dataMap.get(how).get(what).keys()) {
+                let dataSetLevel_whensVector = [];
+                let dataSetLevel_wheresVector = [];
+                let dataSetLevel_dataVector = [];
+
+                for (let when in dataMap.get(how).get(what).keys()) { // ----------------> Time
                     let whenStats = {};
-                    whenStats[DS_WHERE_VECTOR] = [];
-                    whenStats[DS_DATA_VECTOR] = [];
 
-                    for (let where in dataMap.get(how).get(what).get(when).keys()) {
+                    let timeLevel_wheresVector = [];
+                    let timeLevel_dataVector = [];
+
+                    for (let where in dataMap.get(how).get(what).get(when).keys()) { //--> Spatial Objects
                         let data = dataMap.get(how).get(what).get(when).get(where);
 
-                        whenStats[DS_DATA_VECTOR].push(data);
-                        whenStats[DS_WHERE_VECTOR].push(where);
+                        timeLevel_dataVector.push(data);
+                        timeLevel_wheresVector.push(where);
 
-                        whatStats[DS_DATA_VECTOR].push(data);
-                        whatStats[DS_WHERE_VECTOR].push(where);
-                    }
+                    }                                                                //--> Spatial Objects
 
-                    whenStats[DS_MIN] = JStat.jStat.min(whenStats[DS_DATA_VECTOR]);
-                    whenStats[DS_MAX] = JStat.jStat.max(whenStats[DS_DATA_VECTOR]);
-                    whenStats[DS_MEAN] = JStat.jStat.mean(whenStats[DS_DATA_VECTOR]);
+                    whenStats[DS_DATA_VECTOR] = timeLevel_dataVector;
+                    whenStats[DS_WHERE_VECTOR] = timeLevel_wheresVector;
 
-                    whatStats[DS_WHEN_VECTOR] = when;
+                    whenStats[DS_MIN] = JStat.jStat.min(timeLevel_dataVector);
+                    whenStats[DS_MAX] = JStat.jStat.max(timeLevel_dataVector);
+                    whenStats[DS_MEAN] = JStat.jStat.mean(timeLevel_dataVector);
+
                     whatStats[when] = whenStats;
-                }
+                    dataSetLevel_whensVector.push(when);
+                    dataSetLevel_dataVector.concat(timeLevel_dataVector);
+                    dataSetLevel_wheresVector.concat(timeLevel_wheresVector);
+                }                                                     // ----------------> Time
 
-                whatStats[DS_MIN] = JStat.jStat.min(whatStats[DS_DATA_VECTOR]);
-                whatStats[DS_MAX] = JStat.jStat.max(whatStats[DS_DATA_VECTOR]);
-                whatStats[DS_MEAN] = JStat.jStat.mean(whatStats[DS_DATA_VECTOR]);
+                whatStats[DS_DATA_VECTOR]  = dataSetLevel_dataVector;
+                whatStats[DS_WHEN_VECTOR]  = (Array.from(new Set(dataSetLevel_whensVector))).sort(function(a, b){return a-b});
+                whatStats[DS_WHERE_VECTOR] = (Array.from(new Set(dataSetLevel_wheresVector))).sort();
 
-                howStats[what] = whatStats;
-            }
 
-            descriptiveStats[how] = howStats;
-        }
+            }                                           // ------------------------------> DataSet
+
+
+        }                                 // --------------------------------------------> Group
 
         glbs.PROJECT[DESC_STATS] = descriptiveStats;
+
+
+        function recursiveStats(map) {
+
+            let stats = {};
+            let dataArray = [], keysArray = [];
+
+            for (let key in map.keys()) {
+                let candidate = map.get(key);
+
+                if(!Number.isNaN(candidate)) {
+
+                    dataArray.push(candidate);
+                    keysArray.push(key);
+
+                } else {
+                    stats[key] = recursiveStats(candidate);
+                    return;
+                }
+            }
+
+            stats[DS_DATA_VECTOR] = dataArray;
+
+            stats[DS_MIN] = JStat.jStat.min(dataArray);
+            stats[DS_MAX] = JStat.jStat.max(dataArray);
+            stats[DS_MEAN] = JStat.jStat.mean(dataArray);
+
+            return stats;
+        }
+
     }
 
     __json2array(key, json) {
@@ -203,5 +240,21 @@ export default class DataController{
             array.push(row[key]);
 
         return array;
+    }
+
+    __unique(array) {
+
+
+
+        array = Number.isNaN(array[0]) ? array.sort() : array.sort(function(a, b){return a-b});
+
+        let i = 0, currentItem, nextItem;
+        do {
+            currentItem = array[i];
+            nextItem = array[i +1];
+            i++;
+        } while (currentItem == nextItem)
+
+
     }
 }
