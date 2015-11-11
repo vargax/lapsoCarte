@@ -177,6 +177,13 @@ export const DATA_CONSTANTS = {
          |-> Object with MAX, MIN, AVERAGE for the given WHAT in the given HOW
      */
     DESCRIPTIVE_STATS: 'DESCRIPTIVE_STATS',
+    DS_MIN: 'MIN',
+    DS_MAX: 'MAX',
+    DS_MEAN: 'AVERAGE',
+    DS_WHAT_VECTOR: 'WHAT_VECTOR',
+    DS_WHEN_VECTOR: 'WHEN_VECTOR',
+    DS_WHERE_VECTOR: 'WHERE_VECTOR',
+    DS_DATA_VECTOR: 'DATA_VECTOR',
 
     LEAFLET_MAP: 'LEAFLET_MAP',               // Leaflet MAP object
     CURRENT_TIME: 'CURRENT_TIME'              // Current selected time in GUI

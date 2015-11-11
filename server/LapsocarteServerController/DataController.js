@@ -134,30 +134,63 @@ export default class DataController{
     _genDescriptiveStats() {
         if (!done.data || !done.whats || !done.hows) return;
 
-        let descriptiveStats = new Map();
+        const   DESCRIPTIVE_STATS = glbs.DATA_CONSTANTS.DESCRIPTIVE_STATS,
+                DS_MIN            = glbs.DATA_CONSTANTS.DS_MIN,
+                DS_MAX            = glbs.DATA_CONSTANTS.DS_MAX,
+                DS_MEAN           = glbs.DATA_CONSTANTS.DS_MEAN,
+                DS_WHAT_VECTOR    = glbs.DATA_CONSTANTS.DS_WHAT_VECTOR,
+                DS_WHEN_VECTOR    = glbs.DATA_CONSTANTS.DS_WHEN_VECTOR,
+                DS_WHERE_VECTOR   = glbs.DATA_CONSTANTS.DS_WHERE_VECTOR,
+                DS_DATA_VECTOR    = glbs.DATA_CONSTANTS.DS_DATA_VECTOR;
 
         let dataMap = glbs.PROJECT[DATA_MAP];
         //  |-> How -> What -> When -> Where -> Data
 
-        function recursiveStats() {
 
-        }
-
-
-        let howsMap = new Map();
+        let descriptiveStats = {};
         for (let how in dataMap.keys()) {
+            let howStats = {};
+            howStats[DS_WHAT_VECTOR] = [];
+            howStats[DS_WHEN_VECTOR] = [];
+            howStats[DS_WHERE_VECTOR] = [];
 
-            let whatsMap = new Map();
             for (let what in dataMap.get(how).keys()) {
+                let whatStats = {};
+                whatStats[DS_WHEN_VECTOR] = [];
+                whatStats[DS_WHERE_VECTOR] = [];
+                whatStats[DS_DATA_VECTOR] = [];
 
-                let whensMap = new Map();
                 for (let when in dataMap.get(how).get(what).keys()) {
+                    let whenStats = {};
+                    whenStats[DS_WHERE_VECTOR] = [];
+                    whenStats[DS_DATA_VECTOR] = [];
 
+                    for (let where in dataMap.get(how).get(what).get(when).keys()) {
+                        let data = dataMap.get(how).get(what).get(when).get(where);
+
+                        whenStats[DS_DATA_VECTOR].push(data);
+                        whenStats[DS_WHERE_VECTOR].push(where);
+
+                        whatStats[DS_DATA_VECTOR].push(data);
+                        whatStats[DS_WHERE_VECTOR].push(where);
+                    }
+
+                    whenStats[DS_MIN] = JStat.jStat.min(whenStats[DS_DATA_VECTOR]);
+                    whenStats[DS_MAX] = JStat.jStat.max(whenStats[DS_DATA_VECTOR]);
+                    whenStats[DS_MEAN] = JStat.jStat.mean(whenStats[DS_DATA_VECTOR]);
+
+                    whatStats[DS_WHEN_VECTOR] = when;
+                    whatStats[when] = whenStats;
                 }
 
-                whatsMap.set(what, stats);
+                whatStats[DS_MIN] = JStat.jStat.min(whatStats[DS_DATA_VECTOR]);
+                whatStats[DS_MAX] = JStat.jStat.max(whatStats[DS_DATA_VECTOR]);
+                whatStats[DS_MEAN] = JStat.jStat.mean(whatStats[DS_DATA_VECTOR]);
+
+                howStats[what] = whatStats;
             }
-            howsMap.set(how, whatsMap);
+
+            descriptiveStats[how] = howStats;
         }
 
         glbs.PROJECT[DESC_STATS] = descriptiveStats;
