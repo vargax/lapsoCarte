@@ -94,7 +94,7 @@ export default class DatabaseController {
             } catch (e) {
                 if (e instanceof TypeError)
                     console.log('! First recursiveQuery() call...');
-                else console.dir(e);
+                else throw e;
             }
 
             let nextQuery = queries.pop();
