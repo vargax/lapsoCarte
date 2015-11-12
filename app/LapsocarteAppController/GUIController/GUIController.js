@@ -9,8 +9,6 @@ import TimeController from './TimeController/TimeController.js'
 import $ from 'jquery'
 import L from'leaflet'
 
-require('handlebars');
-
 // ------------------------------------------------------------------------
 // CONTROLLERS
 // ------------------------------------------------------------------------
@@ -60,7 +58,12 @@ export default class GUIController {
 
     mc_loadData() {
         dataMap = glbs.PROJECT[glbs.DATA_CONSTANTS.DATA_MAP];
-        _timeController.mc_loadTimeVector();
+
+        let hows = glbs.PROJECT[glbs.DATA_CONSTANTS.HOWs_VECTOR];
+        let howsSelect = support.HandlebarsHelper.compileSelect(hows);
+        $('#lpc-hows-selector').append(howsSelect);
+
+        //_timeController.mc_loadTimeVector();
     }
 
     // Methods exposed to all my subcontrollers (sc) --------------------------

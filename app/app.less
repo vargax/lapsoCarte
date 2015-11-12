@@ -1,6 +1,5 @@
-@import "node_modules/leaflet/dist/leaflet.css";
-@import "node_modules/font-awesome/css/font-awesome.css";
-@import "node_modules/nouislider/distribute/nouislider.min.css";
+@import (inline) "../node_modules/leaflet/dist/leaflet.css";
+@import (inline) "../node_modules/nouislider/distribute/nouislider.min.css";
 
 @header-height: 50px;
 @sidebar-width: 250px;
@@ -61,11 +60,14 @@ body {
     width: @controllers-width;
     height: 100%;
 
-    table td {
-      padding: 5px;
-    }
-    select {
+    table {
       width: 100%;
+      td {
+        padding: 5px;
+        select {
+          width: 100%;
+        }
+      }
     }
   }
 

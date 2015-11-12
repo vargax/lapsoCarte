@@ -190,6 +190,6 @@ export const DATA_CONSTANTS = {
     DS_KEYS_VECTOR: 'lpc_KEYS_VECTOR',
     DS_DATA_VECTOR: 'lpc_DATA_VECTOR',
 
-    LEAFLET_MAP: 'lpc_LEAFLET_MAP',               // Leaflet MAP object
-    CURRENT_TIME: 'lpc_CURRENT_TIME'              // Current selected time in GUI
+    LEAFLET_MAP: 'lpc_LEAFLET_MAP',             // Leaflet MAP object
+    CURRENT_TIME: 'lpc_CURRENT_TIME'            // Current selected time in GUI
 };

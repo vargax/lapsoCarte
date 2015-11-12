@@ -39,7 +39,7 @@ export default class LapsocarteAppController {
         let log = "LapsocarteAppController.sc_ready() :: ";
         switch (controller) {
             case _dataController:
-                //_guiController.mc_loadData();
+                _guiController.mc_loadData();
                 console.log(log+"DataController ready!");
                 break;
 

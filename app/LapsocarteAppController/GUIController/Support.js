@@ -1,16 +1,30 @@
 import L from'leaflet';
 import $ from 'jquery';
+import Handlebars from 'handlebars'
 
 import * as glbs from './../../../Globals.js';
 
-export class HTMLHelper {
-    static genSidebarEntry(featureId, feature) {
-        let center = feature.getBounds().getCenter();
-        let html = '<tr class="feature-row" id="'+featureId + '" lat="' + center.lat + '" lng="' + center.lng + '">'
-            + '<td style="vertical-align: middle;"><img width="16" height="18" src="assets/img/theater.png"></td>'
-            + '<td class="feature-name">' + feature.feature.properties[glbs.PROJECT.COLUMN_NAME] + '</td>'
-            + '<td style="vertical-align: middle;"><i class="fa fa-chevron-right pull-right"></i></td></tr>';
-        return html;
+// Templates to load: Once loaded the value becomes the handlebars compiled template!
+const templates = {
+    select: 'select.hbs'
+};
+
+export class HandlebarsHelper {
+    static compileSelect(options) {
+        let context = {option: []};
+
+        for (let option of options)
+            context.option.push({value: option});
+
+        return templates.select(context);
+    }
+
+    static loadTemplates() {
+        for (let property in templates) {
+            $.get('templates/'+templates[property], function(response) {
+                templates[property] = Handlebars.compile(response);
+            });
+        }
     }
 }
 
