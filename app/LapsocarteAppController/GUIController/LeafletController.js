@@ -85,10 +85,10 @@ export default class LeafletController {
         /*
          In Leaflet:
          - Feature is the spatial object (geoJSON feature)
-         - Has a 'geometry' Object
-         - Has a 'properties' Object
+         -- Has a 'geometry' Object
+         -- Has a 'properties' Object
          - Layer is the JS object
-         - Has all the methods / listeners / etc.
+         -- Has all the methods / listeners / etc.
 
          In the Leaflet's geoJSON implementation each geoJSON feature is one Leaflet LAYER
          with one Leaflet FEATURE!

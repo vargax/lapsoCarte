@@ -10,6 +10,11 @@ import $ from 'jquery'
 import L from'leaflet'
 
 // ------------------------------------------------------------------------
+// CONSTANTS
+// ------------------------------------------------------------------------
+const HOW_SELECT = 'lpc-how-select';
+
+// ------------------------------------------------------------------------
 // CONTROLLERS
 // ------------------------------------------------------------------------
 let _mainController;
@@ -25,7 +30,6 @@ let geometriesMap;
 let dataMap;
 
 let _notReady = 0;
-
 // ------------------------------------------------------------------------
 // CLASSES
 // ------------------------------------------------------------------------
@@ -60,13 +64,17 @@ export default class GUIController {
         dataMap = glbs.PROJECT[glbs.DATA_CONSTANTS.DATA_MAP];
 
         let hows = glbs.PROJECT[glbs.DATA_CONSTANTS.HOWs_VECTOR];
-        let howsSelect = support.HandlebarsHelper.compileSelect(hows);
-        $('#lpc-hows-selector').append(howsSelect);
+        let howsSelect = support.HandlebarsHelper.compileSelect(HOW_SELECT, hows);
+        $('#lpc-hows-selector-container').append(howsSelect);
 
         //_timeController.mc_loadTimeVector();
     }
 
     // Methods exposed to all my subcontrollers (sc) --------------------------
+    sc_howChange() {
+
+    }
+
     sc_spatialObjectOver(gid) {
         let color = glbs.PROJECT.FOCUSED_COLOR;
         let currentTime = glbs.PROJECT[glbs.DATA_CONSTANTS.CURRENT_TIME];
@@ -87,7 +95,7 @@ export default class GUIController {
 
     sc_timeChange() {
         try {
-            this._resetAllGeometries()
+            this._resetAllGeometries();
             _infoWidgetController.mc_updateInfo();
         } catch (e) {
             console.log("GUIController.sc_timeChange() !: I can not change time now... Maybe I'm not ready yet...");
