@@ -1,6 +1,7 @@
 import MainController from './LapsocarteAppController.js'
 import * as glbs from '../../Globals.js'
 import $ from 'jquery'
+
 // ------------------------------------------------------------------------
 // CONSTANTS
 // ------------------------------------------------------------------------
@@ -12,12 +13,18 @@ const WHEREs_MAP =   glbs.DATA_CONSTANTS.WHEREs_MAP;
 const DATA_MAP = glbs.DATA_CONSTANTS.DATA_MAP;
 const DESC_STATS = glbs.DATA_CONSTANTS.DESCRIPTIVE_STATS;
 
-const CURRENT_TIME = glbs.DATA_CONSTANTS.CURRENT_TIME;
-
+const WHEREs_READY     = 'WHEREs_READY';
+const DATA_READY       = 'DATA_READY';
+const DESC_STATS_READY = 'DESC_STATS_READY';
 // ------------------------------------------------------------------------
 // CONTROLLERS
 // ------------------------------------------------------------------------
 let _mainController;
+
+// ------------------------------------------------------------------------
+// VARIABLES
+// ------------------------------------------------------------------------
+let done;
 
 // ------------------------------------------------------------------------
 // CLASSES
@@ -25,113 +32,57 @@ let _mainController;
 export default class DataController {
     constructor() {
         _mainController = new MainController();
+        done = new Map();
+        done.set(DESC_STATS_READY, false).set(DATA_READY, false).set(WHEREs_READY, false);
     }
 
     // Methods exposed to my MainController (mc) ---------------------------------
-    mc_registerGeometries(geoJSON) {
-        let geometriesMap = new Map();
+    mc_registerGeometries(JSON) {
 
-        for (let feature of geoJSON['features']) {
-            let gid = feature['properties'][glbs.PROJECT.COLUMN_GID];
-
-            geometriesMap.set(gid,feature);
-        }
-
-        glbs.PROJECT[WHEREs_MAP] = geometriesMap;
-        console.log('dataController.mc_registerGeometries() :: '+geometriesMap.size+' geometries registered!');
+        glbs.PROJECT[WHEREs_MAP] = new Map(JSON);
+        console.log('dataController.mc_registerGeometries() :: '+glbs.PROJECT[WHEREs_MAP].size+' geometries registered!');
         console.dir(glbs.PROJECT[WHEREs_MAP]);
 
+        done.set(DATA_READY, true);
         this._amIready();
     }
 
-    mc_registerData(json) {
-        /*
-         4 dimensions map:
-            |-> First  key -> GROUP
-            |-> Second key -> WHAT  -> data set
-            |-> Third  key -> WHEN  -> t
-            |-> Fourth key -> WHERE -> gid.
-            |-> Element    -> The actual data...
-          */
-        dataMap = new Map();
-        timeVector = [];
+    mc_registerData(JSON) {
 
-        for (let row of json) {
-            let group = row[glbs.PROJECT.COLUMN_GROUP];
-            let what  = row[glbs.PROJECT.COLUMN_WHAT];
-            let when  = row[glbs.PROJECT.COLUMN_WHEN];
-            let where = row[glbs.PROJECT.COLUMN_WHERE];
-            let data  = row[glbs.PROJECT.COLUMN_DATA];
+        glbs.PROJECT[HOWs_VECTOR]   = JSON[HOWs_VECTOR];
+        console.log('dataController.mc_registerData() :: '+glbs.PROJECT[HOWs_VECTOR].length+' HOWs registered!');
+        console.dir(glbs.PROJECT[HOWs_VECTOR]);
 
-            let stack = [data, where, when, what, group];
+        glbs.PROJECT[WHATs_VECTOR]  = JSON[WHATs_VECTOR];
+        console.log('dataController.mc_registerData() :: '+glbs.PROJECT[WHATs_VECTOR].length+' WHATs registered!');
+        console.dir(glbs.PROJECT[WHATs_VECTOR]);
 
-            recursiveInsert(dataMap, stack);
+        glbs.PROJECT[WHENs_VECTOR]  = JSON[WHENs_VECTOR];
+        console.log('dataController.mc_registerData() :: '+glbs.PROJECT[WHENs_VECTOR].length+' WHENs registered!');
+        console.dir(glbs.PROJECT[WHENs_VECTOR]);
 
-            function recursiveInsert(map, stack) {
-                let key = stack.pop();
+        glbs.PROJECT[DATA_MAP]      = new Map(JSON[DATA_MAP]);
+        console.log('dataController.mc_registerData() :: DATA registered!');
+        console.dir(glbs.PROJECT[DATA_MAP]);
 
-                if (stack.length == 1) {
-                    let data = stack.pop();
-                    map.set(key, data);
-                    return;
-                }
-
-                let nextMap = map.get(key);
-
-                if (nextMap == undefined) {
-                    nextMap = new Map();
-                    map.set(key, nextMap);
-                }
-                recursiveInsert(nextMap, stack);
-            }
-        }
-        console.dir(dataMap);
-
-        for (let t of dataMap.keys()) timeVector.push(t);
-
-        timeVector.sort(function(a, b){return a-b});
-
-        glbs.PROJECT[DATA_MAP] = dataMap;
-        glbs.PROJECT[TIME_VECT] = timeVector;
-        glbs.PROJECT[CURRENT_TIME] = timeVector[0];
-
-        console.log('dataController.mc_registerData() :: '+timeVector.length+' time periods registered!');
-        console.dir(timeVector);
-
+        done.set(WHEREs_READY, true);
         this._amIready();
     }
 
-    mc_registerDescriptiveStats(object) {
-        descriptiveStats = object;
+    mc_registerDescriptiveStats(JSON) {
 
-        glbs.PROJECT[DESC_STATS] = descriptiveStats;
+        glbs.PROJECT[DESC_STATS] = new Map(JSON);
         console.log('dataController.mc_registerDescriptiveStats() :: Data descriptive statistics registered!');
-        console.dir(descriptiveStats);
+        console.dir(glbs.PROJECT[DESC_STATS]);
 
+        done.set(DESC_STATS_READY, true);
         this._amIready();
-    }
-
-    mc_getGeometries() {
-        return geometriesMap;
-    }
-
-    mc_getData() {
-        return dataMap;
-    }
-
-    mc_getTimeVector() {
-        return timeVector;
-    }
-
-    mc_getDescriptiveStats() {
-        return descriptiveStats;
     }
 
     _amIready() {
-        if (geometriesMap && dataMap && descriptiveStats) {
-            _mainController.sc_ready(this);
-            return true;
-        }
-        return false;
+        for (let method of done.values())
+            if (!method) return;
+
+        _mainController.sc_ready(this);
     }
 }

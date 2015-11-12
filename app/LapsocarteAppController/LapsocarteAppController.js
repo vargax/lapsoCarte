@@ -39,11 +39,7 @@ export default class LapsocarteAppController {
         let log = "LapsocarteAppController.sc_ready() :: ";
         switch (controller) {
             case _dataController:
-                let tVector = _dataController.mc_getTimeVector();
-                let dMap = _dataController.mc_getData();
-                let dStats = _dataController.mc_getDescriptiveStats();
-                _guiController.mc_loadData(tVector,dMap,dStats);
-
+                //_guiController.mc_loadData();
                 console.log(log+"DataController ready!");
                 break;
 
@@ -54,8 +50,8 @@ export default class LapsocarteAppController {
     }
 
     // Methods exposed to all my subcontrollers (sc) --------------------------
-    sc_geomReceived(geoJSON) {
-        _dataController.mc_registerGeometries(geoJSON);
+    sc_geomReceived(json) {
+        _dataController.mc_registerGeometries(json);
         _guiController.mc_loadGeometries();
     }
 

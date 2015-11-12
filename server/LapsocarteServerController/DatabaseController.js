@@ -61,25 +61,25 @@ export default class DatabaseController {
         let sqlTimeWhere = this.__genFilteredTimeWhere();
 
         let howQuery = {
-            query: 'SELECT DISTINCT '+COLUMN_HOW+' FROM '+TABLE_DATA + sqlTimeWhere,
+            query: 'SELECT DISTINCT '+COLUMN_HOW+' FROM '+TABLE_DATA + sqlTimeWhere + ' ORDER BY '+COLUMN_HOW + ';',
             callback: _mainController.sc_giveHows
         };
         queries.push(howQuery);
 
         let whatsQuery = {
-            query: 'SELECT DISTINCT '+COLUMN_WHAT+' FROM '+TABLE_DATA + sqlTimeWhere,
+            query: 'SELECT DISTINCT '+COLUMN_WHAT+' FROM '+TABLE_DATA + sqlTimeWhere + ' ORDER BY '+COLUMN_WHAT + ';',
             callback: _mainController.sc_giveWhats
         };
         queries.push(whatsQuery);
 
         let whensQuery = {
-            query: 'SELECT DISTINCT '+COLUMN_WHEN+' FROM '+TABLE_DATA + sqlTimeWhere,
+            query: 'SELECT DISTINCT '+COLUMN_WHEN+' FROM '+TABLE_DATA + sqlTimeWhere + ' ORDER BY '+COLUMN_WHEN + ';',
             callback: _mainController.sc_giveWhens
         };
         queries.push(whensQuery);
 
         let dataQuery = {
-            query: 'SELECT * FROM '+TABLE_DATA + sqlTimeWhere,
+            query: 'SELECT * FROM '+TABLE_DATA + sqlTimeWhere + ';',
             callback: _mainController.sc_giveData
         };
         queries.push(dataQuery);
@@ -120,7 +120,6 @@ export default class DatabaseController {
             where += COLUMN_WHEN+'='+t+' OR ';
         }
         where = where.slice(0,-4);
-        where += ';';
 
         return where;
     }

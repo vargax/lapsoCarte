@@ -8,7 +8,7 @@ require('leaflet-providers');
 // ------------------------------------------------------------------------
 // CONSTANTS
 // ------------------------------------------------------------------------
-const GEOM_MAP = glbs.DATA_CONSTANTS.WHERE_MAP;
+const GEOM_MAP = glbs.DATA_CONSTANTS.WHEREs_MAP;
 
 const MAP_CENTER = glbs.PROJECT.MAP_CENTER;
 const MAP_ZOOM = glbs.PROJECT.MAP_ZOOM;

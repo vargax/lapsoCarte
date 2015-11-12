@@ -5,6 +5,17 @@ import DataController from './DataController.js'
 import * as glbs from '../../Globals.js'
 
 // ------------------------------------------------------------------------
+// CONSTANTS
+// ------------------------------------------------------------------------
+const HOWs_VECTOR = glbs.DATA_CONSTANTS.HOWs_VECTOR;
+const WHATs_VECTOR = glbs.DATA_CONSTANTS.WHATs_VECTOR;
+const WHENs_VECTOR = glbs.DATA_CONSTANTS.WHENs_VECTOR;
+const WHEREs_MAP =   glbs.DATA_CONSTANTS.WHEREs_MAP;
+
+const DATA_MAP = glbs.DATA_CONSTANTS.DATA_MAP;
+const DESC_STATS = glbs.DATA_CONSTANTS.DESCRIPTIVE_STATS;
+
+// ------------------------------------------------------------------------
 // CONTROLLERS
 // ------------------------------------------------------------------------
 let _databaseController;
@@ -69,7 +80,16 @@ export default class LapsocarteServerController {
 
     // Used by _socketioController
     sc_init(socketId) {
+        let data = {};
+        data[HOWs_VECTOR]  = glbs.PROJECT[HOWs_VECTOR];
+        data[WHATs_VECTOR] = glbs.PROJECT[WHATs_VECTOR];
+        data[WHENs_VECTOR] = glbs.PROJECT[WHENs_VECTOR];
+        data[DATA_MAP]     = glbs.PROJECT[DATA_MAP];
 
+        _socketioController.mc_sendData(socketId, data);
+
+        _socketioController.mc_sendStats(socketId, glbs.PROJECT[DESC_STATS]);
+        _socketioController.mc_sendGeometries(socketId, glbs.PROJECT[WHEREs_MAP]);
     }
 
     // Used by _databaseController

@@ -45,7 +45,7 @@ export default class DataController{
     mc_setHows(json) {
         let key = glbs.PROJECT.COLUMN_HOW;
         let array = this.__json2array(key,json);
-        glbs.PROJECT[glbs.DATA_CONSTANTS.HOWs_VECTOR] = array;
+        glbs.PROJECT[HOWs_VECTOR] = array;
 
         console.log('_dataController.mc_setHows() :: '+array.length+' HOWs ('+key+') registered!');
         done.set(HOWs_READY, true);
@@ -55,7 +55,7 @@ export default class DataController{
     mc_setWhats(json) {
         let key = glbs.PROJECT.COLUMN_WHAT;
         let array = this.__json2array(key,json);
-        glbs.PROJECT[glbs.DATA_CONSTANTS.WHATs_VECTOR] = array;
+        glbs.PROJECT[WHATs_VECTOR] = array;
 
         console.log('_dataController.mc_setWhats() :: '+array.length+' WHATs ('+key+') registered!');
         done.set(WHATs_READY, true);
@@ -65,7 +65,7 @@ export default class DataController{
     mc_setWhens(json) {
         let key = glbs.PROJECT.COLUMN_WHEN;
         let array = this.__json2array(key,json);
-        glbs.PROJECT[glbs.DATA_CONSTANTS.WHENs_VECTOR] = array;
+        glbs.PROJECT[WHENs_VECTOR] = array;
 
         console.log('_dataController.mc_setWhens() :: '+array.length+' WHENs ('+key+') registered!');
         done.set(WHENs_READY, true);
