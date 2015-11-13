@@ -1,27 +1,36 @@
 import MainController from './TimeController.js'
 import * as glbs from './../../../../Globals.js'
 
-import $ from 'jquery'
 import noUiSlider from 'nouislider'
 
 const WHENs_VECTOR  = glbs.DATA_CONSTANTS.LPC_INSTANCE_STATE.WHENs_VECTOR;
 
+let _mainController;
 let instance;
 
-let _mainController;
+let slider;
 let timeVector;
 
-export default class PlaybackControl {
+export default class SliderController {
     constructor() {
         _mainController = new MainController();
 
         const INSTANCE_KEY = glbs.DATA_CONSTANTS.LPC_INSTANCE_KEY;
         instance = glbs.PROJECT[INSTANCE_KEY];
 
-        timeVector = instance[WHENs_VECTOR];
+        slider = document.getElementById('time-slider');
+    }
 
+    mc_update() {
+        timeVector = instance[WHENs_VECTOR];
+        try {
+            slider.noUiSlider.destroy();
+        } catch (e) {
+            console.log('SliderController :: It is OK if this is the first time you update the slider');
+        }
         this._setupControl();
     }
+
     _setupControl() {
         let range = {};
 
@@ -35,10 +44,6 @@ export default class PlaybackControl {
             range[key] = value;
         }
         range['max'] = max;
-
-        console.dir(range);
-
-        let slider = document.getElementById('time-slider');
 
         // Object instantiation
         noUiSlider.create(slider, {

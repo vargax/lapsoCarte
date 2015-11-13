@@ -112,24 +112,37 @@ export const PROJECT = mars;
 function choropleth(d) {
     const CHOROPLETH_RANGE = 'CHOROPLETH_RANGE';
     let colors = ['#FFEDA0','#FED976','#FEB24C','#FD8D3C','#FC4E2A','#E31A1C','#BD0026','#800026'];
-    if (this[CHOROPLETH_RANGE] == undefined) {
-        let range = [];
-        let max = this[DATA_CONSTANTS.DESCRIPTIVE_STATS].MAX;
-        let min = this[DATA_CONSTANTS.DESCRIPTIVE_STATS].MIN;
+
+    let DC = DATA_CONSTANTS,
+        instance = this[DC.LPC_INSTANCE_KEY],
+        range = instance[CHOROPLETH_RANGE];
+
+    if (range == undefined) {
+        range = [];
+
+        let how = instance[DC.LPC_INSTANCE_STATE.CURRENT_HOW],
+            what = instance[DC.LPC_INSTANCE_STATE.CURRENT_WHAT],
+            stats = this[DC.DESCRIPTIVE_STATS].get(how).get(what);
+
+        console.log(how+' '+what)
+        console.dir(stats)
+
+        let max = stats.get(DC.DS_MAX);
+        let min = stats.get(DC.DS_MIN);
 
         let step = (max - min) / colors.length;
         for (let i = min + step; i <= max; i += step)
             range.push(i);
 
-        this[CHOROPLETH_RANGE] = range;
-        console.dir(this[CHOROPLETH_RANGE]);
+        instance[CHOROPLETH_RANGE] = range;
+        console.dir(range);
     }
 
     for (let i = 0; i < colors.length; i++)
-        if (d <= this[CHOROPLETH_RANGE][i]) return colors[i];
+        if (d <= range[i]) return colors[i];
 
     // I should never reach this!!
-    return PROJECT.DEFAULT_STYLE.color;
+    return 'black';
 }
 
 // ---------------------------------------------------------------------------------------------------------------------

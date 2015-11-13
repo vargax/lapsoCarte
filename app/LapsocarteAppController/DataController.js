@@ -38,13 +38,6 @@ export default class DataController {
         console.log('dataController.mc_registerGeometries() :: '+glbs.PROJECT[WHEREs_MAP].size+' geometries registered!');
         console.dir(glbs.PROJECT[WHEREs_MAP]);
 
-        let geomMap = glbs.PROJECT[WHEREs_MAP];
-        let dataMap = glbs.PROJECT[DATA_MAP];
-        let gids = dataMap.get('level').get('co2').get(0);
-        console.dir(gids)
-        console.dir(geomMap)
-
-
         done.set(DATA_READY, true);
         this._amIready();
     }

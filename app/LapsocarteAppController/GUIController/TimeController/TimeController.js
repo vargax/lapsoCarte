@@ -6,7 +6,7 @@ import SliderController from './SliderController.js'
 const CURRENT_WHEN  = glbs.DATA_CONSTANTS.LPC_INSTANCE_STATE.CURRENT_WHEN;
 
 let _mainController;
-let _playerControl;
+let _sliderController = null;
 
 let instance;
 
@@ -24,8 +24,11 @@ export default class TimeController {
     }
 
     mc_loadTimeVector() {
-        _playerControl = new SliderController();
-        _mainController.sc_ready(this);
+        if (!_sliderController) {
+            _sliderController = new SliderController();
+            _mainController.sc_ready(this);
+        }
+        _sliderController.mc_update();
     }
 
     slc_movedTo(newTime) {

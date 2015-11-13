@@ -128,6 +128,8 @@ export default class GUIController {
     }
 
     sc_whatChange(newWhat) {
+        this._resetAllGeometries();
+
         let globalDataMap = glbs.PROJECT[glbs.DATA_CONSTANTS.DATA_MAP];
 
         let currentHow = instance[CURRENT_HOW];
@@ -144,13 +146,11 @@ export default class GUIController {
     }
 
     sc_spatialObjectOver(gid) {
-        let dataMap = instance[DATA_MAP];
-
         let color = glbs.PROJECT.FOCUSED_COLOR;
-        let currentTime = instance[CURRENT_WHEN];
 
         _leafletController.mc_colorGeometry(gid, color);
-        let data = Object.assign(geometriesMap.get(gid)['properties'], dataMap.get(currentTime).get(gid));
+
+        let data = geometriesMap.get(gid)['properties'];
         _infoWidgetController.mc_updateInfo(data);
     }
 
@@ -164,13 +164,8 @@ export default class GUIController {
     }
 
     sc_timeChange() {
-        try {
-            this._resetAllGeometries();
-            _infoWidgetController.mc_updateInfo();
-        } catch (e) {
-            console.log("GUIController.sc_timeChange() !: I can not change time now... Maybe I'm not ready yet...");
-            console.dir(e);
-        }
+        this._resetAllGeometries();
+        _infoWidgetController.mc_updateInfo();
     }
 
     sc_ready(controller) {
@@ -202,14 +197,22 @@ export default class GUIController {
         let currentTime = instance[CURRENT_WHEN];
         let dataMap = instance[DATA_MAP];
 
+        if (!dataMap) {
+            let color = glbs.PROJECT.DEFAULT_STYLE.color;
+            _leafletController.mc_colorGeometry(gid, color);
+            return;
+        }
+
         let data, color, error;
         try {
             data = dataMap.get(currentTime).get(gid);
             color = glbs.PROJECT.FUNC_DATA2COLOR(data);
         } catch (e) {
             color = glbs.PROJECT.DEFAULT_STYLE.color;
-            error = 'GUIController._resetGeometry()!: No data for '+gid+' in t='+currentTime;
-            console.dir(e)
+            error = {
+                message: 'GUIController._resetGeometry()!: No data for '+gid+' in t='+currentTime,
+                exception: e
+            };
         }
         _leafletController.mc_colorGeometry(gid, color);
 
@@ -222,7 +225,10 @@ export default class GUIController {
             try {
                 this._resetGeometry(gid);
             } catch (e) {
-                noData.push(gid);
+                noData.push({
+                    where: gid,
+                    error: e
+                });
             }
         }
         if (noData.length != 0) {

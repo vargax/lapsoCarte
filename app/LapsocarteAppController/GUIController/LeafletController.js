@@ -107,7 +107,7 @@ export default class LeafletController {
             map.addLayer(_geoJsonLayer);
 
             function geometrySetup(feature, layer) {
-                layer.gid = feature['properties'][glbs.PROJECT.COLUMN_GID];
+                layer.gid = feature['properties'][glbs.PROJECT.COLUMN_WHERE];
                 layer.mainController = leafletController;
                 layer.setStyle(glbs.PROJECT.DEFAULT_STYLE);
 
