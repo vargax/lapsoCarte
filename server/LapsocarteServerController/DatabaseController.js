@@ -36,16 +36,10 @@ let _geo;
 // ------------------------------------------------------------------------
 // CLASSES
 // ------------------------------------------------------------------------
-let databaseController = null; // --> Singleton Pattern...
 export default class DatabaseController {
     constructor() {
-        if (!databaseController) {
-            databaseController = this;
-
-            _mainController = new MainController();
-            _geo = new GeotabulaDB();
-        }
-        return databaseController;
+        _mainController = new MainController();
+        _geo = new GeotabulaDB();
     }
 
     mc_init() {
@@ -56,53 +50,14 @@ export default class DatabaseController {
         });
 
         this._getWheres();
+        this._getData();
 
-        let queries = [];
-        let sqlTimeWhere = this.__genFilteredTimeWhere();
+        _mainController.sc_ready(this);
+    }
 
-        let howQuery = {
-            query: 'SELECT DISTINCT '+COLUMN_HOW+' FROM '+TABLE_DATA + sqlTimeWhere + ' ORDER BY '+COLUMN_HOW + ';',
-            callback: _mainController.sc_giveHows
-        };
-        queries.push(howQuery);
-
-        let whatsQuery = {
-            query: 'SELECT DISTINCT '+COLUMN_WHAT+' FROM '+TABLE_DATA + sqlTimeWhere + ' ORDER BY '+COLUMN_WHAT + ';',
-            callback: _mainController.sc_giveWhats
-        };
-        queries.push(whatsQuery);
-
-        let whensQuery = {
-            query: 'SELECT DISTINCT '+COLUMN_WHEN+' FROM '+TABLE_DATA + sqlTimeWhere + ' ORDER BY '+COLUMN_WHEN + ';',
-            callback: _mainController.sc_giveWhens
-        };
-        queries.push(whensQuery);
-
-        let dataQuery = {
-            query: 'SELECT * FROM '+TABLE_DATA + sqlTimeWhere + ';',
-            callback: _mainController.sc_giveData
-        };
-        queries.push(dataQuery);
-
-        let hashMap = new Map();
-        recursiveQuery();
-
-        function recursiveQuery(result, hash) {
-            try {
-                let callback = hashMap.get(hash);
-                callback(result);
-            } catch (e) {
-                if (e instanceof TypeError)
-                    console.log('! First recursiveQuery() call...');
-                else throw e;
-            }
-
-            let nextQuery = queries.pop();
-            if (nextQuery != undefined) {
-                let nextHash = _geo.query(nextQuery.query, recursiveQuery);
-                hashMap.set(nextHash, nextQuery.callback)
-            } else _mainController.sc_ready(databaseController);
-        }
+    _getData() {
+        let query = 'SELECT * FROM '+TABLE_DATA + this.__genFilteredTimeWhere() + ';';
+        _geo.query(query, _mainController.sc_giveData);
     }
 
     _getWheres() {

@@ -50,18 +50,16 @@ export default class GUIController {
     constructor() {
         if (!guiController) {
             guiController = this;
-
             _mainController = new MainController();
+
+            instance = {};
+            instance[INSTANCE] = this;
+            const INSTANCE_KEY = glbs.DATA_CONSTANTS.LPC_INSTANCE_KEY;
+            glbs.PROJECT[INSTANCE_KEY] = instance;
 
             _leafletController = new LeafletController();       _notReady++;
             _infoWidgetController = new InfoWidgetController(); _notReady++;
             _timeController = new TimeController();             _notReady++;
-
-            instance = {};
-            instance[INSTANCE] = this;
-
-            const INSTANCE_KEY = glbs.DATA_CONSTANTS.LPC_INSTANCE_KEY;
-            glbs.PROJECT[INSTANCE_KEY] = instance;
         }
         return guiController;
     }
@@ -206,11 +204,12 @@ export default class GUIController {
 
         let data, color, error;
         try {
-            data = dataMap.get(currentTime).get(gid)[glbs.PROJECT.COLUMN_DATA];
+            data = dataMap.get(currentTime).get(gid);
             color = glbs.PROJECT.FUNC_DATA2COLOR(data);
         } catch (e) {
             color = glbs.PROJECT.DEFAULT_STYLE.color;
             error = 'GUIController._resetGeometry()!: No data for '+gid+' in t='+currentTime;
+            console.dir(e)
         }
         _leafletController.mc_colorGeometry(gid, color);
 

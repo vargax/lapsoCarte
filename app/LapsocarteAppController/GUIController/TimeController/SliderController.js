@@ -75,7 +75,7 @@ export default class PlaybackControl {
         // On update handler
         slider.noUiSlider.on('update', function(values, handle) {
             // ToDo Here I'm assuming time is always an integer! --> It would be problems if that is not the case...
-            let sliderPosition = Number.parseInt(values[handle]);
+            let sliderPosition = Number.parseFloat(values[handle]);
             _mainController.slc_movedTo(sliderPosition);
         });
     }

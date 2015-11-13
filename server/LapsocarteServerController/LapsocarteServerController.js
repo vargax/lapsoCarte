@@ -90,18 +90,6 @@ export default class LapsocarteServerController {
     }
 
     // Used by _databaseController
-    sc_giveHows(json) {
-        _dataController.mc_setHows(json);
-    }
-
-    sc_giveWhats(json) {
-        _dataController.mc_setWhats(json);
-    }
-
-    sc_giveWhens(json) {
-        _dataController.mc_setWhens(json);
-    }
-    
     sc_giveWheres(geoJSON) {
         _dataController.mc_setWheres(geoJSON);
     }

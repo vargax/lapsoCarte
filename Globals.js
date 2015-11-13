@@ -155,9 +155,11 @@ export const GIVE_STATS = 'give_stats';
 // Objects Name Constants
 // ---------------------------------------------------------------------------------------------------------------------
 export const DATA_CONSTANTS = {
-    HOWs_VECTOR: 'lpc_HOWs_VECTOR',
-    WHATs_VECTOR: 'lpc_WHATs_VECTOR',
-    WHENs_VECTOR: 'lpc_WHENs_VECTOR',
+    /*
+     Geometries map:
+     |-> key: COLUMN_WHERE
+     |-> Element: geoJSON
+     */
     WHEREs_MAP:   'lpc_WHEREs_MAP',
 
     /*

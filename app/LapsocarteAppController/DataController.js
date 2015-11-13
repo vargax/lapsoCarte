@@ -5,11 +5,7 @@ import $ from 'jquery'
 // ------------------------------------------------------------------------
 // CONSTANTS
 // ------------------------------------------------------------------------
-const HOWs_VECTOR = glbs.DATA_CONSTANTS.HOWs_VECTOR;
-const WHATs_VECTOR = glbs.DATA_CONSTANTS.WHATs_VECTOR;
-const WHENs_VECTOR = glbs.DATA_CONSTANTS.WHENs_VECTOR;
 const WHEREs_MAP =   glbs.DATA_CONSTANTS.WHEREs_MAP;
-
 const DATA_MAP = glbs.DATA_CONSTANTS.DATA_MAP;
 const DESC_STATS = glbs.DATA_CONSTANTS.DESCRIPTIVE_STATS;
 
@@ -37,31 +33,24 @@ export default class DataController {
     }
 
     // Methods exposed to my MainController (mc) ---------------------------------
-    mc_registerGeometries(JSON) {
-
-        glbs.PROJECT[WHEREs_MAP] = new Map(JSON);
+    mc_registerGeometries(json) {
+        glbs.PROJECT[WHEREs_MAP] = this._recursiveMap(JSON.parse(json));
         console.log('dataController.mc_registerGeometries() :: '+glbs.PROJECT[WHEREs_MAP].size+' geometries registered!');
         console.dir(glbs.PROJECT[WHEREs_MAP]);
+
+        let geomMap = glbs.PROJECT[WHEREs_MAP];
+        let dataMap = glbs.PROJECT[DATA_MAP];
+        let gids = dataMap.get('level').get('co2').get(0);
+        console.dir(gids)
+        console.dir(geomMap)
+
 
         done.set(DATA_READY, true);
         this._amIready();
     }
 
-    mc_registerData(object) {
-
-        glbs.PROJECT[HOWs_VECTOR]   = object[HOWs_VECTOR];
-        console.log('dataController.mc_registerData() :: '+glbs.PROJECT[HOWs_VECTOR].length+' HOWs registered!');
-        console.dir(glbs.PROJECT[HOWs_VECTOR]);
-
-        glbs.PROJECT[WHATs_VECTOR]  = object[WHATs_VECTOR];
-        console.log('dataController.mc_registerData() :: '+glbs.PROJECT[WHATs_VECTOR].length+' WHATs registered!');
-        console.dir(glbs.PROJECT[WHATs_VECTOR]);
-
-        glbs.PROJECT[WHENs_VECTOR]  = object[WHENs_VECTOR];
-        console.log('dataController.mc_registerData() :: '+glbs.PROJECT[WHENs_VECTOR].length+' WHENs registered!');
-        console.dir(glbs.PROJECT[WHENs_VECTOR]);
-
-        glbs.PROJECT[DATA_MAP]      = new Map(object[DATA_MAP]);
+    mc_registerData(json) {
+        glbs.PROJECT[DATA_MAP] = this._recursiveMap(JSON.parse(json));
         console.log('dataController.mc_registerData() :: DATA registered!');
         console.dir(glbs.PROJECT[DATA_MAP]);
 
@@ -70,8 +59,7 @@ export default class DataController {
     }
 
     mc_registerDescriptiveStats(json) {
-
-        glbs.PROJECT[DESC_STATS] = this._JSON2Map(json);
+        glbs.PROJECT[DESC_STATS] = this._recursiveMap(JSON.parse(json));
         console.log('dataController.mc_registerDescriptiveStats() :: Data descriptive statistics registered!');
         console.dir(glbs.PROJECT[DESC_STATS]);
 
@@ -79,8 +67,15 @@ export default class DataController {
         this._amIready();
     }
 
-    _JSON2Map(json) {
-        return new Map(JSON.parse(json));
+    _recursiveMap(array) {
+        let map = new Map(array);
+
+        for (let [key, candidate] of map) {
+            if (Array.isArray(candidate) && candidate[0].length == 2)
+                map.set(key, this._recursiveMap(candidate));
+        }
+
+        return map;
     }
 
     _amIready() {
