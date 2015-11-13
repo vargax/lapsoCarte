@@ -20,19 +20,23 @@ export default class SocketioController {
         _mainController.sc_ready(this);
     }
 
-    mc_sendGeometries(socketId, geoJSON) {
+    mc_sendGeometries(socketId, map) {
         let client = _clients.get(socketId);
-        client.emit(glbs.GIVE_GEOM,geoJSON);
+        client.emit(glbs.GIVE_GEOM,this._map2JSON(map));
     }
 
-    mc_sendData(socketId, json) {
+    mc_sendData(socketId, map) {
         let client = _clients.get(socketId);
-        client.emit(glbs.GIVE_DATA,json);
+        client.emit(glbs.GIVE_DATA,this._map2JSON(map));
     }
 
-    mc_sendStats(socketId, object) {
+    mc_sendStats(socketId, map) {
         let client = _clients.get(socketId);
-        client.emit(glbs.GIVE_STATS,object);
+        client.emit(glbs.GIVE_STATS,this._map2JSON(map));
+    }
+
+    _map2JSON(map) {
+        return JSON.stringify([...map]);
     }
 
     _inMsgs() {

@@ -10,9 +10,8 @@ const templates = {
 };
 
 export class HandlebarsHelper {
-    static compileSelect(htmlId, options) {
+    static compileSelect(options) {
         let context = {
-            id: htmlId,
             option: []
         };
 

@@ -12,7 +12,19 @@ import L from'leaflet'
 // ------------------------------------------------------------------------
 // CONSTANTS
 // ------------------------------------------------------------------------
-const HOW_SELECT = 'lpc-how-select';
+const INSTANCE      = glbs.DATA_CONSTANTS.LPC_INSTANCE_STATE.INSTANCE,
+
+      CURRENT_HOW   = glbs.DATA_CONSTANTS.LPC_INSTANCE_STATE.CURRENT_HOW,
+      CURRENT_WHAT  = glbs.DATA_CONSTANTS.LPC_INSTANCE_STATE.CURRENT_WHAT,
+      CURRENT_WHEN  = glbs.DATA_CONSTANTS.LPC_INSTANCE_STATE.CURRENT_WHEN,
+      WHENs_VECTOR  = glbs.DATA_CONSTANTS.LPC_INSTANCE_STATE.WHENs_VECTOR,
+      DATA_MAP      = glbs.DATA_CONSTANTS.LPC_INSTANCE_STATE.DATA_MAP,
+      LEAFLET_MAP   = glbs.DATA_CONSTANTS.LPC_INSTANCE_STATE.LEAFLET_MAP;
+
+// ToDo put this on globals and compile the index.html using Handlebars
+const HOWs_CONTAINER = '#lpc-hows-selector-container';
+const WHATs_CONTAINER = '#lpc-whats-selector-container';
+
 
 // ------------------------------------------------------------------------
 // CONTROLLERS
@@ -27,7 +39,7 @@ let _timeController;
 // VARIABLES
 // ------------------------------------------------------------------------
 let geometriesMap;
-let dataMap;
+let instance;
 
 let _notReady = 0;
 // ------------------------------------------------------------------------
@@ -44,6 +56,12 @@ export default class GUIController {
             _leafletController = new LeafletController();       _notReady++;
             _infoWidgetController = new InfoWidgetController(); _notReady++;
             _timeController = new TimeController();             _notReady++;
+
+            instance = {};
+            instance[INSTANCE] = this;
+
+            const INSTANCE_KEY = glbs.DATA_CONSTANTS.LPC_INSTANCE_KEY;
+            glbs.PROJECT[INSTANCE_KEY] = instance;
         }
         return guiController;
     }
@@ -51,7 +69,7 @@ export default class GUIController {
     // Methods exposed to my MainController (mc) ------------------------------
     mc_initGUI() {
         _leafletController.mc_initMap();
-        let leafletMap = glbs.PROJECT[glbs.DATA_CONSTANTS.LEAFLET_MAP];
+        let leafletMap = instance[LEAFLET_MAP];
         leafletMap.addControl(_infoWidgetController.mc_getLeafletControl());
     }
 
@@ -61,23 +79,77 @@ export default class GUIController {
     }
 
     mc_loadData() {
-        dataMap = glbs.PROJECT[glbs.DATA_CONSTANTS.DATA_MAP];
+        let globalDataMap = glbs.PROJECT[glbs.DATA_CONSTANTS.DATA_MAP];
 
-        let hows = glbs.PROJECT[glbs.DATA_CONSTANTS.HOWs_VECTOR];
-        let howsSelect = support.HandlebarsHelper.compileSelect(HOW_SELECT, hows);
-        $('#lpc-hows-selector-container').append(howsSelect);
+        instance[CURRENT_HOW] = null;
+        instance[CURRENT_WHAT] = null;
+        instance[CURRENT_WHEN] = null;
+        instance[WHENs_VECTOR] = null;
+        instance[DATA_MAP] = null;
 
-        //_timeController.mc_loadTimeVector();
+        let hows = Array.from(globalDataMap.keys());
+        let howsSelect = support.HandlebarsHelper.compileSelect(hows);
+
+        let howsContainer = $(HOWs_CONTAINER);
+        howsContainer.append(howsSelect);
+
+        howsContainer.on({
+            change: function(){
+                let newHow = $(this).val();
+                let guiController = new GUIController();
+                guiController.sc_howChange(newHow);
+            }
+        }, 'select');
     }
 
     // Methods exposed to all my subcontrollers (sc) --------------------------
-    sc_howChange() {
+    sc_howChange(newHow) {
+        let globalDataMap = glbs.PROJECT[glbs.DATA_CONSTANTS.DATA_MAP];
 
+        instance[CURRENT_HOW] = newHow;
+        instance[CURRENT_WHAT] = null;
+        instance[CURRENT_WHEN] = null;
+        instance[WHENs_VECTOR] = null;
+        instance[DATA_MAP] = null;
+
+        this._resetAllGeometries();
+
+        let whats = Array.from(globalDataMap.get(newHow).keys());
+        let whatsSelect = support.HandlebarsHelper.compileSelect(whats);
+
+        let whatsContainer = $(WHATs_CONTAINER);
+        whatsContainer.append(whatsSelect);
+
+        whatsContainer.on({
+            change: function(){
+                let newWhat = $(this).val();
+                let guiController = new GUIController();
+                guiController.sc_whatChange(newWhat);
+            }
+        }, 'select');
+    }
+
+    sc_whatChange(newWhat) {
+        let globalDataMap = glbs.PROJECT[glbs.DATA_CONSTANTS.DATA_MAP];
+
+        let currentHow = instance[CURRENT_HOW];
+        let dataMap = globalDataMap.get(currentHow).get(newWhat);
+
+        let whensVector = Array.from(dataMap.keys());
+
+        instance[CURRENT_WHAT] = newWhat;
+        instance[WHENs_VECTOR] = whensVector;
+        instance[CURRENT_WHEN] = null;
+        instance[DATA_MAP] = dataMap;
+
+        _timeController.mc_loadTimeVector();
     }
 
     sc_spatialObjectOver(gid) {
+        let dataMap = instance[DATA_MAP];
+
         let color = glbs.PROJECT.FOCUSED_COLOR;
-        let currentTime = glbs.PROJECT[glbs.DATA_CONSTANTS.CURRENT_TIME];
+        let currentTime = instance[CURRENT_WHEN];
 
         _leafletController.mc_colorGeometry(gid, color);
         let data = Object.assign(geometriesMap.get(gid)['properties'], dataMap.get(currentTime).get(gid));
@@ -129,7 +201,9 @@ export default class GUIController {
 
     // Private Methods --------------------------------------------------------
     _resetGeometry(gid) {
-        let currentTime = glbs.PROJECT[glbs.DATA_CONSTANTS.CURRENT_TIME];
+        let currentTime = instance[CURRENT_WHEN];
+        let dataMap = instance[DATA_MAP];
+
         let data, color, error;
         try {
             data = dataMap.get(currentTime).get(gid)[glbs.PROJECT.COLUMN_DATA];
@@ -153,11 +227,10 @@ export default class GUIController {
             }
         }
         if (noData.length != 0) {
-            let currentTime = glbs.PROJECT[glbs.DATA_CONSTANTS.CURRENT_TIME];
+            let currentTime = instance[CURRENT_WHEN];
             console.log('GUIController._resetAllGeometries()!: No '+glbs.PROJECT.COLUMN_DATA
                 +' data for '+noData.length+' geometries in '+currentTime+'!');
             console.dir(noData);
         }
-
     }
 }

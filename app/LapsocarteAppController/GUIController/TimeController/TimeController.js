@@ -3,10 +3,12 @@ import * as glbs from './../../../../Globals.js'
 import MainController from './../GUIController.js'
 import SliderController from './SliderController.js'
 
+const CURRENT_WHEN  = glbs.DATA_CONSTANTS.LPC_INSTANCE_STATE.CURRENT_WHEN;
+
 let _mainController;
 let _playerControl;
 
-let timeVector;
+let instance;
 
 let timeController = null; // --> Singleton Pattern...
 export default class TimeController {
@@ -14,6 +16,9 @@ export default class TimeController {
         if (!timeController) {
             timeController = this;
             _mainController = new MainController();
+
+            const INSTANCE_KEY = glbs.DATA_CONSTANTS.LPC_INSTANCE_KEY;
+            instance = glbs.PROJECT[INSTANCE_KEY];
         }
         return timeController;
     }
@@ -24,7 +29,7 @@ export default class TimeController {
     }
 
     slc_movedTo(newTime) {
-        glbs.PROJECT[glbs.DATA_CONSTANTS.CURRENT_TIME] = newTime;
+        instance[CURRENT_WHEN] = newTime;
         _mainController.sc_timeChange();
     }
 }

@@ -8,6 +8,9 @@ require('leaflet-providers');
 // ------------------------------------------------------------------------
 // CONSTANTS
 // ------------------------------------------------------------------------
+const INSTANCE_KEY = glbs.DATA_CONSTANTS.LPC_INSTANCE_KEY;
+const INSTANCE_STATE = glbs.DATA_CONSTANTS.LPC_INSTANCE_STATE;
+
 const GEOM_MAP = glbs.DATA_CONSTANTS.WHEREs_MAP;
 
 const MAP_CENTER = glbs.PROJECT.MAP_CENTER;
@@ -66,7 +69,7 @@ export default class LeafletController {
 
         map.addControl(support.Widgets.getLocateWidget());
 
-        glbs.PROJECT[glbs.DATA_CONSTANTS.LEAFLET_MAP] = map;
+        glbs.PROJECT[INSTANCE_KEY][INSTANCE_STATE.LEAFLET_MAP] = map;
     }
 
     mc_loadGeometries() {

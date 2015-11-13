@@ -47,21 +47,21 @@ export default class DataController {
         this._amIready();
     }
 
-    mc_registerData(JSON) {
+    mc_registerData(object) {
 
-        glbs.PROJECT[HOWs_VECTOR]   = JSON[HOWs_VECTOR];
+        glbs.PROJECT[HOWs_VECTOR]   = object[HOWs_VECTOR];
         console.log('dataController.mc_registerData() :: '+glbs.PROJECT[HOWs_VECTOR].length+' HOWs registered!');
         console.dir(glbs.PROJECT[HOWs_VECTOR]);
 
-        glbs.PROJECT[WHATs_VECTOR]  = JSON[WHATs_VECTOR];
+        glbs.PROJECT[WHATs_VECTOR]  = object[WHATs_VECTOR];
         console.log('dataController.mc_registerData() :: '+glbs.PROJECT[WHATs_VECTOR].length+' WHATs registered!');
         console.dir(glbs.PROJECT[WHATs_VECTOR]);
 
-        glbs.PROJECT[WHENs_VECTOR]  = JSON[WHENs_VECTOR];
+        glbs.PROJECT[WHENs_VECTOR]  = object[WHENs_VECTOR];
         console.log('dataController.mc_registerData() :: '+glbs.PROJECT[WHENs_VECTOR].length+' WHENs registered!');
         console.dir(glbs.PROJECT[WHENs_VECTOR]);
 
-        glbs.PROJECT[DATA_MAP]      = new Map(JSON[DATA_MAP]);
+        glbs.PROJECT[DATA_MAP]      = new Map(object[DATA_MAP]);
         console.log('dataController.mc_registerData() :: DATA registered!');
         console.dir(glbs.PROJECT[DATA_MAP]);
 
@@ -69,14 +69,18 @@ export default class DataController {
         this._amIready();
     }
 
-    mc_registerDescriptiveStats(JSON) {
+    mc_registerDescriptiveStats(json) {
 
-        glbs.PROJECT[DESC_STATS] = new Map(JSON);
+        glbs.PROJECT[DESC_STATS] = this._JSON2Map(json);
         console.log('dataController.mc_registerDescriptiveStats() :: Data descriptive statistics registered!');
         console.dir(glbs.PROJECT[DESC_STATS]);
 
         done.set(DESC_STATS_READY, true);
         this._amIready();
+    }
+
+    _JSON2Map(json) {
+        return new Map(JSON.parse(json));
     }
 
     _amIready() {

@@ -80,13 +80,10 @@ export default class LapsocarteServerController {
 
     // Used by _socketioController
     sc_init(socketId) {
-        let data = {};
-        data[HOWs_VECTOR]  = glbs.PROJECT[HOWs_VECTOR];
-        data[WHATs_VECTOR] = glbs.PROJECT[WHATs_VECTOR];
-        data[WHENs_VECTOR] = glbs.PROJECT[WHENs_VECTOR];
-        data[DATA_MAP]     = glbs.PROJECT[DATA_MAP];
 
-        _socketioController.mc_sendData(socketId, data);
+        let dataMap = glbs.PROJECT[DATA_MAP];
+
+        _socketioController.mc_sendData(socketId, dataMap);
 
         _socketioController.mc_sendStats(socketId, glbs.PROJECT[DESC_STATS]);
         _socketioController.mc_sendGeometries(socketId, glbs.PROJECT[WHEREs_MAP]);

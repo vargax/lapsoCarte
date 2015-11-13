@@ -4,13 +4,21 @@ import * as glbs from './../../../../Globals.js'
 import $ from 'jquery'
 import noUiSlider from 'nouislider'
 
+const WHENs_VECTOR  = glbs.DATA_CONSTANTS.LPC_INSTANCE_STATE.WHENs_VECTOR;
+
+let instance;
+
 let _mainController;
 let timeVector;
 
 export default class PlaybackControl {
     constructor() {
         _mainController = new MainController();
-        timeVector = glbs.PROJECT[glbs.DATA_CONSTANTS.TIME_VECTOR];
+
+        const INSTANCE_KEY = glbs.DATA_CONSTANTS.LPC_INSTANCE_KEY;
+        instance = glbs.PROJECT[INSTANCE_KEY];
+
+        timeVector = instance[WHENs_VECTOR];
 
         this._setupControl();
     }
