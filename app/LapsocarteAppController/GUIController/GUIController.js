@@ -176,12 +176,8 @@ export default class GUIController {
     }
 
     sc_spatialObjectOut(gid) {
-        try {
-            _infoWidgetController.mc_updateInfo();
-            this._resetGeometry(gid);
-        } catch (e) {
-            console.log(e);
-        }
+        _infoWidgetController.mc_updateInfo();
+        this._resetGeometry(gid);
     }
 
     sc_ready(controller) {
@@ -214,26 +210,15 @@ export default class GUIController {
     }
 
     // Private Methods --------------------------------------------------------
+
+
     _resetGeometry(gid) {
-        let dataMap = instance[DATA_MAP];
-
-        if (!dataMap) {
-            let color = glbs.PROJECT.DEFAULT_STYLE.color;
-            _leafletController.mc_colorGeometry(gid, color);
-            return;
-        }
-
-        let data, color, error;
+        let color = glbs.PROJECT.DEFAULT_STYLE.color;
         try {
-            data = dataMap.get(gid);
-            color = this.choropleth.giveColor(data);
-        } catch (e) {
-            color = glbs.PROJECT.DEFAULT_STYLE.color;
-            error = e;
+            color = this.choropleth.giveColor(instance[DATA_MAP].get(gid))
+        } finally {
+            _leafletController.mc_colorGeometry(gid, color);
         }
-        _leafletController.mc_colorGeometry(gid, color);
-
-        if (error != undefined) throw error;
     }
 
     _resetAllGeometries() {

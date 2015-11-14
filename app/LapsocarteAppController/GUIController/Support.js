@@ -50,6 +50,9 @@ export class Choropleth {
     }
 
     giveColor(rawData) {
+
+        if(!Number.isFinite(rawData)) throw rawData+' not a valid number!';
+
         let normalizedValue = (rawData - this.min) / this.delta;
         let segment = math.add(this.rgbMin, math.dotMultiply(normalizedValue, this.rgbDelta));
 

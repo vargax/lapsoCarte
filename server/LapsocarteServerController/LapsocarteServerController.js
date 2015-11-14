@@ -7,11 +7,7 @@ import * as glbs from '../../Globals.js'
 // ------------------------------------------------------------------------
 // CONSTANTS
 // ------------------------------------------------------------------------
-const HOWs_VECTOR = glbs.DATA_CONSTANTS.HOWs_VECTOR;
-const WHATs_VECTOR = glbs.DATA_CONSTANTS.WHATs_VECTOR;
-const WHENs_VECTOR = glbs.DATA_CONSTANTS.WHENs_VECTOR;
 const WHEREs_MAP =   glbs.DATA_CONSTANTS.WHEREs_MAP;
-
 const DATA_MAP = glbs.DATA_CONSTANTS.DATA_MAP;
 const DESC_STATS = glbs.DATA_CONSTANTS.DESCRIPTIVE_STATS;
 
@@ -38,9 +34,9 @@ export default class LapsocarteServerController {
             lapsocarteServerController = this;
 
             _databaseController = new DatabaseController(); _notReady++;
-            _expressController = new ExpressController();   _notReady++;
+            _expressController  = new ExpressController();  _notReady++;
             _socketioController = new SocketioController(); _notReady++;
-            _dataController = new DataController();         _notReady++;
+            _dataController     = new DataController();     _notReady++;
 
         }
         return lapsocarteServerController;
@@ -48,7 +44,7 @@ export default class LapsocarteServerController {
 
     // Methods exposed to my MainController (mc) ------------------------------
     mc_init() {
-        _databaseController.mc_initSlider();
+        _databaseController.mc_init();
     }
 
     // Methods exposed my subcontrollers (sc) --------------------------
@@ -62,13 +58,13 @@ export default class LapsocarteServerController {
             case _dataController:
                 _notReady--;
                 console.log("_dataController ready! "+_notReady+" controllers pending...");
-                _expressController.mc_initSlider();
+                _expressController.mc_init();
                 break;
 
             case _expressController:
                 _notReady--;
                 console.log("_expressController ready! "+_notReady+" controllers pending...");
-                _socketioController.mc_initSlider(_expressController.mc_getServer());
+                _socketioController.mc_init(_expressController.mc_getServer());
                 break;
 
             case _socketioController:
@@ -80,11 +76,7 @@ export default class LapsocarteServerController {
 
     // Used by _socketioController
     sc_init(socketId) {
-
-        let dataMap = glbs.PROJECT[DATA_MAP];
-
-        _socketioController.mc_sendData(socketId, dataMap);
-
+        _socketioController.mc_sendData(socketId, glbs.PROJECT[DATA_MAP]);
         _socketioController.mc_sendStats(socketId, glbs.PROJECT[DESC_STATS]);
         _socketioController.mc_sendGeometries(socketId, glbs.PROJECT[WHEREs_MAP]);
     }
