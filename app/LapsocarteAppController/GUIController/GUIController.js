@@ -211,7 +211,6 @@ export default class GUIController {
 
     // Private Methods --------------------------------------------------------
 
-
     _resetGeometry(gid) {
         let color = glbs.PROJECT.DEFAULT_STYLE.color;
         try {
