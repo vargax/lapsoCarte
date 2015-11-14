@@ -48,7 +48,7 @@ export default class LapsocarteServerController {
 
     // Methods exposed to my MainController (mc) ------------------------------
     mc_init() {
-        _databaseController.mc_init();
+        _databaseController.mc_initSlider();
     }
 
     // Methods exposed my subcontrollers (sc) --------------------------
@@ -62,13 +62,13 @@ export default class LapsocarteServerController {
             case _dataController:
                 _notReady--;
                 console.log("_dataController ready! "+_notReady+" controllers pending...");
-                _expressController.mc_init();
+                _expressController.mc_initSlider();
                 break;
 
             case _expressController:
                 _notReady--;
                 console.log("_expressController ready! "+_notReady+" controllers pending...");
-                _socketioController.mc_init(_expressController.mc_getServer());
+                _socketioController.mc_initSlider(_expressController.mc_getServer());
                 break;
 
             case _socketioController:

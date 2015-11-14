@@ -217,9 +217,7 @@ export const DATA_CONSTANTS = {
 
         CURRENT_HOW: 'lpc_CURRENT_HOW',
         CURRENT_WHAT: 'lpc_CURRENT_WHAT',
-
         CURRENT_WHEN: 'lpc_CURRENT_WHEN',
-        WHENs_VECTOR: 'lpc_WHENs_VECTOR',
 
         DATA_MAP: 'lpc_DATA_MAP',
         LEAFLET_MAP: 'lpc_LEAFLET_MAP'             // Leaflet MAP object

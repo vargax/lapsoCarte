@@ -4,7 +4,7 @@ import * as support from './Support.js'
 import MainController from './../LapsocarteAppController.js'
 import LeafletController from './LeafletController.js'
 import InfoWidgetController from './InfoWidgetController.js'
-import TimeController from './TimeController/TimeController.js'
+import SliderController from './SliderController.js'
 
 import $ from 'jquery'
 import L from'leaflet'
@@ -33,7 +33,7 @@ let _mainController;
 
 let _leafletController;
 let _infoWidgetController;
-let _timeController;
+let _sliderController;
 
 // ------------------------------------------------------------------------
 // VARIABLES
@@ -59,7 +59,7 @@ export default class GUIController {
 
             _leafletController = new LeafletController();       _notReady++;
             _infoWidgetController = new InfoWidgetController(); _notReady++;
-            _timeController = new TimeController();             _notReady++;
+            _sliderController = new SliderController();         _notReady++;
         }
         return guiController;
     }
@@ -69,6 +69,8 @@ export default class GUIController {
         _leafletController.mc_initMap();
         let leafletMap = instance[LEAFLET_MAP];
         leafletMap.addControl(_infoWidgetController.mc_getLeafletControl());
+
+        _sliderController.mc_initSlider();
     }
 
     mc_loadGeometries() {
@@ -82,7 +84,6 @@ export default class GUIController {
         instance[CURRENT_HOW] = null;
         instance[CURRENT_WHAT] = null;
         instance[CURRENT_WHEN] = null;
-        instance[WHENs_VECTOR] = null;
         instance[DATA_MAP] = null;
 
         let hows = Array.from(globalDataMap.keys());
@@ -107,17 +108,14 @@ export default class GUIController {
         instance[CURRENT_HOW] = newHow;
         instance[CURRENT_WHAT] = null;
         instance[CURRENT_WHEN] = null;
-        instance[WHENs_VECTOR] = null;
         instance[DATA_MAP] = null;
 
         this._resetAllGeometries();
 
         let whats = Array.from(globalDataMap.get(newHow).keys());
         let whatsSelect = support.HandlebarsHelper.compileSelect(whats);
-
         let whatsContainer = $(WHATs_CONTAINER);
         whatsContainer.append(whatsSelect);
-
         whatsContainer.on({
             change: function(){
                 let newWhat = $(this).val();
@@ -128,21 +126,30 @@ export default class GUIController {
     }
 
     sc_whatChange(newWhat) {
-        this._resetAllGeometries();
-
         let globalDataMap = glbs.PROJECT[glbs.DATA_CONSTANTS.DATA_MAP];
 
-        let currentHow = instance[CURRENT_HOW];
-        let dataMap = globalDataMap.get(currentHow).get(newWhat);
-
-        let whensVector = Array.from(dataMap.keys());
-
         instance[CURRENT_WHAT] = newWhat;
-        instance[WHENs_VECTOR] = whensVector;
         instance[CURRENT_WHEN] = null;
-        instance[DATA_MAP] = dataMap;
+        instance[DATA_MAP] = null;
 
-        _timeController.mc_loadTimeVector();
+        this._resetAllGeometries();
+
+        let currentHow = instance[CURRENT_HOW];
+        let whensVector = Array.from(globalDataMap.get(currentHow).get(newWhat).keys());
+        _sliderController.mc_update(whensVector);
+    }
+
+    sc_whenChange(newWhen) {
+        let globalDataMap = glbs.PROJECT[glbs.DATA_CONSTANTS.DATA_MAP];
+
+        instance[CURRENT_WHEN] = newWhen;
+        instance[DATA_MAP] = globalDataMap
+            .get(instance[CURRENT_HOW])
+            .get(instance[CURRENT_WHAT])
+            .get(instance[CURRENT_WHEN]);
+
+        this._resetAllGeometries();
+        _infoWidgetController.mc_updateInfo();
     }
 
     sc_spatialObjectOver(gid) {
@@ -150,8 +157,12 @@ export default class GUIController {
 
         _leafletController.mc_colorGeometry(gid, color);
 
-        let data = geometriesMap.get(gid)['properties'];
-        _infoWidgetController.mc_updateInfo(data);
+        let info = geometriesMap.get(gid)['properties'];
+        if(instance[DATA_MAP]) {
+            info[glbs.PROJECT.COLUMN_WHEN] = instance[CURRENT_WHEN];
+            info[instance[CURRENT_WHAT]] = instance[DATA_MAP].get(gid);
+        }
+        _infoWidgetController.mc_updateInfo(info);
     }
 
     sc_spatialObjectOut(gid) {
@@ -161,11 +172,6 @@ export default class GUIController {
         } catch (e) {
             console.log(e);
         }
-    }
-
-    sc_timeChange() {
-        this._resetAllGeometries();
-        _infoWidgetController.mc_updateInfo();
     }
 
     sc_ready(controller) {
@@ -181,20 +187,19 @@ export default class GUIController {
                 console.log(log+"InfoWidgetController ready! "+_notReady+" controllers pending...");
                 break;
 
-            case _timeController:
+            case _sliderController:
                 _notReady--;
-                console.log(log+"TimeController ready! "+_notReady+" controllers pending...");
+                console.log(log+"SliderController ready! "+_notReady+" controllers pending...");
                 break;
         }
         if (_notReady == 0) {
-            this.sc_timeChange();
+            this.sc_whenChange();
             _mainController.sc_ready(this);
         }
     }
 
     // Private Methods --------------------------------------------------------
     _resetGeometry(gid) {
-        let currentTime = instance[CURRENT_WHEN];
         let dataMap = instance[DATA_MAP];
 
         if (!dataMap) {
@@ -205,12 +210,12 @@ export default class GUIController {
 
         let data, color, error;
         try {
-            data = dataMap.get(currentTime).get(gid);
+            data = dataMap.get(gid);
             color = glbs.PROJECT.FUNC_DATA2COLOR(data);
         } catch (e) {
             color = glbs.PROJECT.DEFAULT_STYLE.color;
             error = {
-                message: 'GUIController._resetGeometry()!: No data for '+gid+' in t='+currentTime,
+                message: 'GUIController._resetGeometry()!: No data for '+gid+' in t='+instance[CURRENT_WHEN],
                 exception: e
             };
         }
