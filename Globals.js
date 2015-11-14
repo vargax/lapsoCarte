@@ -97,53 +97,13 @@ let mars = {
 
     DEFAULT_STYLE: {color: 'blue', weight: 1.2},
     FOCUSED_COLOR: 'green',
-    FUNC_DATA2COLOR: choropleth
+    CHOROPLETH_RANGE: ['#FFEDA0', '#800026']
 };
 mars.DB_USER = mars.PROJECT;
 mars.DB_PASS = mars.PROJECT;
 mars.DB_NAME = mars.PROJECT;
 
 export const PROJECT = mars;
-
-// ---------------------------------------------------------------------------------------------------------------------
-// Generic FUNC_DATA2COLOR functions
-// ---------------------------------------------------------------------------------------------------------------------
-// ToDo review this choropleth implementation
-function choropleth(d) {
-    const CHOROPLETH_RANGE = 'CHOROPLETH_RANGE';
-    let colors = ['#FFEDA0','#FED976','#FEB24C','#FD8D3C','#FC4E2A','#E31A1C','#BD0026','#800026'];
-
-    let DC = DATA_CONSTANTS,
-        instance = this[DC.LPC_INSTANCE_KEY],
-        range = instance[CHOROPLETH_RANGE];
-
-    if (range == undefined) {
-        range = [];
-
-        let how = instance[DC.LPC_INSTANCE_STATE.CURRENT_HOW],
-            what = instance[DC.LPC_INSTANCE_STATE.CURRENT_WHAT],
-            stats = this[DC.DESCRIPTIVE_STATS].get(how).get(what);
-
-        console.log(how+' '+what)
-        console.dir(stats)
-
-        let max = stats.get(DC.DS_MAX);
-        let min = stats.get(DC.DS_MIN);
-
-        let step = (max - min) / colors.length;
-        for (let i = min + step; i <= max; i += step)
-            range.push(i);
-
-        instance[CHOROPLETH_RANGE] = range;
-        console.dir(range);
-    }
-
-    for (let i = 0; i < colors.length; i++)
-        if (d <= range[i]) return colors[i];
-
-    // I should never reach this!!
-    return 'black';
-}
 
 // ---------------------------------------------------------------------------------------------------------------------
 // Utility Functions

@@ -107,12 +107,13 @@ export default class GUIController {
         instance[WHAT_STATS] = null;
         instance[WHEN_STATS] = null;
 
-        this._resetAllGeometries();
         _domController.mc_setWhats(Array.from(
             glbs.PROJECT[glbs.DATA_CONSTANTS.DATA_MAP]
                 .get(instance[CURRENT_HOW])
                 .keys()
         ));
+
+        this._resetAllGeometries();
     }
 
     sc_whatChange(newWhat) {
@@ -126,13 +127,22 @@ export default class GUIController {
                 .get(instance[CURRENT_WHAT]);
         instance[WHEN_STATS] = null;
 
-        this._resetAllGeometries();
+        this.choropleth = new support.Choropleth(
+            glbs.PROJECT.CHOROPLETH_RANGE,
+            [
+                instance[WHAT_STATS].get(glbs.DATA_CONSTANTS.DS_MIN),
+                instance[WHAT_STATS].get(glbs.DATA_CONSTANTS.DS_MAX)
+            ]
+        );
+
         _sliderController.mc_update(Array.from(
             glbs.PROJECT[glbs.DATA_CONSTANTS.DATA_MAP]
                 .get(instance[CURRENT_HOW])
                 .get(instance[CURRENT_WHAT])
                 .keys()
         ));
+
+        this._resetAllGeometries();
     }
 
     sc_whenChange(newWhen) {
@@ -148,8 +158,8 @@ export default class GUIController {
                 .get(instance[CURRENT_WHAT])
                 .get(instance[CURRENT_WHEN]);
 
-        this._resetAllGeometries();
         _infoWidgetController.mc_updateInfo();
+        this._resetAllGeometries();
     }
 
     sc_spatialObjectOver(gid) {
@@ -160,7 +170,7 @@ export default class GUIController {
         let info = geometriesMap.get(gid)['properties'];
         if(instance[DATA_MAP]) {
             info[glbs.PROJECT.COLUMN_WHEN] = instance[CURRENT_WHEN];
-            info[instance[CURRENT_WHAT]] = instance[DATA_MAP].get(gid);
+            info[instance[CURRENT_WHAT]]   = instance[DATA_MAP].get(gid);
         }
         _infoWidgetController.mc_updateInfo(info);
     }
@@ -216,13 +226,10 @@ export default class GUIController {
         let data, color, error;
         try {
             data = dataMap.get(gid);
-            color = glbs.PROJECT.FUNC_DATA2COLOR(data);
+            color = this.choropleth.giveColor(data);
         } catch (e) {
             color = glbs.PROJECT.DEFAULT_STYLE.color;
-            error = {
-                message: 'GUIController._resetGeometry()!: No data for '+gid+' in t='+instance[CURRENT_WHEN],
-                exception: e
-            };
+            error = e;
         }
         _leafletController.mc_colorGeometry(gid, color);
 
@@ -243,8 +250,8 @@ export default class GUIController {
         }
         if (noData.length != 0) {
             let currentTime = instance[CURRENT_WHEN];
-            console.log('GUIController._resetAllGeometries()!: No '+glbs.PROJECT.COLUMN_DATA
-                +' data for '+noData.length+' geometries in '+currentTime+'!');
+            console.log('GUIController._resetAllGeometries()!: Can not colorize ' +noData.length
+                +' geometries in '+currentTime+'!');
             console.dir(noData);
         }
     }
