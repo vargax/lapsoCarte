@@ -12,33 +12,35 @@ export default class DOMController {
     }
 
     mc_initDOM() {
-
-    }
-
-    mc_setHows(howsArray) {
-        let jQueryId = '#'+support.DOM_CONSTANTS.HOWs_CONTAINER_ID;
-        this._appendSelect(jQueryId, howsArray);
-
-        $(jQueryId).on({
+        let howsContainerId = '#'+support.DOM_CONSTANTS.HOWs_CONTAINER_ID;
+        $(howsContainerId).on({
             change: function(){
                 let newHow = $(this).val();
                 let mainController = new MainController();
                 mainController.sc_howChange(newHow);
             }
         }, 'select');
-    }
 
-    mc_setWhats(whatsArray) {
-        let jQueryId = '#'+support.DOM_CONSTANTS.WHATs_CONTAINER_ID;
-        this._appendSelect(jQueryId, whatsArray);
-
-        $(jQueryId).on({
+        let whatsContainerId = '#'+support.DOM_CONSTANTS.WHATs_CONTAINER_ID;
+        $(whatsContainerId).on({
             change: function(){
                 let newWhat = $(this).val();
                 let mainController = new MainController();
                 mainController.sc_whatChange(newWhat);
             }
         }, 'select');
+    }
+
+    mc_setHows(howsArray) {
+        let jQueryId = '#'+support.DOM_CONSTANTS.HOWs_CONTAINER_ID;
+        this._appendSelect(jQueryId, howsArray);
+
+    }
+
+    mc_setWhats(whatsArray) {
+        let jQueryId = '#'+support.DOM_CONSTANTS.WHATs_CONTAINER_ID;
+        this._appendSelect(jQueryId, whatsArray);
+
     }
 
     _appendSelect(containerId, options) {

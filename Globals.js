@@ -220,6 +220,9 @@ export const DATA_CONSTANTS = {
         CURRENT_WHEN: 'lpc_CURRENT_WHEN',
 
         DATA_MAP: 'lpc_DATA_MAP',
+        WHAT_STATS: 'lpc_WHAT_STATS',
+        WHEN_STATS: 'lpc_WHEN_STATS',
+
         LEAFLET_MAP: 'lpc_LEAFLET_MAP'             // Leaflet MAP object
     }
 };

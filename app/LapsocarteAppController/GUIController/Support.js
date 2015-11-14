@@ -35,6 +35,10 @@ export class HandlebarsHelper {
     }
 }
 
+export class Choropleth {
+
+}
+
 export class Widgets {
     static getLocateWidget() {
         require('leaflet.locatecontrol');

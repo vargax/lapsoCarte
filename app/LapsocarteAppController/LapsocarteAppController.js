@@ -40,6 +40,7 @@ export default class LapsocarteAppController {
         switch (controller) {
             case _dataController:
                 _guiController.mc_loadData();
+                _guiController.mc_loadStats();
                 console.log(log+"DataController ready!");
                 break;
 

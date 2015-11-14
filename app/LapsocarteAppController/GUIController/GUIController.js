@@ -18,7 +18,11 @@ const INSTANCE      = glbs.DATA_CONSTANTS.LPC_INSTANCE_STATE.INSTANCE,
       CURRENT_HOW   = glbs.DATA_CONSTANTS.LPC_INSTANCE_STATE.CURRENT_HOW,
       CURRENT_WHAT  = glbs.DATA_CONSTANTS.LPC_INSTANCE_STATE.CURRENT_WHAT,
       CURRENT_WHEN  = glbs.DATA_CONSTANTS.LPC_INSTANCE_STATE.CURRENT_WHEN,
+
       DATA_MAP      = glbs.DATA_CONSTANTS.LPC_INSTANCE_STATE.DATA_MAP,
+      WHAT_STATS    = glbs.DATA_CONSTANTS.LPC_INSTANCE_STATE.WHAT_STATS,
+      WHEN_STATS    = glbs.DATA_CONSTANTS.LPC_INSTANCE_STATE.WHEN_STATS,
+
       LEAFLET_MAP   = glbs.DATA_CONSTANTS.LPC_INSTANCE_STATE.LEAFLET_MAP;
 
 // ------------------------------------------------------------------------
@@ -77,54 +81,72 @@ export default class GUIController {
     }
 
     mc_loadData() {
-        let globalDataMap = glbs.PROJECT[glbs.DATA_CONSTANTS.DATA_MAP];
-
         instance[CURRENT_HOW] = null;
         instance[CURRENT_WHAT] = null;
         instance[CURRENT_WHEN] = null;
         instance[DATA_MAP] = null;
 
-        let hows = Array.from(globalDataMap.keys());
-        _domController.mc_setHows(hows);
+        _domController.mc_setHows(Array.from(
+            glbs.PROJECT[glbs.DATA_CONSTANTS.DATA_MAP]
+                .keys()
+        ));
+    }
+
+    mc_loadStats() {
+        instance[WHAT_STATS] = null;
+        instance[WHEN_STATS] = null;
     }
 
     // Methods exposed to all my subcontrollers (sc) --------------------------
     sc_howChange(newHow) {
-        let globalDataMap = glbs.PROJECT[glbs.DATA_CONSTANTS.DATA_MAP];
-
         instance[CURRENT_HOW] = newHow;
         instance[CURRENT_WHAT] = null;
         instance[CURRENT_WHEN] = null;
         instance[DATA_MAP] = null;
 
-        this._resetAllGeometries();
+        instance[WHAT_STATS] = null;
+        instance[WHEN_STATS] = null;
 
-        let whats = Array.from(globalDataMap.get(newHow).keys());
-        _domController.mc_setWhats(whats);
+        this._resetAllGeometries();
+        _domController.mc_setWhats(Array.from(
+            glbs.PROJECT[glbs.DATA_CONSTANTS.DATA_MAP]
+                .get(instance[CURRENT_HOW])
+                .keys()
+        ));
     }
 
     sc_whatChange(newWhat) {
-        let globalDataMap = glbs.PROJECT[glbs.DATA_CONSTANTS.DATA_MAP];
-
         instance[CURRENT_WHAT] = newWhat;
         instance[CURRENT_WHEN] = null;
         instance[DATA_MAP] = null;
 
-        this._resetAllGeometries();
+        instance[WHAT_STATS] =
+            glbs.PROJECT[glbs.DATA_CONSTANTS.DESCRIPTIVE_STATS]
+                .get(instance[CURRENT_HOW])
+                .get(instance[CURRENT_WHAT]);
+        instance[WHEN_STATS] = null;
 
-        let currentHow = instance[CURRENT_HOW];
-        let whensVector = Array.from(globalDataMap.get(currentHow).get(newWhat).keys());
-        _sliderController.mc_update(whensVector);
+        this._resetAllGeometries();
+        _sliderController.mc_update(Array.from(
+            glbs.PROJECT[glbs.DATA_CONSTANTS.DATA_MAP]
+                .get(instance[CURRENT_HOW])
+                .get(instance[CURRENT_WHAT])
+                .keys()
+        ));
     }
 
     sc_whenChange(newWhen) {
-        let globalDataMap = glbs.PROJECT[glbs.DATA_CONSTANTS.DATA_MAP];
-
         instance[CURRENT_WHEN] = newWhen;
-        instance[DATA_MAP] = globalDataMap
-            .get(instance[CURRENT_HOW])
-            .get(instance[CURRENT_WHAT])
-            .get(instance[CURRENT_WHEN]);
+
+        instance[WHEN_STATS] =
+            instance[WHAT_STATS]
+                .get(instance[CURRENT_WHEN]);
+
+        instance[DATA_MAP] =
+            glbs.PROJECT[glbs.DATA_CONSTANTS.DATA_MAP]
+                .get(instance[CURRENT_HOW])
+                .get(instance[CURRENT_WHAT])
+                .get(instance[CURRENT_WHEN]);
 
         this._resetAllGeometries();
         _infoWidgetController.mc_updateInfo();
