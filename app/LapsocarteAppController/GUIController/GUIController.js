@@ -4,6 +4,7 @@ import * as support from './Support.js'
 import MainController from './../LapsocarteAppController.js'
 import LeafletController from './LeafletController.js'
 import InfoWidgetController from './InfoWidgetController.js'
+import DOMController from './DOMController.js'
 import SliderController from './SliderController.js'
 
 import $ from 'jquery'
@@ -17,14 +18,8 @@ const INSTANCE      = glbs.DATA_CONSTANTS.LPC_INSTANCE_STATE.INSTANCE,
       CURRENT_HOW   = glbs.DATA_CONSTANTS.LPC_INSTANCE_STATE.CURRENT_HOW,
       CURRENT_WHAT  = glbs.DATA_CONSTANTS.LPC_INSTANCE_STATE.CURRENT_WHAT,
       CURRENT_WHEN  = glbs.DATA_CONSTANTS.LPC_INSTANCE_STATE.CURRENT_WHEN,
-      WHENs_VECTOR  = glbs.DATA_CONSTANTS.LPC_INSTANCE_STATE.WHENs_VECTOR,
       DATA_MAP      = glbs.DATA_CONSTANTS.LPC_INSTANCE_STATE.DATA_MAP,
       LEAFLET_MAP   = glbs.DATA_CONSTANTS.LPC_INSTANCE_STATE.LEAFLET_MAP;
-
-// ToDo put this on globals and compile the index.html using Handlebars
-const HOWs_CONTAINER = '#lpc-hows-selector-container';
-const WHATs_CONTAINER = '#lpc-whats-selector-container';
-
 
 // ------------------------------------------------------------------------
 // CONTROLLERS
@@ -33,6 +28,7 @@ let _mainController;
 
 let _leafletController;
 let _infoWidgetController;
+let _domController;
 let _sliderController;
 
 // ------------------------------------------------------------------------
@@ -57,9 +53,10 @@ export default class GUIController {
             const INSTANCE_KEY = glbs.DATA_CONSTANTS.LPC_INSTANCE_KEY;
             glbs.PROJECT[INSTANCE_KEY] = instance;
 
-            _leafletController = new LeafletController();       _notReady++;
+            _leafletController    = new LeafletController();    _notReady++;
             _infoWidgetController = new InfoWidgetController(); _notReady++;
-            _sliderController = new SliderController();         _notReady++;
+            _domController        = new DOMController();        _notReady++;
+            _sliderController     = new SliderController();     _notReady++;
         }
         return guiController;
     }
@@ -70,6 +67,7 @@ export default class GUIController {
         let leafletMap = instance[LEAFLET_MAP];
         leafletMap.addControl(_infoWidgetController.mc_getLeafletControl());
 
+        _domController.mc_initDOM();
         _sliderController.mc_initSlider();
     }
 
@@ -87,18 +85,7 @@ export default class GUIController {
         instance[DATA_MAP] = null;
 
         let hows = Array.from(globalDataMap.keys());
-        let howsSelect = support.HandlebarsHelper.compileSelect(hows);
-
-        let howsContainer = $(HOWs_CONTAINER);
-        howsContainer.append(howsSelect);
-
-        howsContainer.on({
-            change: function(){
-                let newHow = $(this).val();
-                let guiController = new GUIController();
-                guiController.sc_howChange(newHow);
-            }
-        }, 'select');
+        _domController.mc_setHows(hows);
     }
 
     // Methods exposed to all my subcontrollers (sc) --------------------------
@@ -113,16 +100,7 @@ export default class GUIController {
         this._resetAllGeometries();
 
         let whats = Array.from(globalDataMap.get(newHow).keys());
-        let whatsSelect = support.HandlebarsHelper.compileSelect(whats);
-        let whatsContainer = $(WHATs_CONTAINER);
-        whatsContainer.append(whatsSelect);
-        whatsContainer.on({
-            change: function(){
-                let newWhat = $(this).val();
-                let guiController = new GUIController();
-                guiController.sc_whatChange(newWhat);
-            }
-        }, 'select');
+        _domController.mc_setWhats(whats);
     }
 
     sc_whatChange(newWhat) {
@@ -190,6 +168,11 @@ export default class GUIController {
             case _sliderController:
                 _notReady--;
                 console.log(log+"SliderController ready! "+_notReady+" controllers pending...");
+                break;
+
+            case _domController:
+                _notReady--;
+                console.log(log+"DOMController ready! "+_notReady+" controllers pending...");
                 break;
         }
         if (_notReady == 0) {

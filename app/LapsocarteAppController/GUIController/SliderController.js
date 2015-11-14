@@ -1,10 +1,9 @@
-import MainController from './GUIController.js'
 import * as glbs from './../../../Globals.js'
+import MainController from './GUIController.js'
 
 import noUiSlider from 'nouislider'
 
 let _mainController;
-
 let _slider;
 let _timeVector;
 

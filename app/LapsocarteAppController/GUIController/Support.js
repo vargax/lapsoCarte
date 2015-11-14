@@ -9,6 +9,11 @@ const templates = {
     select: 'select.hbs'
 };
 
+export const DOM_CONSTANTS = {
+    HOWs_CONTAINER_ID: 'lpc-hows-selector-container',
+    WHATs_CONTAINER_ID: 'lpc-whats-selector-container'
+};
+
 export class HandlebarsHelper {
     static compileSelect(options) {
         let context = {
