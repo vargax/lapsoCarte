@@ -11,13 +11,13 @@ The backend is based on:
 - [jStat](https://github.com/jstat/jstat) to calculate descriptive statistics.
 
 The frontend is based on:
-- [**LeafletJS**](http://leafletjs.com/) to represent the WHEREs (spatial dimension).
-- [**noUiSlider**](http://refreshless.com/nouislider/) to represent the WHENs (temporal dimension).
+- [**LeafletJS**](http://leafletjs.com/) to represent WHEREs (spatial dimension).
+- [**noUiSlider**](http://refreshless.com/nouislider/) to represent WHENs (temporal dimension).
 - [jQuery](https://jquery.com/) to handle web browser events.
 - [Less](http://lesscss.org/) to compile the CSS stylesheets.
 - [Handlebars](http://handlebarsjs.com/) to manage HTML templates.
 
-Most of LapsoCarte code is written in **ECMAScript 6** and uses [**Babel**](https://babeljs.io/) for backward compatibility.
+LapsoCarte code is written in **ECMAScript 6** and uses [**Babel**](https://babeljs.io/) for backward compatibility.
 
 ## Code Patterns
 - [EAFP](https://docs.python.org/2/glossary.html#term-eafp): Easier to ask for forgiveness than permission.
