@@ -3,7 +3,6 @@ import * as glbs from '../../Globals.js'
 
 const logString = 'socketioController';
 const logOK  = ' :: ';
-const logERR = ' !! ';
 
 let _clients;
 let _mainController;

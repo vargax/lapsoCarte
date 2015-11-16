@@ -45,11 +45,6 @@ export default class LeafletController {
     }
 
     // Methods exposed to my MainController (mc) ---------------------------------
-    mc_colorGeometies(gid2colorArray) {
-        for (let tuple of gid2colorArray)
-            this.mc_colorGeometry(tuple[0],tuple[1]);
-    }
-
     mc_colorGeometry(gid, color) {
         let leafletObject = _gid2leafletObjectMap.get(gid);
         leafletObject.layer.setStyle({

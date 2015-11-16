@@ -1,4 +1,3 @@
-import * as glbs from './../../../Globals.js'
 import MainController from './GUIController.js'
 
 import noUiSlider from 'nouislider'

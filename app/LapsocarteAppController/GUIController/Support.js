@@ -1,5 +1,3 @@
-import * as glbs from './../../../Globals.js';
-
 import L from'leaflet';
 import $ from 'jquery';
 import Handlebars from 'handlebars'

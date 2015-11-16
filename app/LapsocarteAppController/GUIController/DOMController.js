@@ -1,4 +1,3 @@
-import * as glbs from './../../../Globals.js'
 import * as support from './Support.js'
 import MainController from './GUIController.js'
 
