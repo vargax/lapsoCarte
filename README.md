@@ -37,6 +37,7 @@ LapsoCarte code is written in **ECMAScript 6** and uses [**Babel**](https://babe
 - Green modules provides task specific classes (reusable code).
 - Aqua modules are small embedded modules (code is in it's parent module).
 - Yellow objects are the JavaScript objects in Globals.js.
+
 ![Architecture](doc/arch.png)
 
 ## Workspace Setup (Ubuntu 14.04)

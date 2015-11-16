@@ -105,7 +105,7 @@ export default class DataController{
         const   DS_MIN            = glbs.DATA_KEYs.DS_MIN,
                 DS_MAX            = glbs.DATA_KEYs.DS_MAX,
                 DS_MEAN           = glbs.DATA_KEYs.DS_MEAN,
-                DS_KEYS_VECTOR   = glbs.DATA_KEYs.DS_KEYS_VECTOR,
+                DS_KEYS_VECTOR    = glbs.DATA_KEYs.DS_KEYS_VECTOR,
                 DS_DATA_VECTOR    = glbs.DATA_KEYs.DS_DATA_VECTOR;
 
         let dataMap = glbs.PROJECT[DATA_MAP];
