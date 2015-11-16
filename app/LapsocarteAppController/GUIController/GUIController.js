@@ -13,17 +13,17 @@ import L from'leaflet'
 // ------------------------------------------------------------------------
 // CONSTANTS
 // ------------------------------------------------------------------------
-const INSTANCE      = glbs.DATA_CONSTANTS.LPC_INSTANCE_STATE.INSTANCE,
+const INSTANCE      = glbs.DATA_KEYs.LPC_INSTANCE_STATE.INSTANCE,
 
-      CURRENT_HOW   = glbs.DATA_CONSTANTS.LPC_INSTANCE_STATE.CURRENT_HOW,
-      CURRENT_WHAT  = glbs.DATA_CONSTANTS.LPC_INSTANCE_STATE.CURRENT_WHAT,
-      CURRENT_WHEN  = glbs.DATA_CONSTANTS.LPC_INSTANCE_STATE.CURRENT_WHEN,
+      CURRENT_HOW   = glbs.DATA_KEYs.LPC_INSTANCE_STATE.CURRENT_HOW,
+      CURRENT_WHAT  = glbs.DATA_KEYs.LPC_INSTANCE_STATE.CURRENT_WHAT,
+      CURRENT_WHEN  = glbs.DATA_KEYs.LPC_INSTANCE_STATE.CURRENT_WHEN,
 
-      DATA_MAP      = glbs.DATA_CONSTANTS.LPC_INSTANCE_STATE.DATA_MAP,
-      WHAT_STATS    = glbs.DATA_CONSTANTS.LPC_INSTANCE_STATE.WHAT_STATS,
-      WHEN_STATS    = glbs.DATA_CONSTANTS.LPC_INSTANCE_STATE.WHEN_STATS,
+      DATA_MAP      = glbs.DATA_KEYs.LPC_INSTANCE_STATE.DATA_MAP,
+      WHAT_STATS    = glbs.DATA_KEYs.LPC_INSTANCE_STATE.WHAT_STATS,
+      WHEN_STATS    = glbs.DATA_KEYs.LPC_INSTANCE_STATE.WHEN_STATS,
 
-      LEAFLET_MAP   = glbs.DATA_CONSTANTS.LPC_INSTANCE_STATE.LEAFLET_MAP;
+      LEAFLET_MAP   = glbs.DATA_KEYs.LPC_INSTANCE_STATE.LEAFLET_MAP;
 
 // ------------------------------------------------------------------------
 // CONTROLLERS
@@ -54,7 +54,7 @@ export default class GUIController {
 
             instance = {};
             instance[INSTANCE] = this;
-            const INSTANCE_KEY = glbs.DATA_CONSTANTS.LPC_INSTANCE_KEY;
+            const INSTANCE_KEY = glbs.DATA_KEYs.LPC_INSTANCE_KEY;
             glbs.PROJECT[INSTANCE_KEY] = instance;
 
             _leafletController    = new LeafletController();    _notReady++;
@@ -76,7 +76,7 @@ export default class GUIController {
     }
 
     mc_loadGeometries() {
-        geometriesMap = glbs.PROJECT[glbs.DATA_CONSTANTS.WHEREs_MAP];
+        geometriesMap = glbs.PROJECT[glbs.DATA_KEYs.WHEREs_MAP];
         _leafletController.mc_loadGeometries();
     }
 
@@ -87,7 +87,7 @@ export default class GUIController {
         instance[DATA_MAP] = null;
 
         _domController.mc_setHows(Array.from(
-            glbs.PROJECT[glbs.DATA_CONSTANTS.DATA_MAP]
+            glbs.PROJECT[glbs.DATA_KEYs.DATA_MAP]
                 .keys()
         ));
     }
@@ -108,7 +108,7 @@ export default class GUIController {
         instance[WHEN_STATS] = null;
 
         _domController.mc_setWhats(Array.from(
-            glbs.PROJECT[glbs.DATA_CONSTANTS.DATA_MAP]
+            glbs.PROJECT[glbs.DATA_KEYs.DATA_MAP]
                 .get(instance[CURRENT_HOW])
                 .keys()
         ));
@@ -122,7 +122,7 @@ export default class GUIController {
         instance[DATA_MAP] = null;
 
         instance[WHAT_STATS] =
-            glbs.PROJECT[glbs.DATA_CONSTANTS.DESCRIPTIVE_STATS]
+            glbs.PROJECT[glbs.DATA_KEYs.DESCRIPTIVE_STATS]
                 .get(instance[CURRENT_HOW])
                 .get(instance[CURRENT_WHAT]);
         instance[WHEN_STATS] = null;
@@ -130,13 +130,13 @@ export default class GUIController {
         this.choropleth = new support.Choropleth(
             glbs.PROJECT.CHOROPLETH_RANGE,
             [
-                instance[WHAT_STATS].get(glbs.DATA_CONSTANTS.DS_MIN),
-                instance[WHAT_STATS].get(glbs.DATA_CONSTANTS.DS_MAX)
+                instance[WHAT_STATS].get(glbs.DATA_KEYs.DS_MIN),
+                instance[WHAT_STATS].get(glbs.DATA_KEYs.DS_MAX)
             ]
         );
 
         _sliderController.mc_update(Array.from(
-            glbs.PROJECT[glbs.DATA_CONSTANTS.DATA_MAP]
+            glbs.PROJECT[glbs.DATA_KEYs.DATA_MAP]
                 .get(instance[CURRENT_HOW])
                 .get(instance[CURRENT_WHAT])
                 .keys()
@@ -153,7 +153,7 @@ export default class GUIController {
                 .get(instance[CURRENT_WHEN]);
 
         instance[DATA_MAP] =
-            glbs.PROJECT[glbs.DATA_CONSTANTS.DATA_MAP]
+            glbs.PROJECT[glbs.DATA_KEYs.DATA_MAP]
                 .get(instance[CURRENT_HOW])
                 .get(instance[CURRENT_WHAT])
                 .get(instance[CURRENT_WHEN]);

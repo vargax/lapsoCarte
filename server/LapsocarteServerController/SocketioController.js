@@ -1,12 +1,30 @@
 import MainController from './LapsocarteServerController.js'
 import * as glbs from '../../Globals.js'
 
+// ------------------------------------------------------------------------
+// CONSTANTS
+// ------------------------------------------------------------------------
+const INIT       = glbs.SOCKETio_CONSTANTS.INIT,
+      GIVE_DATA  = glbs.SOCKETio_CONSTANTS.GIVE_DATA,
+      GIVE_GEOM  = glbs.SOCKETio_CONSTANTS.GIVE_GEOM,
+      GIVE_STATS = glbs.SOCKETio_CONSTANTS.GIVE_STATS;
+
 const logString = 'socketioController';
 const logOK  = ' :: ';
 
-let _clients;
+// ------------------------------------------------------------------------
+// CONTROLLERS
+// ------------------------------------------------------------------------
 let _mainController;
 
+// ------------------------------------------------------------------------
+// VARIABLES
+// ------------------------------------------------------------------------
+let _clients;
+
+// ------------------------------------------------------------------------
+// CLASSES
+// ------------------------------------------------------------------------
 export default class SocketioController {
     constructor() {
         _mainController = new MainController();
@@ -21,17 +39,17 @@ export default class SocketioController {
 
     mc_sendGeometries(socketId, map) {
         let client = _clients.get(socketId);
-        client.emit(glbs.GIVE_GEOM,this._map2JSON(map));
+        client.emit(GIVE_GEOM,this._map2JSON(map));
     }
 
     mc_sendData(socketId, map) {
         let client = _clients.get(socketId);
-        client.emit(glbs.GIVE_DATA,this._map2JSON(map));
+        client.emit(GIVE_DATA,this._map2JSON(map));
     }
 
     mc_sendStats(socketId, map) {
         let client = _clients.get(socketId);
-        client.emit(glbs.GIVE_STATS,this._map2JSON(map));
+        client.emit(GIVE_STATS,this._map2JSON(map));
     }
 
     _map2JSON(map) {
@@ -53,8 +71,8 @@ export default class SocketioController {
             });
 
             // App specific methods:
-            socket.on(glbs.INIT, function(msg) {
-                console.log('| --> Receiving a '+glbs.INIT+' request...');
+            socket.on(INIT, function(msg) {
+                console.log('| --> Receiving a '+INIT+' request...');
                 _mainController.sc_init(socket.id);
             });
         });

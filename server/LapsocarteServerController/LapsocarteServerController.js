@@ -7,9 +7,9 @@ import * as glbs from '../../Globals.js'
 // ------------------------------------------------------------------------
 // CONSTANTS
 // ------------------------------------------------------------------------
-const WHEREs_MAP =   glbs.DATA_CONSTANTS.WHEREs_MAP;
-const DATA_MAP = glbs.DATA_CONSTANTS.DATA_MAP;
-const DESC_STATS = glbs.DATA_CONSTANTS.DESCRIPTIVE_STATS;
+const WHEREs_MAP =   glbs.DATA_KEYs.WHEREs_MAP;
+const DATA_MAP = glbs.DATA_KEYs.DATA_MAP;
+const DESC_STATS = glbs.DATA_KEYs.DESCRIPTIVE_STATS;
 
 // ------------------------------------------------------------------------
 // CONTROLLERS

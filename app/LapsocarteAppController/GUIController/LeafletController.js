@@ -8,10 +8,10 @@ require('leaflet-providers');
 // ------------------------------------------------------------------------
 // CONSTANTS
 // ------------------------------------------------------------------------
-const INSTANCE_KEY = glbs.DATA_CONSTANTS.LPC_INSTANCE_KEY;
-const INSTANCE_STATE = glbs.DATA_CONSTANTS.LPC_INSTANCE_STATE;
+const INSTANCE_KEY = glbs.DATA_KEYs.LPC_INSTANCE_KEY;
+const INSTANCE_STATE = glbs.DATA_KEYs.LPC_INSTANCE_STATE;
 
-const GEOM_MAP = glbs.DATA_CONSTANTS.WHEREs_MAP;
+const GEOM_MAP = glbs.DATA_KEYs.WHEREs_MAP;
 
 const MAP_CENTER = glbs.PROJECT.MAP_CENTER;
 const MAP_ZOOM = glbs.PROJECT.MAP_ZOOM;

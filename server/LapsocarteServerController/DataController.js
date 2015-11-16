@@ -6,9 +6,9 @@ import util from 'util'
 // ------------------------------------------------------------------------
 // CONSTANTS
 // ------------------------------------------------------------------------
-const WHEREs_MAP =   glbs.DATA_CONSTANTS.WHEREs_MAP;
-const DATA_MAP = glbs.DATA_CONSTANTS.DATA_MAP;
-const DESC_STATS = glbs.DATA_CONSTANTS.DESCRIPTIVE_STATS;
+const WHEREs_MAP =   glbs.DATA_KEYs.WHEREs_MAP;
+const DATA_MAP = glbs.DATA_KEYs.DATA_MAP;
+const DESC_STATS = glbs.DATA_KEYs.DESCRIPTIVE_STATS;
 
 const WHEREs_READY     = 'WHEREs_READY';
 const DATA_READY       = 'DATA_READY';
@@ -102,11 +102,11 @@ export default class DataController{
     }
 
     _genDescriptiveStats() {
-        const   DS_MIN            = glbs.DATA_CONSTANTS.DS_MIN,
-                DS_MAX            = glbs.DATA_CONSTANTS.DS_MAX,
-                DS_MEAN           = glbs.DATA_CONSTANTS.DS_MEAN,
-                DS_KEYS_VECTOR   = glbs.DATA_CONSTANTS.DS_KEYS_VECTOR,
-                DS_DATA_VECTOR    = glbs.DATA_CONSTANTS.DS_DATA_VECTOR;
+        const   DS_MIN            = glbs.DATA_KEYs.DS_MIN,
+                DS_MAX            = glbs.DATA_KEYs.DS_MAX,
+                DS_MEAN           = glbs.DATA_KEYs.DS_MEAN,
+                DS_KEYS_VECTOR   = glbs.DATA_KEYs.DS_KEYS_VECTOR,
+                DS_DATA_VECTOR    = glbs.DATA_KEYs.DS_DATA_VECTOR;
 
         let dataMap = glbs.PROJECT[DATA_MAP];
         //  |-> How -> What -> When -> Where -> Data

@@ -117,17 +117,9 @@ function range(begin, end, step = 1) {
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
-// Server-Client socket CONSTANTS (sck)
-// ---------------------------------------------------------------------------------------------------------------------
-export const INIT = 'init';
-export const GIVE_DATA = 'give_data';
-export const GIVE_GEOM = 'give_geom';
-export const GIVE_STATS = 'give_stats';
-
-// ---------------------------------------------------------------------------------------------------------------------
 // Objects Name Constants
 // ---------------------------------------------------------------------------------------------------------------------
-export const DATA_CONSTANTS = {
+export const DATA_KEYs = {
     /*
      Geometries map:
      |-> key: COLUMN_WHERE
@@ -185,4 +177,14 @@ export const DATA_CONSTANTS = {
 
         LEAFLET_MAP: 'lpc_LEAFLET_MAP'             // Leaflet MAP object
     }
+};
+
+// ---------------------------------------------------------------------------------------------------------------------
+// Server-Client socket CONSTANTS (sck)
+// ---------------------------------------------------------------------------------------------------------------------
+export const SOCKETio_CONSTANTS = {
+    INIT: 'init',
+    GIVE_DATA:  'give_data',
+    GIVE_GEOM:  'give_geom',
+    GIVE_STATS: 'give_stats'
 };

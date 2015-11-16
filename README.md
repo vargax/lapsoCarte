@@ -3,30 +3,41 @@
 LapsoCarte is a web-based visual tool to interact with time-space referenced data.
 
 The backend is based on:
-- **PostGIS** as a database engine.
-- **NodeJS 0.12** as a server-side platform.
+- [**PostGIS**](http://postgis.net/) as a database engine.
+- [**NodeJS 0.12**](https://nodejs.org/en/) as a server-side platform.
+  - [Express](http://expressjs.com/) as a web framework.
+  - [Socket.oi](http://socket.io/) to manage socket communications.
 - [GeoTabulaDB](https://github.com/tabulaco/geotabuladb) between NodeJS and PostGIS.
+- [jStat](https://github.com/jstat/jstat) to calculate descriptive statistics.
 
 The frontend is based on:
-- **jQuery**
-- **LeafletJS**
-- [noUiSlider](http://refreshless.com/nouislider/)
-- jQuery-ui
-- Handlebars
+- [**LeafletJS**](http://leafletjs.com/) to represent the WHEREs (spatial dimension).
+- [**noUiSlider**](http://refreshless.com/nouislider/) to represent the WHENs (temporal dimension).
+- [jQuery](https://jquery.com/) to handle web browser events.
+- [Less](http://lesscss.org/) to compile the CSS stylesheets.
+- [Handlebars](http://handlebarsjs.com/) to manage HTML templates.
 
-Most of LapsoCarte code is written in **ECMAScript 6** and uses **Babel** for backward compatibility.
+Most of LapsoCarte code is written in **ECMAScript 6** and uses [**Babel**](https://babeljs.io/) for backward compatibility.
 
 ## Code Patterns
 - [EAFP](https://docs.python.org/2/glossary.html#term-eafp): Easier to ask for forgiveness than permission.
 - [Mediator Pattern](http://addyosmani.com/largescalejavascript/): Each submodule has its own mediator, who manages all interaction between all its decedent modules and its own main module. Each mediator **must initialize all his decedent modules and save a reference to them**, otherwise the submodule will be destroyed along with its state.
- - The client-side main mediator is [app.js](app/app.js).
- - The server-side main mediator is [index.js](server/index.js).
+  - The client-side main mediator is [app.js](app/app.js).
+  - The server-side main mediator is [index.js](server/index.js).
+- All App and Server shared constants and variables are in [Globals.js](Globals.js)
+  - **PROJECT constant**: This JavaScript object is a single point who holds all the project specific parameters such as:
+    - Database credentials, tables and columns names.
+    - WHERE dimension representation setup.
+    - *Leaflet* map configuration.
+    - **Instance object**: This is a *run time* object who holds the state of the displayed instance, including the current (HOW, WHAT, WHEN) tuple, the DATA_MAP and the relevant descriptive statistics.
 
 ## Architecture
+- Red modules are mediators.
+- Yellow-border modules access elements in Globals.js.
+- Green modules provides task specific classes (reusable code).
+- Aqua modules are small embedded modules (code is in it's parent module).
+- Yellow objects are the JavaScript objects in Globals.js.
 ![Architecture](doc/arch.png)
-- Module mediators are in red.
-- First request (client-side) information flow is represented by black arrows.
-- User interaction with the slider is represented by green arrows.
 
 ## Workspace Setup (Ubuntu 14.04)
 ### Packages Installation
