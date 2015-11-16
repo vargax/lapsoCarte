@@ -167,7 +167,7 @@ export default class GUIController {
 
         _leafletController.mc_colorGeometry(gid, color);
 
-        let info = geometriesMap.get(gid)['properties'];
+        let info = Object.assign({}, geometriesMap.get(gid)['properties']);
         if(instance[DATA_MAP]) {
             info[glbs.PROJECT.COLUMN_WHEN] = instance[CURRENT_WHEN];
             info[instance[CURRENT_WHAT]]   = instance[DATA_MAP].get(gid);
