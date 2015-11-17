@@ -88,7 +88,7 @@ let mars = {
     TABLE_GEOM: 'shape',
     COLUMN_GEOM: 'geom',
 
-    TIME_RANGE: [0,2,6,7,10].concat(range(11,30)),
+    TIME_RANGE: range(0,30),
 
     MAP_CENTER: [4.66198, -74.09866],
     MAP_ZOOM: 11,
