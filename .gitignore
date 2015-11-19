@@ -1,5 +1,5 @@
 
-data/ignore
+drivers/mars/data
 app/public/bundle.js
 app/public/app.css
 

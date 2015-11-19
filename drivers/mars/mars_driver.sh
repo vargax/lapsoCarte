@@ -1,9 +1,9 @@
 #!/bin/bash
 rm -r /tmp/mars
-cd ../../data/ignore/mars
+cd data
 unzip Shape.zip -d /tmp/mars
 
-python ../../../drivers/mars/csv_parser.py
+python ../csv_parser.py
 mv mars.sql /tmp/mars/.
 
 cd /tmp/mars

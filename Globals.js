@@ -4,86 +4,15 @@
 
 // DEMO ----------------------------------------------------------------------------------------------------------------
 let demo = {
-    PROJECT: 'lapsocarte',
+    PROJECT: 'demo',
 
-    /* server/LapsocarteServerController/DatabaseController.js */
-    COLUMN_GID: 'gid',
-    TABLE_GEOM: 'barrios_catastrales_wgs84',
-    COLUMN_GEOM: 'geom',
-    TABLE_DATA: 'population',
-    COLUMN_NAME: 'nomb_barr',
-    COLUMN_DATA: 'population',
-    COLUMN_TIME: 't',
-    TIME_RANGE: [1,2,3,4,5,6,7,8,9,10],
+    TABLE_DATA: 'demo',
 
-    /* app/LapsocarteAppController/GUIController/LeafletController.js */
-    MAP_CENTER: [4.66198, -74.09866],
-    MAP_ZOOM: 11,
-    MAP_ZOOM_RANGE: [10, 16],
-    LAYER_PROVIDER: 'Esri.WorldGrayCanvas',
-
-    /* app/LapsocarteAppController/GUIController/LeafletController.js */
-    DEFAULT_STYLE: {color: 'blue', weight: 1.2},
-    FOCUSED_COLOR: '#0000FF',
-    /* app/LapsocarteAppController/GUIController/GUIController.js */
-    FUNC_DATA2COLOR: function (d) {
-        // To get the color of each COLUMN_GEOM in function of COLUMN_WHAT
-        return  d > 8000 ? '#800026' :
-                d > 7000 ? '#BD0026' :
-                d > 6000 ? '#E31A1C' :
-                d > 5000 ? '#FC4E2A' :
-                d > 4000 ? '#FD8D3C' :
-                d > 3000 ? '#FEB24C' :
-                d > 2000 ? '#FED976' : '#FFEDA0';
-    }
-};
-demo.DB_USER = demo.PROJECT;
-demo.DB_PASS = demo.PROJECT;
-demo.DB_NAME = demo.PROJECT;
-
-// Project TOMSA -------------------------------------------------------------------------------------------------------
-let tomsa = {
-    PROJECT: 'tomsa',
-
-    COLUMN_GID: 'gid',
-    TABLE_GEOM: 'manzanas',
-    COLUMN_GEOM: 'geom',
-    TABLE_DATA: 'schelling',
-    COLUMN_NAME: 'gid',
-    COLUMN_DATA: 'currentpop',
-    COLUMN_TIME: 't',
-    TIME_RANGE: range(0,30),
-    //TIME_RANGE: [0],
-
-    MAP_CENTER: [4.66198, -74.09866],
-    MAP_ZOOM: 11,
-    MAP_ZOOM_RANGE: [10, 16],
-    LAYER_PROVIDER: 'Esri.WorldGrayCanvas',
-
-    DEFAULT_STYLE: {color: 'blue', weight: 1.2},
-    FOCUSED_COLOR: 'green',
-    FUNC_DATA2COLOR: function (d) {
-        return  d == 0 ? 'gray'  :
-                d == 1 ? 'red'   :
-                d == 2 ? 'blue'  :
-                d == 3 ? 'yellow': 'black';
-    }
-};
-tomsa.DB_USER = tomsa.PROJECT;
-tomsa.DB_PASS = tomsa.PROJECT;
-tomsa.DB_NAME = tomsa.PROJECT;
-
-// Project MARS --------------------------------------------------------------------------------------------------------
-let mars = {
-    PROJECT: 'mars',
-
-    TABLE_DATA: 'mars',
-
-    COLUMN_HOW: 'type',
-    COLUMN_WHAT: 'name',
-    COLUMN_WHEN: 't',
-    COLUMN_WHERE: 'gid',
-    COLUMN_DATA: 'data',
+    COLUMN_HOW: 'how_column',
+    COLUMN_WHAT: 'what_column',
+    COLUMN_WHEN: 'when_column',
+    COLUMN_WHERE: 'where_column',
+    COLUMN_DATA: 'data_column',
 
     TABLE_GEOM: 'shape',
     COLUMN_GEOM: 'geom',
@@ -95,15 +24,16 @@ let mars = {
     MAP_ZOOM_RANGE: [10, 16],
     LAYER_PROVIDER: 'Esri.WorldGrayCanvas',
 
-    DEFAULT_STYLE: {color: 'blue', weight: 1.2},
-    FOCUSED_COLOR: 'green',
-    CHOROPLETH_RANGE: ['#FFEDA0', '#800026']
-};
-mars.DB_USER = mars.PROJECT;
-mars.DB_PASS = mars.PROJECT;
-mars.DB_NAME = mars.PROJECT;
+    DEFAULT_STYLE: {color: '#6baed6', fillOpacity: 0.8, weight: 1.2},
+    FOCUSED_COLOR: '#74c476',
+    CHOROPLETH_RANGE: ['#FFFFCC', '#800026']
 
-export const PROJECT = mars;
+};
+demo.DB_USER = demo.PROJECT;
+demo.DB_PASS = demo.PROJECT;
+demo.DB_NAME = demo.PROJECT;
+
+export const PROJECT = demo;
 
 // ---------------------------------------------------------------------------------------------------------------------
 // Utility Functions
@@ -111,7 +41,7 @@ export const PROJECT = mars;
 function range(begin, end, step = 1) {
     let result = [];
     for (let i = begin; i <= end; i+= step)
-        result.push(i)
+        result.push(i);
 
     return result;
 }
