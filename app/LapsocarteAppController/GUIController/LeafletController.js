@@ -62,7 +62,7 @@ export default class LeafletController {
         map.addControl(L.control.scale({imperial: false, position: 'bottomleft'}));
         map.addControl(L.control.zoom({position: 'bottomright'}));
 
-        map.addControl(support.Widgets.getLocateWidget());
+        //map.addControl(support.Widgets.getLocateWidget());
 
         glbs.PROJECT[INSTANCE_KEY][INSTANCE_STATE.LEAFLET_MAP] = map;
     }
