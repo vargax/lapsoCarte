@@ -17,7 +17,7 @@ let demo = {
     TABLE_GEOM: 'shape',
     COLUMN_GEOM: 'geom',
 
-    TIME_RANGE: range(0,30),
+    TIME_RANGE: range(0,5).concat(range(10,20,1)).concat(range(21,30,3)),
 
     MAP_CENTER: [4.66198, -74.09866],
     MAP_ZOOM: 11,
