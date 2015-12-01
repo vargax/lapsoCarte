@@ -17,10 +17,10 @@ The frontend is based on:
 - [Less](http://lesscss.org/) to compile the CSS stylesheets.
 - [Handlebars](http://handlebarsjs.com/) to manage HTML templates.
 
-LapsoCarte code is written in **ECMAScript 6** and uses [**Babel**](https://babeljs.io/) for backward compatibility. Read more about *LapsoCarte* project on the [wiki](wiki).
+*LapsoCarte* code is written in **ECMAScript 6** and uses [**Babel**](https://babeljs.io/) for backward compatibility.
 
 ## Dimensions
-Data is stored, indexed, retrieved and explored in a generic four dimensional schema:
+Data is stored, indexed, retrieved and explored in a generic [four dimensional schema](https://github.com/vargax/lapsocarte/wiki/LapsoCarte#dimensions):
 
 - **How**: Main grouping level to differentiate between data types or alternatives. *Hows* are represented as strings.
 - **What**: Secondary grouping level to differentiate between data sets. *Whats* are represented as strings.
@@ -28,17 +28,17 @@ Data is stored, indexed, retrieved and explored in a generic four dimensional sc
 - **Where**: Spatial dimension. *Wheres* are geometries represented as points, lines, polylines or polygons.
 
 ### Drivers
-A *driver* is the bridge between data producers and the data structure *LapsoCarte* relies on. *LapsoCarte* uses a data level integration strategy to deal with different data sources.
-
-*Drivers* are essentially a set of *parsers* and *bash scripts* who systematically take a given data output and populate the *LapsoCarte's* data structure. Most drivers are a problem specific implementations and are strongly linked with the source system output.
+A *driver* is the bridge between data producers and the data structure *LapsoCarte* relies on. *LapsoCarte* uses a [data level integration strategy](https://github.com/vargax/lapsocarte/wiki/LapsoCarte#drivers) to deal with different data sources.
 
 ## Client and Server Logic
-The back-end retrieves data and compute descriptive statistics from a Postgres database. The server logic depends on a given database structure of two tables:
+The back-end retrieves data and compute descriptive statistics from a Postgres database. The server logic depends on a [given database structure](https://github.com/vargax/lapsocarte/wiki/LapsoCarte#server-side-data-model) of two tables:
  - **Main data table**: This table has five columns, one for each dimension plus the data itself. The primary key is a compound key of the four dimensions.
  - **Geometries table**: This table is used to normalize the geometries data.
 
-The front-end provides an intuitive interface to explore data through a slider for the *when* or temporal dimension and a map for the *where* or spatial dimension. In the front-end data exploration follows an hierarchical structure: *How*, *What*, *When*, *Where*.
+The front-end provides an [intuitive interface](https://github.com/vargax/lapsocarte/wiki/LapsoCarte#graphical-interface) to explore data through a slider for the *when* or temporal dimension and a map for the *where* or spatial dimension. In the front-end data exploration follows an hierarchical structure: *How*, *What*, *When*, *Where*.
 ![screenshot](doc/proto.png)
+
+Full application's [architecture](https://github.com/vargax/lapsocarte/wiki/LapsoCarte#architecture) and [implementation](https://github.com/vargax/lapsocarte/wiki/LapsoCarte#putting-it-all-together) details are available on project's [wiki](https://github.com/vargax/lapsocarte/wiki).
 
 # Workspace Setup (Ubuntu 14.04)
 ## Packages Installation
@@ -92,6 +92,8 @@ The [Globals.js](Globals.js) define a JavaScript object with all the required pa
   node bootstrap.js
   ```
 
+Read more about Globals [here](https://github.com/vargax/lapsocarte/wiki/LapsoCarte#shared-global-objects).
+
 # App Execution
 ## Sample data load
 ```bash
@@ -106,5 +108,3 @@ npm run build
 # Server run
 node bootstrap.js
 ```
-# Screenshot
-
