@@ -1,7 +1,7 @@
 #!/bin/bash
-rm -r /tmp/mars
+rm -r /tmp/lapsocarte/vensim
 cd data
-unzip Shape.zip -d /tmp/mars
+unzip Shape.zip -d /tmp/lapsocarte/vensim
 
 python ../csv_parser.py
 mv mars.sql /tmp/mars/.

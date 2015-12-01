@@ -2,6 +2,7 @@
 import os
 
 INPUT_FILE = 'data.csv'
+OUTPUT_FILE = 'vensim.sql'
 
 NAME, COLUMNS, FUNCTION, DATA_STRUCTURE = 'name', 'columns', 'function', 'data_structure'
 # ----------------------------------------------------------------------------------------------------------------------
@@ -122,11 +123,11 @@ for line in input_file:
             break
 
 try:
-    os.remove('mars.sql')
+    os.remove(OUTPUT_FILE)
 except OSError:
     pass
 
-sql = open('mars.sql', 'w')
+sql = open(OUTPUT_FILE, 'w')
 
 sql.write('DROP TABLE IF EXISTS mars;\n')
 sql.write('CREATE TABLE mars(type TEXT, t INT, gid INT, name TEXT, data FLOAT);\n')
