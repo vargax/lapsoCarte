@@ -27,8 +27,7 @@ Data is stored, indexed, retrieved and explored in a generic [four dimensional s
 - **When**: Temporal dimension. *Whens* are enumerable and sortable elements, represented as integers.
 - **Where**: Spatial dimension. *Wheres* are geometries represented as points, lines, polylines or polygons.
 
-### Drivers
-A *driver* is the bridge between data producers and the data structure *LapsoCarte* relies on. *LapsoCarte* uses a [data level integration strategy](https://github.com/vargax/lapsocarte/wiki/LapsoCarte#drivers) to deal with different data sources.
+A *driver* is the bridge between data producers and the dimension based structure *LapsoCarte* relies on. *LapsoCarte* uses a [data level integration strategy](https://github.com/vargax/lapsocarte/wiki/LapsoCarte#drivers) to deal with different data sources.
 
 ## Client and Server Logic
 The back-end retrieves data and compute descriptive statistics from a Postgres database. The server logic depends on a [given database structure](https://github.com/vargax/lapsocarte/wiki/LapsoCarte#server-side-data-model) of two tables:
@@ -36,7 +35,6 @@ The back-end retrieves data and compute descriptive statistics from a Postgres d
  - **Geometries table**: This table is used to normalize the geometries data.
 
 The front-end provides an [intuitive interface](https://github.com/vargax/lapsocarte/wiki/LapsoCarte#graphical-interface) to explore data through a slider for the *when* or temporal dimension and a map for the *where* or spatial dimension. In the front-end data exploration follows an hierarchical structure: *How*, *What*, *When*, *Where*.
-![screenshot](doc/proto.png)
 
 Full application's [architecture](https://github.com/vargax/lapsocarte/wiki/LapsoCarte#architecture) and [implementation](https://github.com/vargax/lapsocarte/wiki/LapsoCarte#putting-it-all-together) details are available on project's [wiki](https://github.com/vargax/lapsocarte/wiki).
 
@@ -108,3 +106,7 @@ npm run build
 # Server run
 node bootstrap.js
 ```
+
+## Application screen shot
+
+![screenshot](doc/proto.png)
