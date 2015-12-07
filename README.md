@@ -42,7 +42,7 @@ Full application's [architecture](https://github.com/vargax/lapsocarte/wiki/Laps
 ## Packages Installation
 ```bash
 # Postgres
-sudo apt-get install postgresql postgresql-contrib postgresql-client pgadmin3
+sudo apt-get install postgresql postgresql-contrib postgresql-client
 sudo apt-get install postgis postgresql-9.3-postgis-scripts
 
 # Change postgres auth method
@@ -57,7 +57,7 @@ For details on how to install NodeJS 0.12 please refer to [NODESOURCE](https://n
 ## App setup and NPM dependencies
 ```bash
 cd pathToProjectRoot
-git clone https://github.com/vargax/lapsoCarte.git
+git clone https://github.com/vargax/lapsocarte.git
 cd lapsoCarte
 
 # Install npm modules
@@ -107,6 +107,6 @@ npm run build
 node bootstrap.js
 ```
 
-## Application screen shot
+## Screenshot
 
 ![screenshot](doc/proto.png)
