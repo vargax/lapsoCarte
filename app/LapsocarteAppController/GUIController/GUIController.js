@@ -69,6 +69,7 @@ export default class GUIController {
     mc_initGUI() {
         _leafletController.mc_initMap();
         let leafletMap = instance[LEAFLET_MAP];
+
         leafletMap.addControl(_infoWidgetController.mc_getLeafletControl());
 
         _domController.mc_initDOM();
@@ -127,6 +128,12 @@ export default class GUIController {
                 .get(instance[CURRENT_WHAT]);
         instance[WHEN_STATS] = null;
 
+        try {
+            (instance[LEAFLET_MAP]).removeControl(this.choropleth.getLegend());
+        } catch (e) {
+            console.log('First time WHAT change? '+ e.message);
+        }
+
         this.choropleth = new support.Choropleth(
             glbs.PROJECT.CHOROPLETH_RANGE,
             [
@@ -134,6 +141,9 @@ export default class GUIController {
                 instance[WHAT_STATS].get(glbs.DATA_KEYs.DS_MAX)
             ]
         );
+        (instance[LEAFLET_MAP]).addControl(this.choropleth.getLegend());
+
+        console.dir(instance[WHAT_STATS])
 
         _sliderController.mc_update(Array.from(
             glbs.PROJECT[glbs.DATA_KEYs.DATA_MAP]
@@ -146,20 +156,24 @@ export default class GUIController {
     }
 
     sc_whenChange(newWhen) {
-        instance[CURRENT_WHEN] = newWhen;
+        try {
+            instance[CURRENT_WHEN] = newWhen;
 
-        instance[WHEN_STATS] =
-            instance[WHAT_STATS]
-                .get(instance[CURRENT_WHEN]);
+            instance[WHEN_STATS] =
+                instance[WHAT_STATS]
+                    .get(instance[CURRENT_WHEN]);
 
-        instance[DATA_MAP] =
-            glbs.PROJECT[glbs.DATA_KEYs.DATA_MAP]
-                .get(instance[CURRENT_HOW])
-                .get(instance[CURRENT_WHAT])
-                .get(instance[CURRENT_WHEN]);
+            instance[DATA_MAP] =
+                glbs.PROJECT[glbs.DATA_KEYs.DATA_MAP]
+                    .get(instance[CURRENT_HOW])
+                    .get(instance[CURRENT_WHAT])
+                    .get(instance[CURRENT_WHEN]);
 
-        _infoWidgetController.mc_updateInfo();
-        this._resetAllGeometries();
+            _infoWidgetController.mc_updateInfo();
+            this._resetAllGeometries();
+        } catch (e) {
+            console.log('Is LapsoCarte loading? :: '+e.message);
+        }
     }
 
     sc_spatialObjectOver(gid) {

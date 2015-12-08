@@ -1,3 +1,5 @@
+import * as support from './Support.js'
+
 import MainController from './GUIController.js'
 import L from'leaflet'
 
@@ -19,14 +21,7 @@ export default class InfoWidgetController {
     }
 
     mc_updateInfo(data) {
-        let html = '<h4> Data </h4>';
-        if (data !== undefined) {
-            // ToDo :: Put this HTML in another place...
-            for (let item in data) {
-                html += '<b>' + item + '</b> ' + data[item] + '</b> <br />';
-            }
-        }
-        leafletControl._div.innerHTML = html;
+        leafletControl._div.innerHTML = support.HandlebarsHelper.compileInfoWidget(data);
     }
 
     mc_getLeafletControl() {

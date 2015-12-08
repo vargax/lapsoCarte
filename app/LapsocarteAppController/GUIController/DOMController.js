@@ -28,6 +28,7 @@ export default class DOMController {
                 mainController.sc_whatChange(newWhat);
             }
         }, 'select');
+        _mainController.sc_ready(this);
     }
 
     mc_setHows(howsArray) {

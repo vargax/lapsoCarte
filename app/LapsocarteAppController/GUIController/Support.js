@@ -5,7 +5,9 @@ import math from 'mathjs'
 
 // Templates to load: Once loaded the value becomes the handlebars compiled template!
 const templates = {
-    select: 'select.hbs'
+    select: 'select.hbs',
+    info_widget: 'info_widget.hbs',
+    map_legend: 'map_legend.hbs'
 };
 
 export const DOM_CONSTANTS = {
@@ -23,6 +25,18 @@ export class HandlebarsHelper {
             context.option.push({value: option});
 
         return templates.select(context);
+    }
+
+    static compileLegend(values) {
+        let context = {};
+        context.range = values;
+        return templates.map_legend(context);
+    }
+
+    static compileInfoWidget(data) {
+        let context = {};
+        context.data = data;
+        return templates.info_widget(context);
     }
 
     static loadTemplates() {
@@ -45,6 +59,32 @@ export class Choropleth {
 
         this.rgbMin = rgbMin;
         this.rgbDelta = rgbDelta;
+
+        this._genLegend();
+    }
+
+    _genLegend() {
+        let min = this.min,
+            delta = this.delta;
+
+        let colormap = [];
+        for (let i = 1; i >= 0; i -= 0.2) {
+            let value = min + i*delta,
+                color = this.giveColor(value);
+
+            value = value.toString().split('.');
+            let int = value[0],
+                frac = value[1];
+
+            value = int.length >= 3 ? int : int+'.'+frac.substring(0,1);
+
+            colormap.push({
+                value: value,
+                color: color
+            });
+        }
+
+        this.legend = Widgets.getLegendWidget(colormap);
     }
 
     giveColor(rawData) {
@@ -57,6 +97,10 @@ export class Choropleth {
         return Choropleth.array2hexString(segment);
     }
 
+    getLegend() {
+        return this.legend;
+    }
+
     static hexString2array(rgbString) {
         let red   = Number.parseInt(rgbString.slice(1,3), 16),
             green = Number.parseInt(rgbString.slice(3,5), 16),
@@ -66,10 +110,14 @@ export class Choropleth {
     }
 
     static array2hexString(array) {
+        let r = (Math.round(array[0])).toString(16),
+            g = (Math.round(array[1])).toString(16),
+            b = (Math.round(array[2])).toString(16);
+
         return '#'
-            + (Math.round(array[0])).toString(16)
-            + (Math.round(array[1])).toString(16)
-            + (Math.round(array[2])).toString(16);
+            + (r.length == 1 ? '0'+r : r)
+            + (g.length == 1 ? '0'+g : g)
+            + (b.length == 1 ? '0'+b : b);
     }
 }
 
@@ -77,7 +125,7 @@ export class Widgets {
     static getLocateWidget() {
         require('leaflet.locatecontrol');
         let locateControl = L.control.locate({
-            position: "bottomright",
+            position: "topleft",
             drawCircle: true,
             follow: true,
             setView: true,
@@ -107,5 +155,20 @@ export class Widgets {
             }
         });
         return locateControl;
+    }
+
+    static getLegendWidget(colormap) {
+        let legend = new L.control();
+
+        legend.setPosition('bottomright');
+        legend.onAdd = function(map) {
+            this._div = L.DomUtil.create('div', 'info legend');
+            this._div.innerHTML = HandlebarsHelper.compileLegend(colormap);
+            this.update();
+            return this._div;
+        };
+        legend.update = function(){};
+
+        return legend;
     }
 }

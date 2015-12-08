@@ -60,9 +60,9 @@ export default class LeafletController {
         map._layersMaxZoom = MAP_ZOOM_RANGE[1];
 
         map.addControl(L.control.scale({imperial: false, position: 'bottomleft'}));
-        map.addControl(L.control.zoom({position: 'bottomright'}));
+        map.addControl(L.control.zoom({position: 'topleft'}));
 
-        //map.addControl(support.Widgets.getLocateWidget());
+        map.addControl(support.Widgets.getLocateWidget());
 
         glbs.PROJECT[INSTANCE_KEY][INSTANCE_STATE.LEAFLET_MAP] = map;
     }
