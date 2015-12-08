@@ -1,3 +1,5 @@
+import * as glbs from '../../Globals.js'
+
 import MainController from './LapsocarteServerController.js'
 
 let _mainController;
@@ -22,8 +24,8 @@ export default class ExpressController {
         _app.get('/', function(req, res) {
             res.sendFile(PathHelper.relativeToAbsolute('../../app/index.html'));
         });
-        _server.listen(8080, function() {
-            console.log('ExpressController.init() :: Server listening on port 8080');
+        _server.listen(glbs.PROJECT.PORT, function() {
+            console.log('ExpressController.init() :: Server listening on port '+glbs.PROJECT.PORT);
         });
 
         _mainController.sc_ready(this);
