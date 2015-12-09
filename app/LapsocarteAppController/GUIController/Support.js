@@ -1,7 +1,13 @@
+import * as glbs from './../../../Globals.js'
+
 import L from'leaflet';
 import $ from 'jquery';
 import Handlebars from 'handlebars'
 import math from 'mathjs'
+
+const INSTANCE_KEY = glbs.DATA_KEYs.LPC_INSTANCE_KEY,
+      CURRENT_HOW   = glbs.DATA_KEYs.LPC_INSTANCE_STATE.CURRENT_HOW,
+      CURRENT_WHAT  = glbs.DATA_KEYs.LPC_INSTANCE_STATE.CURRENT_WHAT;
 
 // Templates to load: Once loaded the value becomes the handlebars compiled template!
 const templates = {
@@ -28,8 +34,13 @@ export class HandlebarsHelper {
     }
 
     static compileLegend(values) {
+        let instance = glbs.PROJECT[INSTANCE_KEY];
         let context = {};
+
+        context.current_how = instance[CURRENT_HOW];
+        context.current_what = instance[CURRENT_WHAT];
         context.range = values;
+
         return templates.map_legend(context);
     }
 
@@ -76,7 +87,7 @@ export class Choropleth {
             let int = value[0],
                 frac = value[1];
 
-            value = int.length >= 3 ? int : int+'.'+frac.substring(0,1);
+            value = frac == undefined || int.length >= 3 ? int : int+'.'+frac.substring(0,1);
 
             colormap.push({
                 value: value,

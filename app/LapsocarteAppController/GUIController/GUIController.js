@@ -114,6 +114,7 @@ export default class GUIController {
                 .keys()
         ));
 
+        this._removeLegend();
         this._resetAllGeometries();
     }
 
@@ -128,12 +129,7 @@ export default class GUIController {
                 .get(instance[CURRENT_WHAT]);
         instance[WHEN_STATS] = null;
 
-        try {
-            (instance[LEAFLET_MAP]).removeControl(this.choropleth.getLegend());
-        } catch (e) {
-            console.log('First time WHAT change? '+ e.message);
-        }
-
+        this._removeLegend();
         this.choropleth = new support.Choropleth(
             glbs.PROJECT.CHOROPLETH_RANGE,
             [
@@ -142,8 +138,6 @@ export default class GUIController {
             ]
         );
         (instance[LEAFLET_MAP]).addControl(this.choropleth.getLegend());
-
-        console.dir(instance[WHAT_STATS])
 
         _sliderController.mc_update(Array.from(
             glbs.PROJECT[glbs.DATA_KEYs.DATA_MAP]
@@ -251,6 +245,14 @@ export default class GUIController {
             console.log('GUIController._resetAllGeometries()!: Can not colorize ' +noData.length
                 +' geometries in '+currentTime+'!');
             console.dir(noData);
+        }
+    }
+
+    _removeLegend() {
+        try {
+            (instance[LEAFLET_MAP]).removeControl(this.choropleth.getLegend());
+        } catch (e) {
+            console.log('First time HOW change? '+ e.message);
         }
     }
 }
