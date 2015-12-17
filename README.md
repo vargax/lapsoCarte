@@ -38,10 +38,25 @@ The front-end provides an [intuitive interface](https://github.com/vargax/lapsoc
 
 Full application's [architecture](https://github.com/vargax/lapsocarte/wiki/LapsoCarte#architecture) and [implementation](https://github.com/vargax/lapsocarte/wiki/LapsoCarte#putting-it-all-together) details are available on project's [wiki](https://github.com/vargax/lapsocarte/wiki).
 
+## Globals
+The [Globals.js](Globals.js) define a JavaScript object with all the required parameters for a given project. It is possible to change between projects changing the `export const PROJECT` constant.
+You must recompile and rerun the application to see the changes:
+  ```bash
+  # Compile client-side libraries
+  npm run build
+  # Server run
+  node bootstrap.js
+  ```
+
+Read more about Globals [here](https://github.com/vargax/lapsocarte/wiki/LapsoCarte#shared-global-objects).
+
 # Workspace Setup (Ubuntu 14.04)
 ## Packages Installation
 ```bash
-# Postgres
+# NPM and drivers dependencies
+sudo apt-get install unzip build-essential
+
+# Postgres & PostGIS
 sudo apt-get install postgresql postgresql-contrib postgresql-client
 sudo apt-get install postgis postgresql-9.3-postgis-scripts
 
@@ -58,9 +73,10 @@ For details on how to install NodeJS 0.12 please refer to [NODESOURCE](https://n
 ```bash
 cd pathToProjectRoot
 git clone https://github.com/vargax/lapsocarte.git
-cd lapsoCarte
+cd lapsocarte
 
 # Install npm modules
+sudo npm -g update
 sudo npm install -g napa babel browserify less
 npm install
 
@@ -74,33 +90,22 @@ ln -s ../../../node_modules/font-awesome .
 ## PostGIS setup
 ```bash
 cd drivers
-chmod +x create_user.sh
-sudo ./create_user.sh lapsocarte
+sudo ./create_user.sh demo
 ```
-The `create_user.sh` script will create a new postgresql user *lapsocarte* with password *lapsocarte* in *localhost*. Then it will create the database *lapsocarte* and enable the PostGIS extension on it.
+The `create_user.sh` script will create a new postgresql user *demo* with password *demo* in *localhost*. Then it will create the database *demo* and enable the PostGIS extension on it.
 The idea is to have one PostgreSQL user and database per project.
 
-## Globals
-The [Globals.js](Globals.js) define a JavaScript object with all the required parameters for a given project. It is possible to change between projects changing the `export const PROJECT` constant.
-  You must recompile and rerun the application to see the changes:
-  ```bash
-  # Compile client-side libraries
-  npm run build
-  # Server run
-  node bootstrap.js
-  ```
-
-Read more about Globals [here](https://github.com/vargax/lapsocarte/wiki/LapsoCarte#shared-global-objects).
-
-# App Execution
 ## Sample data load
 ```bash
 cd drivers
-chmod +x shp+csv.sh
-./shp+csv.sh
+sudo ./create_user.sh demo
+cd generic_csv
+./csv_driver.sh # PostgreSQL demo user's password is demo
 ```
+
 ## Project build and execution
 ```bash
+cd ../../ # Go up to project root
 # Compile client-side libraries
 npm run build
 # Server run
