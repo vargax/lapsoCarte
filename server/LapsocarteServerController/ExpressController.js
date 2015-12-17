@@ -21,11 +21,11 @@ export default class ExpressController {
 
     mc_init() {
         _app.use(_express.static(PathHelper.relativeToAbsolute('../../app/public')));
-        _app.get('/', function(req, res) {
+        _app.get(glbs.PROJECT.PATH, function(req, res) {
             res.sendFile(PathHelper.relativeToAbsolute('../../app/index.html'));
         });
         _server.listen(glbs.PROJECT.PORT, function() {
-            console.log('ExpressController.init() :: Server listening on port '+glbs.PROJECT.PORT);
+            console.log('ExpressController.init() :: Server listening on localhost:'+glbs.PROJECT.PORT+glbs.PROJECT.PATH);
         });
 
         _mainController.sc_ready(this);

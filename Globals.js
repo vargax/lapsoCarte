@@ -6,6 +6,7 @@
 let demo = {
     PROJECT: 'demo',
     PORT: 8080,
+    PATH: '/lapsocarte',
 
     TABLE_DATA: 'demo',
 
