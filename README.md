@@ -71,20 +71,18 @@ For details on how to install NodeJS 0.12 please refer to [NODESOURCE](https://n
 
 ## App setup and NPM dependencies
 ```bash
-cd pathToProjectRoot
-git clone https://github.com/vargax/lapsocarte.git
+cd /opt
+sudo git clone https://github.com/vargax/lapsocarte.git
 cd lapsocarte
 
 # Install npm modules
 sudo npm -g update
 sudo npm install -g napa babel browserify less
-npm install
+sudo npm install
 
-# Publish node_modules folder
+# Publish font-awesome fonts
 cd app/public/
-mkdir node_modules
-cd node_modules
-ln -s ../../../node_modules/font-awesome .
+ln -s ../../node_modules/font-awesome/fonts .
 ```
 
 ## PostGIS setup
