@@ -20,7 +20,7 @@ export default class ExpressController {
     }
 
     mc_init() {
-        _app.use(_express.static(PathHelper.relativeToAbsolute('../../app/public')));
+        _app.use(glbs.PROJECT.PATH, _express.static(PathHelper.relativeToAbsolute('../../app/public')));
         _app.get(glbs.PROJECT.PATH, function(req, res) {
             res.sendFile(PathHelper.relativeToAbsolute('../../app/index.html'));
         });
