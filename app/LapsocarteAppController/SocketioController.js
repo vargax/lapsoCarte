@@ -27,7 +27,7 @@ let _socket;
 export default class SocketioController {
     constructor() {
         _mainController = new MainController();
-        _socket = io();
+        _socket = io(undefined, {path: glbs.PROJECT.PATH+'/socket.io'});
         this._inMsgs();
     }
 

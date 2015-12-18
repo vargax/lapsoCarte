@@ -32,7 +32,7 @@ export default class SocketioController {
     }
 
     mc_init(server) {
-        this._socket = require('socket.io')(server);
+        this._socket = require('socket.io')(server, {path: glbs.PROJECT.PATH+'/socket.io'});
         this._inMsgs();
         _mainController.sc_ready(this);
     }
