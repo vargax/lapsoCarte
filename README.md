@@ -110,6 +110,7 @@ npm run build
 node bootstrap.js
 ```
 
-## Screenshot
+## Data exploration
+Once the server is ready you can access the data visualization at http://localhost:8080/lapsocarte/
 
 ![screenshot](doc/proto.png)
